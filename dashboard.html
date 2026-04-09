@@ -295,9 +295,9 @@ a{color:#6366f1;text-decoration:none}
 <h3>Integraciones</h3>
 <p style="font-size:12px;color:#71717a">Webhook endpoints para Zapier/Make:</p>
 <code style="display:block;background:#1f1f23;padding:10px;border-radius:6px;margin-top:8px;font-size:12px">
-POST /api/webhook/lead<br>
-POST /api/webhook/email<br>
-POST /api/webhook/campaign
+POST /http://88.223.95.118:8083/api/webhook/lead<br>
+POST /http://88.223.95.118:8083/api/webhook/email<br>
+POST /http://88.223.95.118:8083/api/webhook/campaign
 </code>
 </div>
 </div>
@@ -360,7 +360,7 @@ async function doLogin(){
   var email = document.getElementById("login-email").value;
   var pass = document.getElementById("login-pass").value;
   if(!email || !pass){ showErr("login", "Completa todos los campos"); return; }
-  var r = await fetch("/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
+  var r = await fetch("http://88.223.95.118:8083/http://88.223.95.118:8083/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
   var d = await r.json();
   if(d.status === "ok"){ saveSess(d); showApp(); loadStats(); }
   else { showErr("login", d.detail || "Error"); }
@@ -371,7 +371,7 @@ async function doRegister(){
   var email = document.getElementById("reg-email").value;
   var pass = document.getElementById("reg-pass").value;
   if(!name || !email || !pass){ showErr("reg", "Completa todos los campos"); return; }
-  var r = await fetch("/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
+  var r = await fetch("http://88.223.95.118:8083/http://88.223.95.118:8083/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
   var d = await r.json();
   if(d.status === "ok"){ saveSess(d); showApp(); toast("Cuenta creada!"); loadStats(); }
   else { showErr("reg", d.detail || "Error"); }
@@ -384,7 +384,7 @@ async function doReset(){
   if(!code || !pass || !pass2){ showErr("reset", "Completa todos los campos"); return; }
   if(pass !== pass2){ showErr("reset", "Las contrasenas no coinciden"); return; }
   if(pass.length < 6){ showErr("reset", "Minimo 6 caracteres"); return; }
-  fetch("/api/auth/reset", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({code: code, new_password: pass})})
+  fetch("http://88.223.95.118:8083/api/auth/reset", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({code: code, new_password: pass})})
     .then(function(r){ return r.json(); })
     .then(function(d){
       if(d.status === "ok"){ toast("Contrasena cambiada!"); showAuthTab("login"); }
@@ -396,7 +396,7 @@ async function doReset(){
 async function doForgot(){
   var email = document.getElementById("forgot-email").value;
   if(!email){ showErr("forgot", "Introduce tu email"); return; }
-  var r = await fetch("/api/auth/forgot", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
+  var r = await fetch("http://88.223.95.118:8083/api/auth/forgot", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
   var d = await r.json();
   if(d.status === "ok"){
     toast("Codigo enviado! Revisa tu email.");
@@ -453,7 +453,7 @@ async function apiPut(url, body){ var r = await fetch(url, {method: "PUT", heade
 async function apiPost(url, body){ var r = await fetch(url, {method: "POST", headers: auth(), body: JSON.stringify(body)}); if(r.status === 401){ logout(); return null;} return r.json(); }
 
 async function loadStats(){
-  var d = await apiGet("/api/stats");
+  var d = await apiGet("http://88.223.95.118:8083/http://88.223.95.118:8083/api/stats");
   if(!d) return;
   document.getElementById("s-leads").textContent = d.leads || 0;
   document.getElementById("s-sent").textContent = d.emails_sent || 0;
@@ -468,7 +468,7 @@ async function doSearch(){
   if(!q){ toast("Introduce un nicho"); return; }
   document.getElementById("search-loading").style.display = "block";
   document.getElementById("search-table").style.display = "none";
-  var d = await apiPost("/api/leads/search", {query: q, location: loc, max_results: parseInt(max)});
+  var d = await apiPost("http://88.223.95.118:8083/http://88.223.95.118:8083/api/leads/search", {query: q, location: loc, max_results: parseInt(max)});
   document.getElementById("search-loading").style.display = "none";
   if(!d) return;
   if(d.leads && d.leads.length > 0){
@@ -501,7 +501,7 @@ function quickEmail(name, email){
 async function loadLeads(){
   document.getElementById("leads-loading").style.display = "block";
   document.getElementById("leads-table").style.display = "none";
-  var d = await apiGet("/api/leads");
+  var d = await apiGet("http://88.223.95.118:8083/http://88.223.95.118:8083/api/leads");
   document.getElementById("leads-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("leads-body");
@@ -526,11 +526,11 @@ async function loadLeads(){
   document.getElementById("leads-table").style.display = idx > 0 ? "table" : "none";
 }
 
-function exportCSV(){ window.open("/api/leads/export", "_blank"); }
+function exportCSV(){ window.open("http://88.223.95.118:8083/http://88.223.95.118:8083/api/leads/export", "_blank"); }
 
 async function genEmail(tone){
   var name = document.getElementById("em-name").value || "Contacto";
-  var d = await apiPost("/api/emails/generate", {lead_name: name, tone: tone});
+  var d = await apiPost("http://88.223.95.118:8083/http://88.223.95.118:8083/api/emails/generate", {lead_name: name, tone: tone});
   if(d && d.email){ document.getElementById("em-body").value = d.email; toast("Generado"); }
 }
 
@@ -540,14 +540,14 @@ async function sendEmail(){
   var subj = document.getElementById("em-subject").value;
   var body = document.getElementById("em-body").value;
   if(!to || !subj || !body){ toast("Completa todos los campos"); return; }
-  var d = await apiPost("/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
+  var d = await apiPost("http://88.223.95.118:8083/http://88.223.95.118:8083/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
   if(d && d.status === "ok"){ toast("Email enviado!"); loadStats(); loadSent(); }
 }
 
 async function loadSent(){
   document.getElementById("sent-loading").style.display = "block";
   document.getElementById("sent-table").style.display = "none";
-  var d = await apiGet("/api/emails/sent");
+  var d = await apiGet("http://88.223.95.118:8083/http://88.223.95.118:8083/api/emails/sent");
   document.getElementById("sent-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("sent-body");
@@ -571,14 +571,14 @@ async function createCampaign(){
   var subj = document.getElementById("camp-subject").value;
   var tmpl = document.getElementById("camp-template").value;
   if(!name || !subj || !tmpl){ toast("Completa todos los campos"); return; }
-  var d = await apiPost("/api/campaigns/create", {name: name, subject: subj, template: tmpl});
+  var d = await apiPost("http://88.223.95.118:8083/http://88.223.95.118:8083/api/campaigns/create", {name: name, subject: subj, template: tmpl});
   if(d && d.status === "ok"){ toast("Campana creada!"); loadCampaigns(); loadStats(); }
 }
 
 async function loadCampaigns(){
   document.getElementById("camp-loading").style.display = "block";
   document.getElementById("camp-table").style.display = "none";
-  var d = await apiGet("/api/campaigns");
+  var d = await apiGet("http://88.223.95.118:8083/http://88.223.95.118:8083/api/campaigns");
   document.getElementById("camp-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("camp-body");
@@ -605,12 +605,12 @@ async function loadCampaigns(){
 
 async function sendCampaign(id){
   if(!confirm("Enviar a todos los leads?")) return;
-  var d = await apiPost("/api/campaigns/" + id + "/send", {});
+  var d = await apiPost("http://88.223.95.118:8083/http://88.223.95.118:8083/api/campaigns/" + id + "/send", {});
   if(d){ toast("Enviados: " + (d.sent || 0)); loadCampaigns(); loadStats(); }
 }
 
 async function loadUserInfo(){
-  var d = await apiGet("/api/user/me");
+  var d = await apiGet("http://88.223.95.118:8083/api/user/me");
   var el = document.getElementById("plan-info");
   if(d && d.user){
     var u = d.user;
@@ -622,18 +622,18 @@ async function loadUserInfo(){
 
 async function upgradePlan(plan){
   if(plan === "free"){
-    var d = await apiPost("/api/plans/upgrade", {plan: plan});
+    var d = await apiPost("http://88.223.95.118:8083/http://88.223.95.118:8083/api/plans/upgrade", {plan: plan});
     if(d && d.status === "ok"){ toast("Plan actualizado!"); loadUserInfo(); loadStats(); }
     return;
   }
   toast("Abriendo Stripe...");
-  var d = await apiPost("/api/stripe/create-checkout", {plan: plan});
+  var d = await apiPost("http://88.223.95.118:8083/api/stripe/create-checkout", {plan: plan});
   if(d && d.url){ window.location.href = d.url; }
   else if(d){ toast(d.error || d.detail || "Error"); }
 }
 
 async function loadAnalytics(){
-  var d = await apiGet("/api/stats");
+  var d = await apiGet("http://88.223.95.118:8083/http://88.223.95.118:8083/api/stats");
   if(!d) return;
   var leads = d.leads || 0;
   var sent = d.emails_sent || 0;
