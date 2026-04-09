@@ -156,14 +156,14 @@ if(name==='dashboard')loadActivity();
 }
 
 async function loadStats(){
-try{const r=await fetch('/api/stats');const d=await r.json();
+try{const r=await fetch('http://88.223.95.118:8083/api/stats');const d=await r.json();
 if(d.stats){document.getElementById('s-leads').textContent=d.stats.total_leads||0;
 document.getElementById('s-sent').textContent=d.stats.total_sent||0;
 document.getElementById('s-camp').textContent=d.stats.total_campaigns||0;
 const rate=d.stats.open_rate||0;document.getElementById('s-open').textContent=rate+'%'}}catch(e){console.log(e)}
 
 async function loadActivity(){
-const r=await fetch('/api/stats');const d=await r.json();
+const r=await fetch('http://88.223.95.118:8083/api/stats');const d=await r.json();
 const div=document.getElementById('recent-activity');
 if(d.stats&&d.stats.total_leads>0){
 div.innerHTML='<p style="color:#a1a1aa">📊 <b>'+d.stats.total_leads+'</b> leads almacenados | <b>'+d.stats.total_sent+'</b> emails enviados | <b>'+d.stats.open_rate+'%</b> tasa de apertura</p><p style="color:#71717a;margin-top:8px;font-size:12px">Mes: '+d.stats.month+'</p>';
@@ -177,7 +177,7 @@ const max=document.getElementById('q-max').value;
 if(!q)return toast('Introduce un nicho');
 document.getElementById('search-loading').style.display='block';
 document.getElementById('search-table').style.display='none';
-try{const r=await fetch('/api/leads/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,location:loc,max_results:parseInt(max)})});
+try{const r=await fetch('http://88.223.95.118:8083/api/leads/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,location:loc,max_results:parseInt(max)})});
 const d=await r.json();document.getElementById('search-loading').style.display='none';
 if(d.leads&&d.leads.length>0){const tb=document.getElementById('search-body');tb.innerHTML='';
 d.leads.forEach((l,i)=>{const tr=document.createElement('tr');
@@ -192,7 +192,7 @@ document.getElementById('em-name').value=name;document.getElementById('em-to').v
 
 async function genEmail(tone){
 const name=document.getElementById('em-name').value||'Contacto';
-const r=await fetch('/api/emails/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lead_name:name,lead_company:name,tone:tone})});
+const r=await fetch('http://88.223.95.118:8083/api/emails/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lead_name:name,lead_company:name,tone:tone})});
 const d=await r.json();if(d.email){document.getElementById('em-body').value=d.email;toast('Email generado - '+d.tone)}}
 
 async function sendEmail(){
@@ -201,12 +201,12 @@ const name=document.getElementById('em-name').value;
 const subj=document.getElementById('em-subject').value;
 const body=document.getElementById('em-body').value;
 if(!to||!subj||!body)return toast('Completa todos los campos');
-try{const r=await fetch('/api/emails/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to_email:to,to_name:name,subject:subj,body_html:body.replace(/\n/g,'<br>'),user_email:'default@leadpilot.es'})});
+try{const r=await fetch('http://88.223.95.118:8083/api/emails/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to_email:to,to_name:name,subject:subj,body_html:body.replace(/\n/g,'<br>'),user_email:'default@leadpilot.es'})});
 const d=await r.json();if(d.status==='ok'){toast('✅ '+d.message);loadStats();loadSent()}else{toast('Error')}}catch(e){toast('Error: '+e.message)}}
 
 async function loadLeads(){
 const filter=document.getElementById('filter-contact').checked;
-const r=await fetch('/api/leads/list');const d=await r.json();
+const r=await fetch('http://88.223.95.118:8083/api/leads/list');const d=await r.json();
 const tb=document.getElementById('leads-body');tb.innerHTML='';
 if(d.leads){let idx=0;
 d.leads.forEach(l=>{
@@ -217,7 +217,7 @@ tr.innerHTML='<td>'+idx+'</td><td>'+(l.name||'N/A')+'</td><td><a href="'+(l.webs
 tb.appendChild(tr)})}}
 
 async function loadSent(){
-const r=await fetch('/api/emails/sent');const d=await r.json();
+const r=await fetch('http://88.223.95.118:8083/api/emails/sent');const d=await r.json();
 const tb=document.getElementById('sent-body');tb.innerHTML='';
 if(d.emails){Object.values(d.emails).forEach(e=>{
 const tr=document.createElement('tr');
@@ -231,13 +231,13 @@ const subj=document.getElementById('camp-subject').value;
 const tmpl=document.getElementById('camp-template').value;
 if(!name||!subj||!tmpl)return toast('Completa todos los campos');
 // Obtener IDs de leads
-const r=await fetch('/api/leads/list');const d=await r.json();
+const r=await fetch('http://88.223.95.118:8083/api/leads/list');const d=await r.json();
 const ids=d.leads.map((_,i)=>i);
-try{const cr=await fetch('/api/campaigns/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,subject:subj,template:tmpl,lead_ids:ids,user_email:'default@leadpilot.es'})});
+try{const cr=await fetch('http://88.223.95.118:8083/api/campaigns/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,subject:subj,template:tmpl,lead_ids:ids,user_email:'default@leadpilot.es'})});
 const cd=await cr.json();if(cd.status==='ok'){toast('Campaña creada: '+cd.total_leads+' leads');loadCampaigns();loadStats()}}catch(e){toast('Error')}}
 
 async function loadCampaigns(){
-const r=await fetch('/api/campaigns');const d=await r.json();
+const r=await fetch('http://88.223.95.118:8083/api/campaigns');const d=await r.json();
 const tb=document.getElementById('camp-body');tb.innerHTML='';
 if(d.campaigns){Object.entries(d.campaigns).forEach(([id,c])=>{
 const tr=document.createElement('tr');
@@ -246,11 +246,11 @@ tb.appendChild(tr)})}}
 
 async function sendCampaign(id){
 if(!confirm('¿Enviar campaña a todos los leads?'))return;
-try{const r=await fetch('/api/campaigns/'+id+'/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_email:'default@leadpilot.es'})});
+try{const r=await fetch('http://88.223.95.118:8083/api/campaigns/'+id+'/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_email:'default@leadpilot.es'})});
 const d=await r.json();toast('Enviados: '+d.sent+' | Errores: '+d.errors);loadCampaigns();loadStats()}catch(e){toast('Error')}}
 
 async function loadUserInfo(){
-const r=await fetch('/api/user/default@leadpilot.es');const d=await r.json();
+const r=await fetch('http://88.223.95.118:8083/api/user/default@leadpilot.es');const d=await r.json();
 const div=document.getElementById('plan-info');
 if(d.user){const u=d.user;const l=d.limits||{};
 div.innerHTML='<p>Plan actual: <b style="color:#6366f1">'+(u.plan||'free').toUpperCase()+'</b></p><p style="color:#a1a1aa;font-size:13px;margin-top:4px">Leads usados: '+(u.leads_used||0)+'/'+(l.leads===-1?'∞':l.leads)+'</p><p style="color:#a1a1aa;font-size:13px">Emails usados: '+(u.emails_used||0)+'/'+(l.emails===-1?'∞':l.emails)+'</p><p style="color:#71717a;font-size:12px;margin-top:8px">Mes: '+(u.usage_month||'')+'</p>';
@@ -258,10 +258,10 @@ div.innerHTML='<p>Plan actual: <b style="color:#6366f1">'+(u.plan||'free').toUpp
 
 async function upgradePlan(plan){
 if(!confirm('Cambiar a plan '+plan.toUpperCase()+'?'))return;
-try{const r=await fetch('/api/plans/upgrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_email:'default@leadpilot.es',plan:plan})});
+try{const r=await fetch('http://88.223.95.118:8083/api/plans/upgrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_email:'default@leadpilot.es',plan:plan})});
 const d=await r.json();if(d.status==='ok'){toast('✅ Plan actualizado a '+plan);loadUserInfo();loadStats()}}catch(e){toast('Error')}}
 
-function exportCSV(){window.open('/api/leads/export?user_email=default@leadpilot.es','_blank');toast('Descargando CSV...')}
+function exportCSV(){window.open('http://88.223.95.118:8083/api/leads/export?user_email=default@leadpilot.es','_blank');toast('Descargando CSV...')}
 loadStats();loadActivity();
 </script>
 </body></html>
