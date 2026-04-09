@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeadPilot - Leads en Autopiloto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fafafa; }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            background: radial-gradient(ellipse at 50% 0%, #1a1a2e 0%, #0a0a0a 70%);
+        }
+        
+        .badge {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            padding: 6px 16px;
+            border-radius: 99px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        
+        h1 {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+        
+        h1 span { color: #6366f1; }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #a1a1aa;
+            max-width: 600px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .cta-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-btn:hover { background: #4f46e5; transform: translateY(-2px); }
+        
+        .features {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .card {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 16px;
+            padding: 32px;
+        }
+        
+        .card h3 { color: #6366f1; margin-bottom: 12px; font-size: 20px; }
+        .card p { color: #a1a1aa; line-height: 1.6; }
+        
+        .pricing {
+            padding: 80px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .pricing h2 { font-size: 36px; margin-bottom: 60px; }
+        
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .plan {
+            background: #18181b;
+            border: 1px solid #27272a;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+        }
+        
+        .plan.featured {
+            border-color: #6366f1;
+            background: linear-gradient(135deg, #18181b, #1a1a2e);
+        }
+        
+        .plan h3 { font-size: 20px; margin-bottom: 8px; }
+        .plan .price { font-size: 36px; font-weight: 800; color: #6366f1; margin: 16px 0; }
+        .plan .price span { font-size: 14px; color: #71717a; font-weight: 400; }
+        .plan ul { list-style: none; text-align: left; margin: 20px 0; }
+        .plan li { padding: 8px 0; color: #a1a1aa; font-size: 14px; }
+        .plan li:before { content: "✓ "; color: #22c55e; font-weight: bold; }
+        
+        .footer {
+            text-align: center;
+            padding: 40px;
+            color: #52525b;
+            font-size: 13px;
+        }
+        
+        .email-form {
+            margin-top: 40px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .email-form input {
+            padding: 14px 20px;
+            border-radius: 10px;
+            border: 1px solid #3f3f46;
+            background: #18181b;
+            color: white;
+            font-size: 14px;
+            width: 300px;
+        }
+        
+        .email-form button {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="badge">🚀 Ya disponible en España</div>
+    <h1>Leads en <span>Autopiloto</span></h1>
+    <p class="subtitle">
+        Encuentra clientes automáticamente. LeadPilot busca leads, genera emails personalizados y ejecuta campañas de outreach por ti.
+    </p>
+    <a href="#pricing" class="cta-btn">Empezar Gratis →</a>
+    
+    <div class="email-form">
+        <input type="email" id="waitlist-email" placeholder="tu@email.com">
+        <button onclick="joinWaitlist()">Unirse a la lista</button>
+    </div>
+    <p style="color: #52525b; font-size: 12px; margin-top: 12px;">10 leads gratis cada mes. Sin tarjeta.</p>
+</div>
+
+<div class="features">
+    <h2>¿Cómo funciona?</h2>
+    <div class="grid">
+        <div class="card">
+            <h3>🔍 Busca Leads</h3>
+            <p>Dinos tu nicho y ubicación. Nosotros buscamos empresas automáticamente en Google, directorios y redes.</p>
+        </div>
+        <div class="card">
+            <h3>✍️ Genera Emails</h3>
+            <p>IA crea emails personalizados para cada lead. Sin templates genéricos. Cada mensaje es único.</p>
+        </div>
+        <div class="card">
+            <h3>📧 Envía Campañas</h3>
+            <p>Programa y envía outreach automático. Tracking de aperturas, clicks y respuestas en tiempo real.</p>
+        </div>
+        <div class="card">
+            <h3>📊 Mide Resultados</h3>
+            <p>Dashboard con métricas claras: leads encontrados, emails enviados, tasa de respuesta, ROI.</p>
+        </div>
+    </div>
+</div>
+
+<div class="pricing" id="pricing">
+    <h2>Planes simples</h2>
+    <div class="plans">
+        <div class="plan">
+            <h3>Free</h3>
+            <div class="price">€0<span>/mes</span></div>
+            <ul>
+                <li>10 leads/mes</li>
+                <li>50 emails/mes</li>
+                <li>1 campaña</li>
+                <li>Dashboard básico</li>
+            </ul>
+            <a href="/dashboard.html" class="cta-btn" style="background: #3f3f46; font-size: 14px; padding: 12px 24px;">Empezar</a>
+        </div>
+        <div class="plan featured">
+            <h3>Starter</h3>
+            <div class="price">€29<span>/mes</span></div>
+            <ul>
+                <li>100 leads/mes</li>
+                <li>500 emails/mes</li>
+                <li>10 campañas</li>
+                <li>IA personalización</li>
+                <li>Tracking completo</li>
+            </ul>
+            <a href="/dashboard.html" class="cta-btn" style="font-size: 14px; padding: 12px 24px;">Elegir</a>
+        </div>
+        <div class="plan">
+            <h3>Pro</h3>
+            <div class="price">€79<span>/mes</span></div>
+            <ul>
+                <li>500 leads/mes</li>
+                <li>2000 emails/mes</li>
+                <li>Campañas ilimitadas</li>
+                <li>IA avanzada</li>
+                <li>API acceso</li>
+            </ul>
+            <a href="/dashboard.html" class="cta-btn" style="background: #3f3f46; font-size: 14px; padding: 12px 24px;">Elegir</a>
+        </div>
+        <div class="plan">
+            <h3>Business</h3>
+            <div class="price">€149<span>/mes</span></div>
+            <ul>
+                <li>Leads ilimitados</li>
+                <li>Emails ilimitados</li>
+                <li>Todo incluido</li>
+                <li>Soporte prioritario</li>
+                <li>Integraciones</li>
+            </ul>
+            <a href="/dashboard.html" class="cta-btn" style="background: #3f3f46; font-size: 14px; padding: 12px 24px;">Contactar</a>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <p>LeadPilot.es — Leads en Autopiloto © 2026</p>
+</div>
+
+<script>
+function joinWaitlist() {
+    const email = document.getElementById('waitlist-email').value;
+    if (!email) return alert('Introduce tu email');
+    
+    fetch('/api/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email: email, password: 'welcome123', name: email.split('@')[0]})
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            alert('¡Registrado! Te redirigimos al dashboard.');
+            window.location.href = '/dashboard.html';
+        } else {
+            alert(data.detail || 'Error al registrar');
+        }
+    })
+    .catch(() => alert('Error de conexión'));
+}
+</script>
+
+</body>
+</html>
