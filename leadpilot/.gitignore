@@ -1,0 +1,7 @@
+*.json
+!plans.json
+data/
+__pycache__/
+*.pyc
+.env
+credentials.json
