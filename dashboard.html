@@ -285,8 +285,8 @@ button:active { transform: scale(0.98); }
 <div class="card">
 <h3>Buscar Leads</h3>
 <div class="flex">
-<input type="text" id="q-niche" placeholder="Ej: restaurantes, dentistas">
-<input type="text" id="q-loc" placeholder="Ubicacion" value="España" style="max-width:150px;flex:none">
+<input type="text" id="q-niche" placeholder="Ej: restaurants, dentistas">
+<input type="text" id="q-loc" placeholder="Ubicacion" value="Espania" style="max-width:150px;flex:none">
 <select id="q-max" style="max-width:100px;flex:none">
 <option value="5">5</option><option value="10">10</option><option value="20" selected>20</option>
 </select>
@@ -344,14 +344,14 @@ button:active { transform: scale(0.98); }
 
 <div class="panel" id="panel-campaigns">
 <div class="card">
-<h3>Crear Campaña</h3>
+<h3>Crear Campana</h3>
 <input type="text" id="camp-name" placeholder="Nombre">
 <input type="text" id="camp-subject" placeholder="Asunto" style="margin-top:8px">
 <textarea id="camp-template" placeholder="Plantilla (usa {{nombre}}, {{empresa}})" style="margin-top:8px;min-height:80px"></textarea>
 <button class="btn" style="margin-top:10px" onclick="createCampaign()">Crear</button>
 </div>
 <div class="card" style="margin-top:12px">
-<h3>Campañas</h3>
+<h3>Campanas</h3>
 <div class="loading" id="camp-loading">Cargando...</div>
 <table id="camp-table" style="display:none">
 <thead><tr><th>Nombre</th><th>Leads</th><th>Enviados</th><th>Estado</th><th></th></tr></thead>
@@ -575,7 +575,7 @@ async function doLogin(){
   try {
     var r = await fetch("https://webhook.leadpilot.es/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
     var d = await r.json();
-    if(d.status === "ok"){ saveSess(d); showApp(); loadStats(); }
+    if(d.success === true){ saveSess(d); showApp(); loadStats(); }
     else { showErr("login", d.detail || "Email o contrasena incorrectos"); }
   } catch(e){ showErr("login", "Error de conexion. Intenta de nuevo."); }
 }
@@ -589,7 +589,7 @@ async function doRegister(){
   try {
     var r = await fetch("https://webhook.leadpilot.es/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
     var d = await r.json();
-    if(d.status === "ok"){ saveSess(d); showApp(); toast("Cuenta creada!"); loadStats(); }
+    if(d.success === true){ saveSess(d); showApp(); toast("Cuenta creada!"); loadStats(); }
     else { showErr("reg", d.detail || "No se pudo crear la cuenta"); }
   } catch(e){ showErr("reg", "Error de conexion. Intenta de nuevo."); }
 }
@@ -601,10 +601,10 @@ async function doReset(){
   if(!code || !pass || !pass2){ showErr("reset", "Completa todos los campos"); return; }
   if(pass !== pass2){ showErr("reset", "Las contrasenas no coinciden"); return; }
   if(pass.length < 6){ showErr("reset", "Minimo 6 caracteres"); return; }
-  fetch("https://webhook.leadpilot.es/api/auth/reset", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({code: code, new_password: pass})})
+  fetch("https://webhook.leadpilot.es/api/reset-password", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({token: code, new_password: pass})})
     .then(function(r){ return r.json(); })
     .then(function(d){
-      if(d.status === "ok"){ toast("Contrasena cambiada!"); showAuthTab("login"); }
+      if(d.success === true){ toast("Contrasena cambiada!"); showAuthTab("login"); }
       else { showErr("reset", d.detail || "Error"); }
     })
     .catch(function(){ showErr("reset", "Error de conexion"); });
@@ -613,9 +613,9 @@ async function doReset(){
 async function doForgot(){
   var email = document.getElementById("forgot-email").value;
   if(!email){ showErr("forgot", "Introduce tu email"); return; }
-  var r = await fetch("https://webhook.leadpilot.es/api/auth/forgot", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
+  var r = await fetch("https://webhook.leadpilot.es/api/forgot-password", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
   var d = await r.json();
-  if(d.status === "ok"){
+  if(d.success === true){
     toast("Codigo enviado! Revisa tu email.");
     // Show reset form
     var tabs = document.querySelectorAll(".auth-tab");
@@ -758,7 +758,7 @@ async function sendEmail(){
   var body = document.getElementById("em-body").value;
   if(!to || !subj || !body){ toast("Completa todos los campos"); return; }
   var d = await apiPost("/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
-  if(d && d.status === "ok"){ toast("Email enviado!"); loadStats(); loadSent(); }
+  if(d && d.success === true){ toast("Email enviado!"); loadStats(); loadSent(); }
 }
 
 async function loadSent(){
@@ -789,7 +789,7 @@ async function createCampaign(){
   var tmpl = document.getElementById("camp-template").value;
   if(!name || !subj || !tmpl){ toast("Completa todos los campos"); return; }
   var d = await apiPost("/api/campaigns/create", {name: name, subject: subj, template: tmpl});
-  if(d && d.status === "ok"){ toast("Campana creada!"); loadCampaigns(); loadStats(); }
+  if(d && d.success === true){ toast("Campana creada!"); loadCampaigns(); loadStats(); }
 }
 
 async function loadCampaigns(){
@@ -840,7 +840,7 @@ async function loadUserInfo(){
 async function upgradePlan(plan){
   if(plan === "free"){
     var d = await apiPost("/api/plans/upgrade", {plan: plan});
-    if(d && d.status === "ok"){ toast("Plan actualizado!"); loadUserInfo(); loadStats(); }
+    if(d && d.success === true){ toast("Plan actualizado!"); loadUserInfo(); loadStats(); }
     return;
   }
   toast("Abriendo Stripe...");
