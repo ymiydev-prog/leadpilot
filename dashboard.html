@@ -411,23 +411,48 @@ a{color:#6366f1;text-decoration:none}
 </div>
 <div class="panel" id="panel-analytics">
 <div class="card">
-<h3>Analytics</h3>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px">
-<canvas id="chart-leads" height="200"></canvas>
-<canvas id="chart-emails" height="200"></canvas>
+<h3>Resumen General</h3>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
+<div style="background:#1f1f23;padding:16px;border-radius:8px;text-align:center">
+<div style="font-size:24px;font-weight:700;color:#6366f1" id="a-leads">0</div>
+<div style="font-size:12px;color:#71717a">Total Leads</div>
 </div>
-<div style="margin-top:16px">
-<canvas id="chart-rates" height="120"></canvas>
+<div style="background:#1f1f23;padding:16px;border-radius:8px;text-align:center">
+<div style="font-size:24px;font-weight:700;color:#22c55e" id="a-emails">0</div>
+<div style="font-size:12px;color:#71717a">Emails Enviados</div>
+</div>
+<div style="background:#1f1f23;padding:16px;border-radius:8px;text-align:center">
+<div style="font-size:24px;font-weight:700;color:#f59e0b" id="a-rate">0%</div>
+<div style="font-size:12px;color:#71717a">Tasa Apertura</div>
+</div>
 </div>
 </div>
 <div class="card" style="margin-top:12px">
-<h3>Integraciones</h3>
-<p style="font-size:12px;color:#71717a">Webhook endpoints para Zapier/Make:</p>
-<code style="display:block;background:#1f1f23;padding:10px;border-radius:6px;margin-top:8px;font-size:12px">
-POST /api/webhook/lead<br>
-POST /api/webhook/email<br>
-POST /api/webhook/campaign
-</code>
+<h3>Rendimiento</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px">
+<canvas id="chart-leads" height="180"></canvas>
+<canvas id="chart-emails" height="180"></canvas>
+</div>
+</div>
+<div class="card" style="margin-top:12px">
+<h3>Stats Detalladas</h3>
+<div style="margin-top:12px;font-size:13px;color:#a1a1aa;line-height:2">
+<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #27272a">
+<span>Leads este mes</span>
+<span id="a-leads-month" style="color:#6366f1;font-weight:600">-</span>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #27272a">
+<span>Campanas activas</span>
+<span id="a-campaigns" style="color:#22c55e;font-weight:600">-</span>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #27272a">
+<span>Emails abiertos</span>
+<span id="a-opened" style="color:#f59e0b;font-weight:600">-</span>
+</div>
+<div style="display:flex;justify-content:space-between;padding:8px 0">
+<span>Tasa conversion</span>
+<span id="a-conversion" style="color:#ec4899;font-weight:600">-</span>
+</div>
 </div>
 </div>
 
@@ -767,9 +792,21 @@ async function loadAnalytics(){
   var leads = d.leads || 0;
   var sent = d.emails_sent || 0;
   var opened = Math.round((d.open_rate || 0) * sent / 100);
+  var rate = d.open_rate || 0;
+  var campaigns = d.campaigns || 0;
+  
+  // Update summary cards
+  document.getElementById("a-leads").textContent = leads;
+  document.getElementById("a-emails").textContent = sent;
+  document.getElementById("a-rate").textContent = rate + "%";
+  document.getElementById("a-leads-month").textContent = leads;
+  document.getElementById("a-campaigns").textContent = campaigns;
+  document.getElementById("a-opened").textContent = opened;
+  document.getElementById("a-conversion").textContent = (sent > 0 ? ((opened/sent)*100).toFixed(1) : 0) + "%";
+  
+  // Charts
   new Chart(document.getElementById("chart-leads"), {type: "bar", data: {labels: ["Leads"], datasets: [{label: "Total", data: [leads], backgroundColor: "#6366f1"}]}});
   new Chart(document.getElementById("chart-emails"), {type: "doughnut", data: {labels: ["Enviados", "Abiertos"], datasets: [{data: [sent - opened, opened], backgroundColor: ["#3f3f46", "#22c55e"]}]}});
-  new Chart(document.getElementById("chart-rates"), {type: "bar", data: {labels: ["Tasa"], datasets: [{data: [d.open_rate || 0], backgroundColor: "#f59e0b"}]}});
 }
 </script>
 </body>
