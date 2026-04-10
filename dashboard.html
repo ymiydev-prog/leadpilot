@@ -573,7 +573,7 @@ async function doLogin(){
   var pass = document.getElementById("login-pass").value;
   if(!email || !pass){ showErr("login", "Completa todos los campos"); return; }
   try {
-    var r = await fetch("http://88.223.95.118:8083/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
+    var r = await fetch("https://webhook.leadpilot.es/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
     var d = await r.json();
     if(d.status === "ok"){ saveSess(d); showApp(); loadStats(); }
     else { showErr("login", d.detail || "Email o contrasena incorrectos"); }
@@ -587,7 +587,7 @@ async function doRegister(){
   if(!name || !email || !pass){ showErr("reg", "Completa todos los campos"); return; }
   if(pass.length < 6){ showErr("reg", "Contrasena minima 6 caracteres"); return; }
   try {
-    var r = await fetch("http://88.223.95.118:8083/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
+    var r = await fetch("https://webhook.leadpilot.es/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
     var d = await r.json();
     if(d.status === "ok"){ saveSess(d); showApp(); toast("Cuenta creada!"); loadStats(); }
     else { showErr("reg", d.detail || "No se pudo crear la cuenta"); }
@@ -601,7 +601,7 @@ async function doReset(){
   if(!code || !pass || !pass2){ showErr("reset", "Completa todos los campos"); return; }
   if(pass !== pass2){ showErr("reset", "Las contrasenas no coinciden"); return; }
   if(pass.length < 6){ showErr("reset", "Minimo 6 caracteres"); return; }
-  fetch("http://88.223.95.118:8083/api/auth/reset", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({code: code, new_password: pass})})
+  fetch("https://webhook.leadpilot.es/api/auth/reset", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({code: code, new_password: pass})})
     .then(function(r){ return r.json(); })
     .then(function(d){
       if(d.status === "ok"){ toast("Contrasena cambiada!"); showAuthTab("login"); }
@@ -613,7 +613,7 @@ async function doReset(){
 async function doForgot(){
   var email = document.getElementById("forgot-email").value;
   if(!email){ showErr("forgot", "Introduce tu email"); return; }
-  var r = await fetch("http://88.223.95.118:8083/api/auth/forgot", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
+  var r = await fetch("https://webhook.leadpilot.es/api/auth/forgot", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
   var d = await r.json();
   if(d.status === "ok"){
     toast("Codigo enviado! Revisa tu email.");
