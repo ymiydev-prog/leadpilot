@@ -141,6 +141,46 @@ a{color:#6366f1;text-decoration:none}
     }
 }
 
+
+/* Password toggle */
+.show-pass{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#71717a;font-size:18px;user-select:none}
+.show-pass:hover{color:#fafafa}
+input[type="password"]{padding-right:40px}
+
+/* Better form inputs */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid #3f3f46;
+  background: #1a1a1e;
+  color: #fafafa;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+}
+input::placeholder { color: #71717a; }
+
+/* Better buttons */
+button {
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+}
+button:hover { opacity: 0.9; }
+button:active { transform: scale(0.98); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -156,7 +196,10 @@ a{color:#6366f1;text-decoration:none}
 
 <div class="auth-form active" id="form-login">
 <input type="email" id="login-email" placeholder="Email">
-<input type="password" id="login-pass" placeholder="Contrasena" style="margin-top:12px">
+<div style="position:relative;margin-top:12px">
+<input type="password" id="login-pass" placeholder="Contrasena">
+<span class="show-pass" onclick="togglePass('login-pass',this)">👁️</span>
+</div>
 <div class="error-msg" id="login-error"></div>
 <div style="text-align:center;margin-top:14px">
 <a href="javascript:void(0)" onclick="showAuthTab('forgot')" style="font-size:13px">Olvidaste tu contrasena?</a>
@@ -168,7 +211,10 @@ a{color:#6366f1;text-decoration:none}
 <div class="auth-form" id="form-register">
 <input type="text" id="reg-name" placeholder="Tu nombre">
 <input type="email" id="reg-email" placeholder="Email" style="margin-top:12px">
-<input type="password" id="reg-pass" placeholder="Contrasena" style="margin-top:12px">
+<div style="position:relative;margin-top:12px">
+<input type="password" id="reg-pass" placeholder="Contrasena">
+<span class="show-pass" onclick="togglePass('reg-pass',this)">👁️</span>
+</div>
 <div class="error-msg" id="reg-error"></div>
 <button class="btn" style="width:100%;margin-top:16px" onclick="doRegister()">Crear cuenta</button>
 </div>
@@ -184,8 +230,14 @@ a{color:#6366f1;text-decoration:none}
 
 <div class="auth-form" id="form-reset">
 <input type="text" id="reset-code" placeholder="Codigo de recuperacion">
-<input type="password" id="reset-pass" placeholder="Nueva contrasena" style="margin-top:12px">
-<input type="password" id="reset-pass2" placeholder="Confirmar contrasena" style="margin-top:12px">
+<div style="position:relative;margin-top:12px">
+<input type="password" id="reset-pass" placeholder="Nueva contrasena">
+<span class="show-pass" onclick="togglePass('reset-pass',this)">👁️</span>
+</div>
+<div style="position:relative;margin-top:12px">
+<input type="password" id="reset-pass2" placeholder="Confirmar contrasena">
+<span class="show-pass" onclick="togglePass('reset-pass2',this)">👁️</span>
+</div>
 <div class="error-msg" id="reset-error"></div>
 <button class="btn" style="width:100%;margin-top:14px" onclick="doReset()">Cambiar contrasena</button>
 <p style="text-align:center;margin-top:16px;font-size:13px;color:#71717a">
@@ -464,6 +516,12 @@ a{color:#6366f1;text-decoration:none}
 var token = localStorage.getItem("lp_token") || null;
 var currentUser = localStorage.getItem("lp_user") || null;
 
+
+function togglePass(id, el){
+  var i = document.getElementById(id);
+  if(i.type === "password"){ i.type = "text"; el.textContent = "🙈"; }
+  else{ i.type = "password"; el.textContent = "👁️"; }
+}
 (function init(){
   var p = new URLSearchParams(window.location.search);
   if(p.get("checkout") === "success"){ toast("Pago completado!"); }
