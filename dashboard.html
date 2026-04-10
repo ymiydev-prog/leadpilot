@@ -29,7 +29,7 @@ tr:hover{background:#1f1f23}
 .b-new{background:#22c55e20;color:#22c55e}.b-sent{background:#6366f120;color:#6366f1}.b-open{background:#f59e0b20;color:#f59e0b}
 .loading{padding:20px;text-align:center;color:#71717a}
 .toast{position:fixed;bottom:20px;right:20px;background:#22c55e;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;display:none;z-index:999}
-.error-msg{color:#ef4444;font-size:12px;margin-top:4px;display:none}
+.error-msg{display:none;background:#ef4444;color:#fff;padding:12px 16px;border-radius:8px;margin-top:12px;font-size:13px;text-align:center}
 a{color:#6366f1;text-decoration:none}
 .auth-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:1000;display:flex;justify-content:center;align-items:center}
 .auth-box{background:#18181b;border:1px solid #27272a;border-radius:12px;padding:32px;width:380px;max-width:95vw}
@@ -572,10 +572,12 @@ async function doLogin(){
   var email = document.getElementById("login-email").value;
   var pass = document.getElementById("login-pass").value;
   if(!email || !pass){ showErr("login", "Completa todos los campos"); return; }
-  var r = await fetch("http://88.223.95.118:8083/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
-  var d = await r.json();
-  if(d.status === "ok"){ saveSess(d); showApp(); loadStats(); }
-  else { showErr("login", d.detail || "Error"); }
+  try {
+    var r = await fetch("http://88.223.95.118:8083/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
+    var d = await r.json();
+    if(d.status === "ok"){ saveSess(d); showApp(); loadStats(); }
+    else { showErr("login", d.detail || "Email o contrasena incorrectos"); }
+  } catch(e){ showErr("login", "Error de conexion. Intenta de nuevo."); }
 }
 
 async function doRegister(){
@@ -583,10 +585,13 @@ async function doRegister(){
   var email = document.getElementById("reg-email").value;
   var pass = document.getElementById("reg-pass").value;
   if(!name || !email || !pass){ showErr("reg", "Completa todos los campos"); return; }
-  var r = await fetch("http://88.223.95.118:8083/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
-  var d = await r.json();
-  if(d.status === "ok"){ saveSess(d); showApp(); toast("Cuenta creada!"); loadStats(); }
-  else { showErr("reg", d.detail || "Error"); }
+  if(pass.length < 6){ showErr("reg", "Contrasena minima 6 caracteres"); return; }
+  try {
+    var r = await fetch("http://88.223.95.118:8083/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
+    var d = await r.json();
+    if(d.status === "ok"){ saveSess(d); showApp(); toast("Cuenta creada!"); loadStats(); }
+    else { showErr("reg", d.detail || "No se pudo crear la cuenta"); }
+  } catch(e){ showErr("reg", "Error de conexion. Intenta de nuevo."); }
 }
 
 async function doReset(){
