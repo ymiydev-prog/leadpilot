@@ -828,7 +828,7 @@ async function sendCampaign(id){
 
 async function loadUserInfo(){
   var d = await apiGet("/api/user/me");
-  var el = document.getElementById("plan-info");
+  var el = document.getElementById("plan-info-detailed");
   if(d && d.user){
     var u = d.user;
     var l = d.limits || {};
