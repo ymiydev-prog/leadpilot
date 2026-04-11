@@ -522,11 +522,11 @@ function togglePass(id, el){
   if(i.type === "password"){ i.type = "text"; el.textContent = "🙈"; }
   else{ i.type = "password"; el.textContent = "👁️"; }
 }
-(function init(){
+(async function init(){
   var p = new URLSearchParams(window.location.search);
   if(p.get("checkout") === "success"){ toast("Pago completado!"); }
   else if(p.get("checkout") === "cancel"){ toast("Pago cancelado."); }
-  if(token){ showApp(); loadStats(); }
+  if(token){ try { var r = await fetch("https://webhook.leadpilot.es/api/user/me", {headers: {"Authorization": "Bearer " + token}}); if(r.ok){ showApp(); loadStats(); } else { localStorage.removeItem("lp_token"); localStorage.removeItem("lp_user"); showAuth(); } } catch(e){ localStorage.removeItem("lp_token"); localStorage.removeItem("lp_user"); showAuth(); } }
   else { showAuth(); fillDemo(); }
 })();
 
