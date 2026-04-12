@@ -2,7 +2,13 @@
 <html lang="es">
 <head>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta property="og:title" content="LeadPilot - Generador de Leads B2B para España">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="LeadPilot">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="canonical" href="https://leadpilot.es/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:title" content="LeadPilot - Generador de Leads B2B para España">
     <meta property="og:description" content="Encuentra empresas y contactos verificados en España. 100+ leads gratis. Sin tarjeta de crédito.">
     <meta property="og:image" content="https://leadpilot.es/og-image.png">
     <meta property="og:url" content="https://leadpilot.es">
@@ -30,7 +36,11 @@
             --green: #22c55e;
             --amber: #f59e0b;
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        
+        /* Skip link for accessibility */
+        .skip-link { position: absolute; top: -40px; left: 0; background: #6366f1; color: #fff; padding: 8px 16px; z-index: 1000; transition: top 0.3s; }
+        .skip-link:focus { top: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
         
         /* NAV */
         nav {
@@ -359,10 +369,11 @@
         }
     </style>
 </head>
-<body>
+<body>    <a href="#main" class="skip-link">Saltar al contenido principal</a>
 
-<nav>
-    <img src="assets/logo.png" alt="LeadPilot" style="height:36px;margin:0 20px 24px 0;">
+
+<nav aria-label="Navegación principal">
+    <img src="assets/logo.png" alt="LeadPilot - Generador de Leads B2B" width="180" height="36" style="height:36px;margin:0 20px 24px 0;">
     <a href="#features">Funciones</a>
     <a href="#pricing">Precios</a>
     <a href="#faq">FAQ</a>
@@ -577,10 +588,10 @@
 <section class="cta-section">
     <h2>Empieza a generar leads hoy</h2>
     <p>Tu primera lista de prospectos en menos de 5 minutos.</p>
-    <a href="https://leadpilot.es/dashboard#register" class="btn-primary">Crear Cuenta Gratis →</a>
+    <a href="https://leadpilot.es/dashboard#register" class="btn-primary" title="Crear cuenta gratuita en LeadPilot">Crear Cuenta Gratis →</a>
 </section>
 
-<footer>
+<footer role="contentinfo">
     <p>© 2026 LeadPilot · <a href="https://leadpilot.es/dashboard">App</a> · <a href="mailto:hola@leadpilot.es">Contacto</a> · <a href="/privacy.html" style="color:#71717a">Privacidad</a> · <a href="/terms.html" style="color:#71717a">Términos</a></p>
 </footer>
 
