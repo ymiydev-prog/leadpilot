@@ -131,11 +131,8 @@ def search_serpapi(query, location, max_results):
     
     return []
 
-def main():
-    query = sys.argv[1] if len(sys.argv) > 1 else "software"
-    location = sys.argv[2] if len(sys.argv) > 2 else "Madrid"
-    max_results = int(sys.argv[3]) if len(sys.argv) > 3 else 20
-    
+def run_search(query="software", location="Madrid", max_results=20):
+    """Run search and return leads list"""
     # Try Firecrawl first
     leads = search_firecrawl(query, location, max_results)
     
@@ -144,6 +141,16 @@ def main():
         print("Firecrawl failed, trying SerpAPI...", file=sys.stderr)
         leads = search_serpapi(query, location, max_results)
     
+    return leads
+
+def main():
+    query = sys.argv[1] if len(sys.argv) > 1 else "software"
+    location = sys.argv[2] if len(sys.argv) > 2 else "Madrid"
+    max_results = int(sys.argv[3]) if len(sys.argv) > 3 else 20
+    leads = run_search(query, location, max_results)
+    print(json.dumps(leads, ensure_ascii=False))
+    
+    leads = run_search(query, location, max_results)
     print(json.dumps(leads, ensure_ascii=False))
 
 if __name__ == "__main__":
