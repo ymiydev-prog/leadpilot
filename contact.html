@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - LeadPilot</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f0f23; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .container { background: #1a1a2e; border-radius: 16px; padding: 40px; max-width: 500px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        h1 { color: #6366f1; margin-bottom: 8px; font-size: 28px; }
+        p { color: #a1a1aa; margin-bottom: 24px; line-height: 1.6; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #e2e8f0; font-weight: 500; }
+        input, textarea { width: 100%; padding: 14px; border: 1px solid #2d2d4a; border-radius: 8px; background: #0f0f23; color: #fff; font-size: 16px; transition: border-color 0.3s; }
+        input:focus, textarea:focus { outline: none; border-color: #6366f1; }
+        textarea { min-height: 120px; resize: vertical; }
+        button { width: 100%; padding: 16px; background: #6366f1; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #4f46e5; }
+        .success { background: #22c55e; color: #fff; padding: 16px; border-radius: 8px; text-align: center; display: none; margin-top: 20px; }
+        .error { background: #ef4444; color: #fff; padding: 12px; border-radius: 8px; text-align: center; display: none; margin-top: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Contacta con LeadPilot</h1>
+        <p>¿Tienes preguntas o quieres una demo personalizada? Escríbenos y te responderemos en menos de 24h.</p>
+        
+        <form id="contact-form">
+            <div class="form-group">
+                <label for="name">Nombre</label>
+                <input type="text" id="name" name="name" placeholder="Tu nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="tu@empresa.com" required>
+            </div>
+            <div class="form-group">
+                <label for="company">Empresa (opcional)</label>
+                <input type="text" id="company" name="company" placeholder="Nombre de tu empresa">
+            </div>
+            <div class="form-group">
+                <label for="message">Mensaje</label>
+                <textarea id="message" name="message" placeholder="¿En qué podemos ayudarte?" required></textarea>
+            </div>
+            <button type="submit" id="submit-btn">Enviar mensaje</button>
+        </form>
+        
+        <div id="success-msg" class="success">✅ Mensaje enviado. Te responderemos pronto!</div>
+        <div id="error-msg" class="error">❌ Error. Intenta de nuevo o email a contacto@leadpilot.es</div>
+    </div>
+
+    <script>
+    document.getElementById('contact-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submit-btn');
+        btn.textContent = 'Enviando...';
+        btn.disabled = true;
+        
+        const data = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            company: document.getElementById('company').value,
+            message: document.getElementById('message').value,
+            source: 'contact_form'
+        };
+        
+        try {
+            // Send to LeadPilot API
+            const resp = await fetch('https://webhook.leadpilot.es/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if (resp.ok) {
+                document.getElementById('success-msg').style.display = 'block';
+                document.getElementById('error-msg').style.display = 'none';
+                document.getElementById('contact-form').reset();
+            } else {
+                throw new Error('Server error');
+            }
+        } catch(e) {
+            // If API fails, show email fallback
+            window.location.href = 'mailto:contacto@leadpilot.es?subject=Contacto desde leadpilot.es&body=' + 
+                encodeURIComponent('Nombre: ' + data.name + '\nEmail: ' + data.email + '\nEmpresa: ' + data.company + '\n\n' + data.message);
+            document.getElementById('success-msg').style.display = 'block';
+            document.getElementById('success-msg').textContent = '✉️ Abriendo email...';
+        }
+        
+        btn.textContent = 'Enviar mensaje';
+        btn.disabled = false;
+    });
+    </script>
+    <!-- Crisp Live Chat -->
+    <script type="text/javascript">
+    window.$crisp=[];window.CRISP_WEBSITE_ID="2fd5a1fb-1716-4b33-9b53-5d475bb1bb55";
+    (function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";
+    s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();
+    </script>
+
+</body>
+</html>
