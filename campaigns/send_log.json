@@ -1,0 +1,226 @@
+{
+  "date": "2026-04-12",
+  "results": [
+    {
+      "email": "info@estrategikadigital.com",
+      "status": "sent"
+    },
+    {
+      "email": "info@dinamiq.com",
+      "status": "sent"
+    },
+    {
+      "email": "info@mkparadise.com",
+      "status": "sent"
+    },
+    {
+      "email": "info@internetrepublica.com",
+      "status": "sent"
+    },
+    {
+      "email": "info@talentumdigital.com",
+      "status": "sent"
+    }
+  ],
+  "batch1": [
+    {
+      "email": "info@topmadrid.com.es",
+      "status": "sent"
+    },
+    {
+      "email": "info@iomarketing.es",
+      "status": "sent"
+    },
+    {
+      "email": "info@budamarketing.es",
+      "status": "sent"
+    },
+    {
+      "email": "info@ad-do.com",
+      "status": "sent"
+    },
+    {
+      "email": "info@gmedia.es",
+      "status": "sent"
+    },
+    {
+      "email": "info@bcm.marketing",
+      "status": "sent"
+    },
+    {
+      "email": "info@advertis.es",
+      "status": "sent"
+    },
+    {
+      "email": "info@comodoromarketing.es",
+      "status": "sent"
+    },
+    {
+      "email": "info@openinnova.es",
+      "status": "sent"
+    },
+    {
+      "email": "info@aliciazunzunegui.com",
+      "status": "sent"
+    }
+  ],
+  "verified_campaign": {
+    "date": "2026-04-12",
+    "results": [
+      {
+        "email": "hola@estrategikadigital.com",
+        "name": "Equipo Estrategika",
+        "status": "sent"
+      },
+      {
+        "email": "hola@internetrepublica.com",
+        "name": "Internet República",
+        "status": "sent"
+      },
+      {
+        "email": "info@topmadrid.com.es",
+        "name": "Equipo TopMadrid",
+        "status": "sent"
+      },
+      {
+        "email": "info@iomarketing.es",
+        "name": "Equipo IOMarketing",
+        "status": "sent"
+      },
+      {
+        "email": "info@budamarketing.es",
+        "name": "Equipo Buda",
+        "status": "sent"
+      },
+      {
+        "email": "hola@ad-do.com",
+        "name": "Equipo ADDO",
+        "status": "sent"
+      },
+      {
+        "email": "hello@gmedia.es",
+        "name": "Equipo Gmedia",
+        "status": "sent"
+      }
+    ]
+  },
+  "batch3": {
+    "date": "2026-04-12",
+    "results": [
+      {
+        "email": "info@optimoclick.com",
+        "status": "sent"
+      },
+      {
+        "email": "agencia@im.education",
+        "status": "sent"
+      },
+      {
+        "email": "agencia@kreaset.com",
+        "status": "sent"
+      },
+      {
+        "email": "info@digency.es",
+        "status": "sent"
+      },
+      {
+        "email": "hola@eyclick.com",
+        "status": "sent"
+      },
+      {
+        "email": "hello@n3xtwave.com",
+        "status": "sent"
+      }
+    ],
+    "total": 6
+  },
+  "total_sent": 12,
+  "batch4_html": {
+    "date": "2026-04-12",
+    "results": [
+      {
+        "email": "info@sortlist.es",
+        "status": "sent"
+      },
+      {
+        "email": "info@expiey.com",
+        "status": "sent"
+      },
+      {
+        "email": "info@openinnova.es",
+        "status": "sent"
+      },
+      {
+        "email": "info@comodoromarketing.es",
+        "status": "sent"
+      }
+    ],
+    "total": 4
+  },
+  "final_batch": {
+    "date": "2026-04-12",
+    "results": [
+      {
+        "email": "hola@internetrepublica.com",
+        "name": "Equipo Internet República",
+        "status": "sent"
+      },
+      {
+        "email": "info@topmadrid.com.es",
+        "name": "Equipo TopMadrid",
+        "status": "sent"
+      },
+      {
+        "email": "info@iomarketing.es",
+        "name": "Equipo IOMarketing",
+        "status": "sent"
+      },
+      {
+        "email": "info@budamarketing.es",
+        "name": "Equipo Buda Marketing",
+        "status": "sent"
+      },
+      {
+        "email": "hola@ad-do.com",
+        "name": "Equipo ADDO",
+        "status": "sent"
+      },
+      {
+        "email": "hello@gmedia.es",
+        "name": "Equipo Gmedia",
+        "status": "sent"
+      },
+      {
+        "email": "info@optimoclick.com",
+        "name": "Equipo Optimoclick",
+        "status": "sent"
+      },
+      {
+        "email": "agencia@im.education",
+        "name": "Equipo Tresce",
+        "status": "sent"
+      },
+      {
+        "email": "agencia@kreaset.com",
+        "name": "Equipo Kreaset",
+        "status": "sent"
+      },
+      {
+        "email": "info@digency.es",
+        "name": "Equipo Digency",
+        "status": "sent"
+      },
+      {
+        "email": "hola@eyclick.com",
+        "name": "Equipo EYClick",
+        "status": "sent"
+      },
+      {
+        "email": "hello@n3xtwave.com",
+        "name": "Equipo N3XTwave",
+        "status": "sent"
+      }
+    ],
+    "total_sent": 12
+  }
+}
