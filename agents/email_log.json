@@ -1,0 +1,42 @@
+[
+  {
+    "timestamp": "2026-04-07T00:05:45.851201",
+    "prospect": "Carlos Rodriguez",
+    "company": "TechStore MX",
+    "email_sent": true,
+    "personalization_score": 8,
+    "subject": "Reduciendo email marketing manual y abandonos de carrito en TechStore MX"
+  },
+  {
+    "timestamp": "2026-04-07T00:05:45.851673",
+    "prospect": "Maria Gonzalez",
+    "company": "Fashion Boutique",
+    "email_sent": true,
+    "personalization_score": 8,
+    "subject": "Reduciendo content creation para redes sociales en Fashion Boutique"
+  },
+  {
+    "timestamp": "2026-04-07T00:05:45.852725",
+    "prospect": "Juan Perez",
+    "company": "Health Supplements Co",
+    "email_sent": true,
+    "personalization_score": 8,
+    "subject": "Reduciendo customer support overwhelmed en Health Supplements Co"
+  },
+  {
+    "timestamp": "2026-04-07T00:05:45.853325",
+    "prospect": "Ana Martinez",
+    "company": "Home Decor Plus",
+    "email_sent": true,
+    "personalization_score": 8,
+    "subject": "Reduciendo product descriptions taking too long en Home Decor Plus"
+  },
+  {
+    "timestamp": "2026-04-07T00:05:45.854312",
+    "prospect": "Roberto Silva",
+    "company": "Sports Gear Online",
+    "email_sent": true,
+    "personalization_score": 8,
+    "subject": "Reduciendo competitor price monitoring manually en Sports Gear Online"
+  }
+]

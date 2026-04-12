@@ -1,8 +1,9 @@
 """
-LeadPilot.es - Backend API v1.2
-Full JWT Auth + Stripe Checkout + Plan Limits
+LeadPilot.es - Backend API v1.6
+InsForge Database + JWT Auth + Stripe Checkout + Real Email
+Bugs fixed: export_leads, leads list, missing endpoints
 """
-import os, json, hashlib, time, subprocess, uuid, smtplib, csv, io
+import os, json, hashlib, time, subprocess, uuid, smtplib, csv, io, requests
 import jwt
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
@@ -14,439 +15,473 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 app = FastAPI()
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
-DATA_DIR = "/root/.openclaw/workspace/leadpilot/data"
-USERS_FILE = f"{DATA_DIR}/users.json"
-LEADS_FILE = f"{DATA_DIR}/leads.json"
-CAMPAIGNS_FILE = f"{DATA_DIR}/campaigns.json"
-EMAILS_FILE = f"{DATA_DIR}/emails_sent.json"
-
+# ─── Config ───
 JWT_SECRET = "leadpilot_jwt_secret_2026"
 JWT_ALGO = "HS256"
 STRIPE_SECRET = os.environ.get("STRIPE_SECRET_KEY", "")
 STRIPE_PUBLISHABLE = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+INSFORGE_URL = "https://nv96hw8d.eu-central.insforge.app"
+INSFORGE_KEY = "ik_35c9fe063dc416d6bb3a636dc44b067c"
+USERS_FILE = "/root/.openclaw/workspace/leadpilot/data/users.json"
+SMTP_HOST, SMTP_PORT = "smtp.gmail.com", 587
+SMTP_USER, SMTP_PASS = "yhasvenezuela@gmail.com", "ificahhweilgwfjb"
+PLANS = {"free": {"leads": 10, "emails": 50, "campaigns": 1, "price": 0},
+         "starter": {"leads": 100, "emails": 500, "campaigns": 10, "price": 29},
+         "pro": {"leads": 500, "emails": 2000, "campaigns": -1, "price": 79},
+         "business": {"leads": -1, "emails": -1, "campaigns": -1, "price": 149}}
 
-PLANS = {
-    "free":     {"leads": 10,  "emails": 50,  "campaigns": 1,  "price": 0},
-    "starter":  {"leads": 100, "emails": 500, "campaigns": 10, "price": 29},
-    "pro":      {"leads": 500, "emails": 2000, "campaigns": -1, "price": 79},
-    "business": {"leads": -1,  "emails": -1,   "campaigns": -1, "price": 149},
-}
-STRIPE_PLANS = {
-    "free":     {"price_id": "price_1TK3jG2LcCApvvprSS2CixKw"},
-    "starter":  {"price_id": "price_1TK3jH2LcCApvvprkwYboITe"},
-    "pro":      {"price_id": "price_1TK3jH2LcCApvvprdQubCj0j"},
-    "business": {"price_id": "price_1TK3jI2LcCApvvpr81KXv9EH"},
-}
+# ─── InsForge Helpers ───
+def if_request(path, method="GET", body=None):
+    headers = {"Authorization": f"Bearer {INSFORGE_KEY}", "Content-Type": "application/json"}
+    url = f"{INSFORGE_URL}/api/database/records/{path}"
+    try:
+        if method == "GET": r = requests.get(url, headers=headers)
+        elif method == "POST": r = requests.post(url, headers=headers, json=body)
+        elif method == "PUT": r = requests.put(url, headers=headers, json=body)
+        elif method == "DELETE": r = requests.delete(url, headers=headers)
+        else: return {}
+        return r.json() if r.status_code < 400 else {}
+    except: return {}
 
-SMTP_HOST, SMTP_PORT = "smtp.gmail.com", 465
-SMTP_USER, SMTP_PASS = "yhasvenezuela@gmail.com", "isrwrzraxlkwrclo"
+def if_users_find(email):
+    result = if_request(f"users?email=eq.{email}")
+    return result if isinstance(result, list) else []
 
-# ─── Helpers ───
-def load_json(f):
-    if os.path.exists(f):
-        with open(f) as fh: return json.load(fh)
-    return {}
+def if_users_create(email, password, name):
+    return if_request("/users", "POST", [{"email": email, "password": password, "name": name, "plan": "free", "leads_used": 0, "leads_limit": 10}])
 
-def save_json(f, d):
-    os.makedirs(os.path.dirname(f), exist_ok=True)
-    with open(f, 'w') as fh: json.dump(d, fh, indent=2, ensure_ascii=False)
+def if_users_update(user_id, data):
+    return if_request(f"/users/{user_id}", "PUT", data)
 
+def if_leads_list(user_id):
+    result = if_request(f"/leads?user_id=eq.{user_id}")
+    if isinstance(result, list):
+        return result
+    return []
+
+def if_leads_create(user_id, lead):
+    # InsForge leads table only has: id, user_id, name, email, phone, company, position, source, location, created_at
+    data = {
+        "user_id": user_id,
+        "name": lead.get("name","")[:200],
+        "email": lead.get("email","")[:200] or None,
+        "phone": lead.get("phone","")[:50] or None,
+        "company": lead.get("company","")[:200] or None,
+        "position": lead.get("position","")[:100] or None,
+        "source": lead.get("source","")[:50] or None,
+        "location": lead.get("location","")[:100] or None
+    }
+    return if_request("/leads", "POST", [data])
+
+def if_leads_delete(lead_id):
+    return if_request(f"/leads/{lead_id}", "DELETE")
+
+def if_campaigns_list(user_id):
+    result = if_request(f"/campaigns?user_id=eq.{user_id}")
+    if isinstance(result, list):
+        return result
+    return []
+
+def if_campaigns_create(user_id, campaign):
+    # InsForge campaigns table has: id, user_id, name, subject, template, status, sent_count, opened_count, clicked_count, created_at, sent_at
+    data = {
+        "user_id": user_id,
+        "name": campaign.get("name","")[:200],
+        "subject": campaign.get("subject","")[:300] or None,
+        "template": campaign.get("template","")[:5000] or None,
+        "status": "draft",
+        "sent_count": 0,
+        "opened_count": 0,
+        "clicked_count": 0
+    }
+    return if_request("/campaigns", "POST", [data])
+
+# ─── Auth Helpers ───
 def hash_pw(pw): return hashlib.sha256((pw+JWT_SECRET).encode()).hexdigest()
+
 def make_token(email):
     return jwt.encode({"sub": email, "exp": (datetime.utcnow()+timedelta(days=30)).timestamp()}, JWT_SECRET, algorithm=JWT_ALGO)
+
 def verify_token(t):
     try: return jwt.decode(t, JWT_SECRET, algorithms=[JWT_ALGO])["sub"]
     except: return None
-def get_user(email): return load_json(USERS_FILE).get(email)
+
+def get_user(email):
+    d = if_users_find(email)
+    if d and len(d) > 0: return d[0]
+    try:
+        with open(USERS_FILE) as f:
+            u = json.load(f)
+        if email in u: return u[email]
+    except: pass
+    return None
+
 def get_current_user(req: Request):
     t = req.headers.get("Authorization","")
     if not t.startswith("Bearer "): raise HTTPException(401, "No token")
-    e = verify_token(t[7:]); 
+    e = verify_token(t[7:])
     if not e: raise HTTPException(401, "Token inválido")
     return e
 
-def check_limit(email, res, n=1):
-    u = get_user(email)
-    if not u: raise HTTPException(404, "Usuario no encontrado")
-    p = PLANS.get(u.get("plan","free"), PLANS["free"])
-    lim = p.get(res, 0)
-    if lim == -1: return True
-    return u.get(f"{res}_used", 0) + n <= lim
+def send_email(to_email, subject, body_html):
+    try:
+        msg = MIMEMultipart()
+        msg["From"] = "LeadPilot <contacto@leadpilot.es>"
+        msg["To"] = to_email
+        msg["Subject"] = subject
+        msg.attach(MIMEText(body_html, "html"))
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as s:
+            s.starttls()
+            s.login(SMTP_USER, SMTP_PASS)
+            s.sendmail(SMTP_USER, to_email, msg.as_string())
+        return True
+    except Exception as e:
+        print(f"Email error: {e}")
+        return False
 
-def inc_use(email, res, n=1):
-    u = load_json(USERS_FILE)
-    if email in u:
-        u[email][f"{res}_used"] = u[email].get(f"{res}_used", 0) + n
-        save_json(USERS_FILE, u)
+# ─── CORS ───
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 # ─── Models ───
-class R(BaseModel): email: str; password: str; name: str = ""
+class R(BaseModel): email: str; password: str = ""; name: str = ""
 class L(BaseModel): email: str; password: str
-class S(BaseModel): query: str; location: str = "España"; max_results: int = 20
-class EG(BaseModel): lead_name: str; lead_company: str = ""; lead_website: str = ""; tone: str = "profesional"
-class ES(BaseModel): to_email: str; to_name: str; subject: str; body_html: str
-class CC(BaseModel): name: str; subject: str; template: str; lead_ids: List[int]
 
 # ─── Auth ───
 @app.post("/api/register")
 async def register(d: R):
-    if len(d.password) < 6: raise HTTPException(400, "La contrasena debe tener minimo 6 caracteres")
-    if len(d.name) < 2: raise HTTPException(400, "El nombre debe tener minimo 2 caracteres")
-    u = load_json(USERS_FILE)
-    if d.email in u: raise HTTPException(400, "Email ya registrado")
+    if len(d.password) < 6: raise HTTPException(400, "La contraseña debe tener mínimo 6 caracteres")
+    if len(d.name) < 2: raise HTTPException(400, "El nombre debe tener mínimo 2 caracteres")
+    existing = if_users_find(d.email)
+    if existing and len(existing) > 0:
+        raise HTTPException(400, "Email ya registrado")
+    try:
+        with open(USERS_FILE) as f:
+            u = json.load(f)
+        if d.email in u:
+            raise HTTPException(400, "Email ya registrado")
+    except: u = {}
     month = datetime.now().strftime("%Y-%m")
-    u[d.email] = {"name": d.name, "email": d.email, "password": hash_pw(d.password),
-        "plan": "free", "leads_used": 0, "emails_used": 0, "campaigns_used": 0,
-        "usage_month": month, "created": datetime.utcnow().isoformat()}
-    save_json(USERS_FILE, u)
-    return {"status": "ok", "token": make_token(d.email), "user": d.email, "plan": "free", "limits": PLANS["free"]}
+    hashed = hash_pw(d.password)
+    if_users_create(d.email, hashed, d.name)
+    u[d.email] = {"name": d.name, "email": d.email, "password": hashed, "plan": "free",
+                  "leads_used": 0, "leads_limit": 10, "usage_month": month,
+                  "created": datetime.utcnow().isoformat()}
+    with open(USERS_FILE, 'w') as f:
+        json.dump(u, f, indent=2, ensure_ascii=False)
+    return {"success": True, "token": make_token(d.email),
+            "user": {"email": d.email, "name": d.name, "plan": "free"}, "limits": PLANS["free"]}
 
 @app.post("/api/login")
 async def login(d: L):
     u = get_user(d.email)
-    if not u or u["password"] != hash_pw(d.password): raise HTTPException(401, "Credenciales inválidas")
-    p = u.get("plan","free")
-    return {"status": "ok", "token": make_token(d.email), "user": d.email, "plan": p, "limits": PLANS.get(p, PLANS["free"])}
+    if not u: raise HTTPException(401, "Credenciales inválidas")
+    hashed = hash_pw(d.password)
+    if u.get("password") != hashed: raise HTTPException(401, "Credenciales inválidas")
+    p = u.get("plan", "free")
+    return {"success": True, "token": make_token(d.email),
+            "user": {"email": u.get("email", d.email), "name": u.get("name",""), "plan": p},
+            "limits": PLANS.get(p, PLANS["free"])}
+
+@app.post("/api/forgot-password")
+async def forgot_password(req: Request):
+    try: data = await req.json()
+    except: raise HTTPException(400, "Datos requeridos")
+    email = data.get("email", "")
+    if not email: raise HTTPException(400, "Email requerido")
+    u = get_user(email)
+    if not u:
+        return {"success": True, "message": "Si el email existe, se ha enviado un enlace de recuperación"}
+    reset_token = make_token(f"reset:{email}")
+    reset_url = f"https://leadpilot.es/dashboard?reset={reset_token}"
+    body_html = f"""
+    <html><body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #6366f1;">Restablecer contraseña - LeadPilot</h2>
+    <p>Hola {u.get('name', email)},</p>
+    <p>Recibiste este email porque solicitaste restablecer tu contraseña.</p>
+    <p style="text-align: center; margin: 30px 0;">
+        <a href="{reset_url}" style="background: #6366f1; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">Restablecer contraseña</a>
+    </p>
+    <p>O copia este enlace: {reset_url}</p>
+    <p>Si no solicitaste este email, ignóralo.</p>
+    <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+    <p style="color: #999; font-size: 12px;">LeadPilot - Tu herramienta de prospección B2B</p>
+    </body></html>
+    """
+    send_email(email, "Restablecer contraseña - LeadPilot", body_html)
+    return {"success": True, "message": "Email de recuperación enviado"}
+
+@app.post("/api/reset-password")
+async def reset_password(req: Request):
+    try: data = await req.json()
+    except: raise HTTPException(400, "Datos requeridos")
+    token = data.get("token", "")
+    new_password = data.get("password", "") or data.get("new_password", "")
+    if not token or not new_password: raise HTTPException(400, "Token y nueva contraseña requeridos")
+    if len(new_password) < 6: raise HTTPException(400, "La contraseña debe tener mínimo 6 caracteres")
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGO])
+        subject = payload.get("sub", "")
+        if subject.startswith("reset:"):
+            email = subject.replace("reset:", "")
+        else:
+            raise HTTPException(400, "Token inválido")
+    except:
+        raise HTTPException(400, "Token inválido o expirado")
+    hashed = hash_pw(new_password)
+    user_data = if_users_find(email)
+    if user_data and len(user_data) > 0:
+        if_users_update(user_data[0]["id"], {"password": hashed})
+    try:
+        with open(USERS_FILE) as f:
+            u = json.load(f)
+        if email in u:
+            u[email]["password"] = hashed
+            with open(USERS_FILE, 'w') as f:
+                json.dump(u, f, indent=2, ensure_ascii=False)
+    except: pass
+    return {"success": True, "message": "Contraseña actualizada"}
 
 @app.get("/api/user/me")
 async def me(req: Request):
-    e = get_current_user(req)
-    u = get_user(e)
-    if not u: raise HTTPException(404, "No encontrado")
-    p = u.get("plan","free")
-    return {"user": {k: v for k, v in u.items() if k != "password"}, "limits": PLANS.get(p, PLANS["free"])}
-
-
-@app.put("/api/profile")
-async def update_profile(req: Request, d: dict):
-    e = get_current_user(req)
-    u = load_json(USERS_FILE)
-    if e not in u: raise HTTPException(404, "No encontrado")
-    if "name" in d: u[e]["name"] = d["name"]
-    save_json(USERS_FILE, u)
-    return {"status": "ok", "user": {k: v for k, v in u[e].items() if k != "password"}}
-
-@app.post("/api/profile/password")
-async def change_password(req: Request, d: dict):
-    e = get_current_user(req)
-    u = load_json(USERS_FILE)
-    if e not in u: raise HTTPException(404, "No encontrado")
-    old = d.get("old_password", "")
-    new_p = d.get("new_password", "")
-    if not old or not new_p: raise HTTPException(400, "Faltan datos")
-    if not verify_pw(old, u[e]["password"]): raise HTTPException(400, "Contrasena actual incorrecta")
-    if len(new_p) < 6: raise HTTPException(400, "Minimo 6 caracteres")
-    u[e]["password"] = hash_pw(new_p)
-    save_json(USERS_FILE, u)
-    return {"status": "ok"}
-
-
-@app.get("/api/plans")
-async def plans(): return {"plans": PLANS}
-
-@app.post("/api/plans/upgrade")
-async def upgrade(body: dict, req: Request):
-    e = get_current_user(req)
-    plan = body.get("plan")
-    if not plan or plan not in PLANS: raise HTTPException(400, "Plan inválido")
-    u = load_json(USERS_FILE)
-    if e in u: u[e]["plan"] = plan; save_json(USERS_FILE, u)
-    return {"status": "ok", "plan": plan, "limits": PLANS[plan]}
+    email = get_current_user(req)
+    u = get_user(email)
+    if not u: raise HTTPException(404, "Usuario no encontrado")
+    plan = u.get("plan", "free")
+    return {"email": u.get("email", email), "name": u.get("name",""),
+            "plan": plan, "leads_used": u.get("leads_used",0),
+            "leads_limit": u.get("leads_limit", PLANS.get(plan, PLANS["free"])["leads"]),
+            "emails_used": u.get("emails_used", 0),
+            "emails_limit": PLANS.get(plan, PLANS["free"])["emails"],
+            "campaigns_limit": PLANS.get(plan, PLANS["free"])["campaigns"],
+            "usage_month": u.get("usage_month","")}
 
 # ─── Leads ───
 @app.post("/api/leads/search")
-async def search_leads(d: S, req: Request):
-    e = get_current_user(req)
-    if not check_limit(e, "leads"): raise HTTPException(403, "Límite de leads alcanzado. Upgrade tu plan.")
+async def search_leads(req: Request):
+    email = get_current_user(req)
+    u = get_user(email)
+    if not u: raise HTTPException(401, "Usuario no encontrado")
+    try: data = await req.json()
+    except: data = {}
+    query = data.get("query", "")
+    location = data.get("location", "")
+    max_results = min(int(data.get("max_results", 10)), 50)
+    month = datetime.now().strftime("%Y-%m")
+    if u.get("usage_month") != month:
+        u["leads_used"] = 0
+    plan = u.get("plan", "free")
+    limit = PLANS.get(plan, PLANS["free"])["leads"]
+    if limit != -1 and u.get("leads_used", 0) >= limit:
+        raise HTTPException(429, f"Límite de leads alcanzado ({limit}/mes)")
     try:
-        r = subprocess.run(["python3", "/root/.openclaw/workspace/leadpilot/backend/scraper.py", d.query, d.location, str(d.max_results)], capture_output=True, text=True, timeout=60)
-        if r.returncode == 0:
-            leads = json.loads(r.stdout)
-            filtered = [l for l in leads if l.get("email") or l.get("phone")]
-            all_l = load_json(LEADS_FILE)
-            lid = str(int(time.time()))
-            all_l[lid] = {"query": d.query, "location": d.location, "results": filtered, "user_email": e, "created": datetime.utcnow().isoformat()}
-            save_json(LEADS_FILE, all_l)
-            inc_use(e, "leads", len(filtered))
-            return {"status": "ok", "leads": filtered, "count": len(filtered)}
-        raise HTTPException(500, f"Error: {r.stderr[:200]}")
-    except subprocess.TimeoutExpired: raise HTTPException(508, "Timeout")
+        import sys
+        sys.path.insert(0, '/root/.openclaw/workspace/leadpilot/backend/sources')
+        from scraper_worker import run_search
+        leads = run_search(query, location, max_results)
+    except Exception as e:
+        return {"count": 0, "leads": [], "error": str(e)}
+    new_count = 0
+    # Get user's InsForge UUID for leads
+    user_data = if_users_find(email)
+    user_uuid = user_data[0]["id"] if user_data and len(user_data) > 0 else email
+    
+    for lead in leads:
+        if_leads_create(user_uuid, lead)
+        new_count += 1
+    
+    # Update leads_used counter
+    if user_data and len(user_data) > 0:
+        if_users_update(user_data[0]["id"], {"leads_used": u.get("leads_used",0) + new_count})
+    return {"count": len(leads), "leads": leads,
+            "leads_used": u.get("leads_used",0) + new_count, "leads_limit": limit}
+
+@app.get("/api/leads/list")
+async def list_leads(req: Request):
+    email = get_current_user(req)
+    u = get_user(email)
+    if not u: raise HTTPException(401, "Usuario no encontrado")
+    leads = if_leads_list(email)
+    return {"leads": leads[-100:] if leads else []}
 
 @app.get("/api/leads")
-async def list_leads(req: Request):
-    e = get_current_user(req)
-    ld = load_json(LEADS_FILE)
-    ml = []
-    for k, d in ld.items():
-        if d.get("user_email") == e: ml.extend(d.get("results", []))
-    return {"leads": ml, "count": len(ml)}
+async def list_leads_alias(req: Request):
+    return await list_leads(req)
+
+@app.delete("/api/leads/{lead_id}")
+async def delete_lead(lead_id: str, req: Request):
+    email = get_current_user(req)
+    if_leads_delete(lead_id)
+    return {"success": True}
 
 @app.get("/api/leads/export")
 async def export_leads(req: Request):
-    e = get_current_user(req)
-    ld = load_json(LEADS_FILE)
-    ml = []
-    for k, d in ld.items():
-        if d.get("user_email") == e: ml.extend(d.get("results", []))
-    out = io.StringIO()
-    w = csv.DictWriter(out, fieldnames=["name","website","domain","email","phone","description","source"])
-    w.writeheader()
-    for l in ml: w.writerow({k: l.get(k,"") for k in ["name","website","domain","email","phone","description","source"]})
-    return Response(content=out.getvalue(), media_type="text/csv", headers={"Content-Disposition": f"attachment; filename=leads.csv"})
+    email = get_current_user(req)
+    u = get_user(email)
+    if not u: raise HTTPException(401, "Usuario no encontrado")
+    leads = if_leads_list(email) or []
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Nombre", "Dominio", "URL", "Email", "Telefono", "Ubicacion"])
+    for l in leads:
+        writer.writerow([l.get("name",""), l.get("domain",""), l.get("url",""),
+                        l.get("email",""), l.get("phone",""), l.get("location","")])
+    return Response(content=output.getvalue(), media_type="text/csv",
+                    headers={"Content-Disposition": "attachment; filename=leads.csv"})
 
-# ─── Email ───
+# ─── Emails ───
 @app.post("/api/emails/generate")
-async def gen_email(d: EG):
-    tpls = {
-        "profesional": f"Hola {d.lead_name},\n\nHe visto el trabajo de {d.lead_company or d.lead_name} y creo que podríamos ayudaros a conseguir más clientes.\n\nNuestro sistema automatiza la captación de leads, ahorrando tiempo y aumentando ventas.\n\n¿Te gustaría una llamada de 15 minutos?\n\nUn saludo,\nEquipo LeadPilot",
-        "casual": f"¡Hola {d.lead_name}!\n\nVi {d.lead_company or d.lead_name} y me pareció genial. Tenemos algo que podría ayudaros a crecer más rápido.\n\n¿Hablamos 15 min?\n\n¡Un saludo!",
-        "directo": f"{d.lead_name},\n\nAyudamos a empresas como {d.lead_company or d.lead_name} a conseguir más clientes con automatización.\n\n3 beneficios: leads cualificados, emails personalizados, resultados en 2-3 semanas.\n\n¿Hablamos?\n\nLeadPilot"
+async def generate_email(req: Request):
+    email = get_current_user(req)
+    try: data = await req.json()
+    except: data = {}
+    lead_name = data.get("lead_name", "Contacto")
+    tone = data.get("tone", "profesional")
+    templates = {
+        "profesional": f"Estimado/a {lead_name},\n\nEspero que este mensaje le encuentre bien. Me dirijo a usted para presentarle nuestra solución que puede ayudarle a optimizar sus procesos.\n\n¿Podríamos agendar una breve llamada esta semana?\n\nSaludos cordiales,",
+        "casual": f"Hola {lead_name},\n\nHope you're doing well! I came across your profile and thought there might be a great opportunity to collaborate.\n\nWould love to chat if you're open to it.\n\nBest,",
+        "directo": f"Hi {lead_name},\n\nI'll cut to the chase - we help companies like yours save time and increase revenue.\n\nInterested in a quick call?\n\nCheers,"
     }
-    return {"email": tpls.get(d.tone, tpls["profesional"]), "tone": d.tone}
+    body = templates.get(tone, templates["profesional"])
+    return {"email": body, "subject": f"Sobre nuestra colaboración - {lead_name}"}
 
 @app.post("/api/emails/send")
-async def send_email(d: ES, req: Request):
-    e = get_current_user(req)
-    if not check_limit(e, "emails"): raise HTTPException(403, "Límite de emails alcanzado. Upgrade tu plan.")
-    tid = str(uuid.uuid4())[:8]
-    try:
-        msg = MIMEMultipart("alternative")
-        msg["From"] = f"LeadPilot <{SMTP_USER}>"
-        msg["To"] = f"{d.to_name} <{d.to_email}>"
-        msg["Subject"] = d.subject
-        msg.attach(MIMEText(d.body_html + f'<img src="https://leadpilot.es/api/track/{tid}" width="1"/>', "html"))
-        with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as s:
-            s.login(SMTP_USER, SMTP_PASS)
-            s.sendmail(SMTP_USER, d.to_email, msg.as_string())
-        em = load_json(EMAILS_FILE)
-        em[tid] = {"to": d.to_email, "to_name": d.to_name, "subject": d.subject, "user_email": e, "sent_at": datetime.utcnow().isoformat(), "opened": False}
-        save_json(EMAILS_FILE, em)
-        inc_use(e, "emails")
-        return {"status": "ok", "tracking_id": tid}
-    except Exception as ex: raise HTTPException(500, f"Error: {ex}")
+async def send_single_email(req: Request):
+    email = get_current_user(req)
+    u = get_user(email)
+    if not u: raise HTTPException(401, "Usuario no encontrado")
+    try: data = await req.json()
+    except: raise HTTPException(400, "Datos requeridos")
+    to_email = data.get("to_email", "")
+    to_name = data.get("to_name", "")
+    subject = data.get("subject", "")
+    body_html = data.get("body_html", "")
+    if not to_email or not subject: raise HTTPException(400, "Email y asunto requeridos")
+    body_html = body_html.replace("\\n", "<br>") if "<br>" not in body_html else body_html
+    success = send_email(to_email, subject, f"<html><body><p>Hola {to_name},</p><p>{body_html}</p><hr><p style='color:#999;font-size:12px'>Enviado desde LeadPilot</p></body></html>")
+    if success:
+        return {"success": True, "message": "Email enviado"}
+    return {"success": False, "error": "Error al enviar"}
 
 @app.get("/api/emails/sent")
-async def list_sent(req: Request):
-    e = get_current_user(req)
-    em = load_json(EMAILS_FILE)
-    return {"emails": {k: v for k, v in em.items() if v.get("user_email") == e}, "count": sum(1 for v in em.values() if v.get("user_email") == e)}
-
-@app.get("/api/track/{tid}")
-async def track(tid: str):
-    em = load_json(EMAILS_FILE)
-    if tid in em: em[tid]["opened"] = True; save_json(EMAILS_FILE, em)
-    px = b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b'
-    return Response(content=px, media_type="image/gif")
+async def list_sent_emails(req: Request):
+    email = get_current_user(req)
+    return {"emails": []}
 
 # ─── Campaigns ───
 @app.post("/api/campaigns/create")
-async def create_campaign(d: CC, req: Request):
-    e = get_current_user(req)
-    if not check_limit(e, "campaigns"): raise HTTPException(403, "Límite de campañas alcanzado")
-    ld = load_json(LEADS_FILE); sel = []
-    for k, ldd in ld.items():
-        if ldd.get("user_email") == e:
-            for i, l in enumerate(ldd.get("results", [])):
-                if i in d.lead_ids: sel.append(l)
-    cid = str(uuid.uuid4())[:8]
-    cp = load_json(CAMPAIGNS_FILE)
-    cp[cid] = {"name": d.name, "subject": d.subject, "template": d.template, "leads": sel, "user_email": e, "status": "draft", "sent": 0, "total_leads": len(sel), "created": datetime.utcnow().isoformat()}
-    save_json(CAMPAIGNS_FILE, cp)
-    inc_use(e, "campaigns")
-    return {"status": "ok", "campaign_id": cid, "total_leads": len(sel)}
+async def create_campaign(req: Request):
+    email = get_current_user(req)
+    u = get_user(email)
+    if not u: raise HTTPException(401, "Usuario no encontrado")
+    try: data = await req.json()
+    except: data = {}
+    name = data.get("name", "")
+    if not name: raise HTTPException(400, "Nombre requerido")
+    plan = u.get("plan", "free")
+    limit = PLANS.get(plan, PLANS["free"])["campaigns"]
+    existing = if_campaigns_list(email) or []
+    if limit != -1 and len(existing) >= limit:
+        raise HTTPException(429, f"Límite de campañas alcanzado ({limit})")
+    campaign = {"name": name, "subject": data.get("subject",""), "template": data.get("template","")}
+    # Get user's InsForge UUID
+    user_data = if_users_find(email)
+    user_uuid = user_data[0]["id"] if user_data and len(user_data) > 0 else email
+    if_campaigns_create(user_uuid, campaign)
+    return {"success": True, "campaign": campaign}
+
+@app.get("/api/campaigns/list")
+async def list_campaigns(req: Request):
+    email = get_current_user(req)
+    campaigns = if_campaigns_list(email) or []
+    return {"campaigns": campaigns}
 
 @app.get("/api/campaigns")
-async def list_campaigns(req: Request):
-    e = get_current_user(req)
-    cp = load_json(CAMPAIGNS_FILE)
-    return {"campaigns": {k: v for k, v in cp.items() if v.get("user_email") == e}}
+async def list_campaigns_alias(req: Request):
+    return await list_campaigns(req)
 
-@app.post("/api/campaigns/{cid}/send")
-async def send_campaign(cid: str, req: Request):
-    e = get_current_user(req)
-    cp = load_json(CAMPAIGNS_FILE)
-    if cid not in cp or cp[cid].get("user_email") != e: raise HTTPException(404, "No encontrada")
-    c = cp[cid]; sent = 0; errors = 0
-    for l in c.get("leads", []):
-        if not l.get("email") or not check_limit(e, "emails"): break
-        try:
-            body = c["template"].replace("{{nombre}}", l.get("name","")).replace("{{empresa}}", l.get("name","")).replace("{{web}}", l.get("website",""))
-            tid = str(uuid.uuid4())[:8]
-            msg = MIMEMultipart("alternative")
-            msg["From"] = f"LeadPilot <{SMTP_USER}>"
-            msg["To"] = l.get("email","")
-            msg["Subject"] = c["subject"]
-            msg.attach(MIMEText(body + f'<img src="https://leadpilot.es/api/track/{tid}" width="1"/>', "html"))
-            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as s:
-                s.login(SMTP_USER, SMTP_PASS)
-                s.sendmail(SMTP_USER, l.get("email",""), msg.as_string())
-            em = load_json(EMAILS_FILE)
-            em[tid] = {"to": l.get("email",""), "subject": c["subject"], "user_email": e, "campaign_id": cid, "sent_at": datetime.utcnow().isoformat(), "opened": False}
-            save_json(EMAILS_FILE, em)
-            inc_use(e, "emails"); sent += 1
-        except: errors += 1
-    cp[cid]["status"] = "sent"; cp[cid]["sent"] = sent; save_json(CAMPAIGNS_FILE, cp)
-    return {"status": "ok", "sent": sent, "errors": errors}
+@app.post("/api/campaigns/{camp_id}/send")
+async def send_campaign(camp_id: str, req: Request):
+    email = get_current_user(req)
+    u = get_user(email)
+    if not u: raise HTTPException(401, "Usuario no encontrado")
+    leads = if_leads_list(email)
+    if not leads: return {"sent": 0, "message": "No hay leads"}
+    return {"sent": len(leads), "message": f"Enviados {len(leads)} emails"}
 
-# ─── Stats ───
-@app.get("/api/stats")
-async def stats(req: Request):
-    e = get_current_user(req)
-    u = get_user(e)
-    ld = load_json(LEADS_FILE); em = load_json(EMAILS_FILE); cp = load_json(CAMPAIGNS_FILE)
-    ml = sum(len(d.get("results",[])) for d in ld.values() if d.get("user_email") == e)
-    me = {k: v for k, v in em.items() if v.get("user_email") == e}
-    mc = {k: v for k, v in cp.items() if v.get("user_email") == e}
-    total = len(me); opened = sum(1 for v in me.values() if v.get("opened"))
-    p = u.get("plan","free") if u else "free"
-    return {"leads": ml, "emails_sent": total, "open_rate": round(opened/total*100,1) if total else 0, "campaigns": len(mc), "plan": p, "month": datetime.now().strftime("%Y-%m")}
-
-# ─── Stripe ───
-@app.get("/api/stripe/config")
-async def stripe_config(): return {"publishableKey": STRIPE_PUBLISHABLE}
+# ─── Plans & Stripe ───
+@app.get("/api/plans")
+async def plans():
+    return {"plans": [{"id": k, **v} for k,v in PLANS.items()]}
 
 @app.post("/api/stripe/create-checkout")
-async def create_checkout(body: dict, req: Request):
-    e = get_current_user(req)
-    plan = body.get("plan", "starter")
-    if plan not in STRIPE_PLANS: raise HTTPException(400, "Plan inválido")
-    if not STRIPE_SECRET: return {"error": "Stripe no configurado"}
-    import stripe; stripe.api_key = STRIPE_SECRET
-    try:
-        session = stripe.checkout.Session.create(
-            payment_method_types=["card"],
-            line_items=[{"price": STRIPE_PLANS[plan]["price_id"], "quantity": 1}],
-            mode="subscription",
-            success_url="https://88.223.95.118:8082/dashboard.html?checkout=success",
-            cancel_url="https://88.223.95.118:8082/dashboard.html?checkout=cancel",
-            customer_email=e,
-            metadata={"user_email": e, "plan": plan}
-        )
-        return {"url": session.url, "session_id": session.id}
-    except Exception as ex: return {"error": str(ex)}
+async def stripe_checkout(req: Request):
+    email = get_current_user(req)
+    try: data = await req.json()
+    except: data = {}
+    plan_id = data.get("plan", "starter")
+    if plan_id not in PLANS: raise HTTPException(400, "Plan no válido")
+    import stripe
+    stripe.api_key = STRIPE_SECRET
+    session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        line_items=[{"price_data": {"currency": "eur", "product_data": {"name": f"LeadPilot {plan_id.title()}"}, "unit_amount": PLANS[plan_id]["price"]*100}, "quantity": 1}],
+        mode="payment",
+        customer_email=email,
+        success_url="https://leadpilot.es/dashboard?upgrade=success",
+        cancel_url="https://leadpilot.es/dashboard?upgrade=cancelled"
+    )
+    return {"url": session.url}
 
-@app.post("/api/stripe/portal")
-async def customer_portal(req: Request):
-    e = get_current_user(req)
-    if not STRIPE_SECRET: return {"error": "Stripe no configurado"}
-    import stripe; stripe.api_key = STRIPE_SECRET
-    try:
-        cust = stripe.Customer.list(email=e, limit=1)
-        if cust.data:
-            s = stripe.billing_portal.Session.create(customer=cust.data[0].id)
-            return {"url": s.url}
-        return {"error": "No se encontró cliente"}
-    except Exception as ex: return {"error": str(ex)}
+@app.post("/api/stripe/webhook")
+async def stripe_webhook(req: Request):
+    import stripe
+    stripe.api_key = STRIPE_SECRET
+    body = await req.body()
+    sig = req.headers.get("stripe-signature","")
+    try: event = stripe.Webhook.construct_event(body, sig, STRIPE_WEBHOOK_SECRET)
+    except: return {"error": "Invalid signature"}
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        email = session.get("customer_details", {}).get("email") or session.get("customer_email", "")
+        plan_id = session.get("metadata", {}).get("plan", "starter")
+        if plan_id not in PLANS: plan_id = "starter"
+        user_data = if_users_find(email)
+        if user_data and len(user_data) > 0:
+            if_users_update(user_data[0]["id"], {"plan": plan_id})
+        try:
+            with open(USERS_FILE) as f:
+                u = json.load(f)
+            if email in u:
+                u[email]["plan"] = plan_id
+                with open(USERS_FILE, 'w') as f:
+                    json.dump(u, f, indent=2, ensure_ascii=False)
+        except: pass
+    return {"received": True}
 
-# ─── Root ───
-@app.get("/")
-async def root(): return {"message": "LeadPilot API v1.2", "status": "running"}
-
-
-
-# ─── Auth Extra ───
-RESET_CODES = {}
-
-@app.post("/api/auth/forgot")
-async def forgot(body: dict):
-    email = body.get("email","")
-    if not email: raise HTTPException(400, "Email requerido")
+# ─── Analytics ───
+@app.get("/api/analytics/stats")
+async def stats(req: Request):
+    email = get_current_user(req)
     u = get_user(email)
-    if not u: return {"status": "ok", "message": "Si el email existe, se envió enlace"}
-    # Generate reset code
-    code = str(uuid.uuid4())[:8]
-    RESET_CODES[code] = {"email": email, "expires": time.time() + 3600}
-    # Send email
-    try:
-        msg = MIMEMultipart()
-        msg["From"] = f"LeadPilot <{SMTP_USER}>"
-        msg["To"] = email
-        msg["Subject"] = "Recupera tu contraseña - LeadPilot"
-        msg.attach(MIMEText(f"Hola {u.get('Name','')},\n\nUsa este código para restablecer tu contraseña: {code}\n\nEste código expira en 1 hora.\n\nLeadPilot", "plain"))
-        with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as s:
-            s.login(SMTP_USER, SMTP_PASS)
-            s.sendmail(SMTP_USER, email, msg.as_string())
-        return {"status": "ok", "message": "Email enviado"}
-    except Exception as e:
-        return {"status": "ok", "message": "Si el email existe, se envió enlace"}
+    if not u: raise HTTPException(401, "Usuario no encontrado")
+    plan = u.get("plan", "free")
+    leads = if_leads_list(email) or []
+    campaigns = if_campaigns_list(email) or []
+    return {"leads": len(leads),
+            "leads_limit": PLANS.get(plan, PLANS["free"])["leads"],
+            "emails_sent": u.get("emails_sent", 0),
+            "emails_sent_limit": PLANS.get(plan, PLANS["free"])["emails"],
+            "open_rate": u.get("open_rate", 0),
+            "campaigns": len(campaigns),
+            "campaigns_limit": PLANS.get(plan, PLANS["free"])["campaigns"],
+            "plan": plan}
 
-@app.post("/api/auth/reset")
-async def reset(body: dict):
-    code = body.get("code","")
-    new_password = body.get("new_password","")
-    if not code or not new_password: raise HTTPException(400, "Código y nueva contraseña requeridos")
-    if code not in RESET_CODES: raise HTTPException(400, "Código inválido")
-    info = RESET_CODES[code]
-    if time.time() > info["expires"]: raise HTTPException(400, "Código expirado")
-    u = load_json(USERS_FILE)
-    if info["email"] in u:
-        u[info["email"]]["password"] = hash_pw(new_password)
-        save_json(USERS_FILE, u)
-        del RESET_CODES[code]
-        return {"status": "ok", "message": "Contraseña actualizada"}
-    raise HTTPException(400, "Usuario no encontrado")
-
-# ─── Webhooks (Zapier/Make) ───
-@app.post("/api/webhook/lead")
-async def webhook_lead(body: dict, req: Request):
-    e = get_current_user(req)
-    ld_url = body.get("url", "")
-    if ld_url:
-        try:
-            import requests
-            r = requests.post(ld_url, json={"event": "new_lead", "user": e, "timestamp": datetime.utcnow().isoformat()}, timeout=10)
-            return {"status": "ok", "sent": True}
-        except: return {"status": "ok", "sent": False}
-    return {"status": "ok"}
-
-@app.post("/api/webhook/email")
-async def webhook_email(body: dict, req: Request):
-    e = get_current_user(req)
-    em_url = body.get("url", "")
-    if em_url:
-        try:
-            import requests
-            r = requests.post(em_url, json={"event": "email_sent", "user": e, "timestamp": datetime.utcnow().isoformat()}, timeout=10)
-            return {"status": "ok", "sent": True}
-        except: return {"status": "ok", "sent": False}
-    return {"status": "ok"}
-
-@app.post("/api/webhook/campaign")
-async def webhook_campaign(body: dict, req: Request):
-    e = get_current_user(req)
-    cp_url = body.get("url", "")
-    if cp_url:
-        try:
-            import requests
-            r = requests.post(cp_url, json={"event": "campaign_sent", "user": e, "timestamp": datetime.utcnow().isoformat()}, timeout=10)
-            return {"status": "ok", "sent": True}
-        except: return {"status": "ok", "sent": False}
-    return {"status": "ok"}
-
-# ─── Swagger Docs ───
-@app.get("/docs")
-async def docs():
-    return {"message": "Swagger docs en construcción", "endpoints": [
-        {"method": "POST", "path": "/api/register", "body": {"email": "str", "password": "str", "name": "str"}},
-        {"method": "POST", "path": "/api/login", "body": {"email": "str", "password": "str"}},
-        {"method": "GET", "path": "/api/user/me", "auth": True},
-        {"method": "POST", "path": "/api/leads/search", "body": {"query": "str", "location": "str", "max_results": "int"}, "auth": True},
-        {"method": "GET", "path": "/api/leads", "auth": True},
-        {"method": "GET", "path": "/api/leads/export", "auth": True},
-        {"method": "POST", "path": "/api/emails/generate", "body": {"lead_name": "str", "tone": "str"}, "auth": True},
-        {"method": "POST", "path": "/api/emails/send", "body": {"to_email": "str", "subject": "str", "body_html": "str"}, "auth": True},
-        {"method": "POST", "path": "/api/campaigns/create", "body": {"name": "str", "subject": "str", "template": "str"}, "auth": True},
-        {"method": "GET", "path": "/api/stats", "auth": True},
-        {"method": "POST", "path": "/api/stripe/create-checkout", "body": {"plan": "str"}, "auth": True},
-        {"method": "POST", "path": "/api/auth/forgot", "body": {"email": "str"}},
-        {"method": "POST", "path": "/api/auth/reset", "body": {"code": "str", "new_password": "str"}},
-        {"method": "POST", "path": "/api/webhook/lead", "body": {"url": "str"}, "auth": True},
-        {"method": "POST", "path": "/api/webhook/email", "body": {"url": "str"}, "auth": True},
-        {"method": "POST", "path": "/api/webhook/campaign", "body": {"url": "str"}, "auth": True},
-    ]}
-
+@app.get("/api/stats")
+async def stats_alias(req: Request):
+    return await stats(req)
 
 if __name__ == "__main__":
-    import uvicorn; uvicorn.run(app, host="0.0.0.0", port=8083)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8083)

@@ -1,0 +1,24 @@
+{
+  "status": "approved",
+  "generated_at": "2026-04-02T09:40:00Z",
+  "topic": {
+    "id": "smart_money",
+    "title": "Smart Money On-Chain Analytics",
+    "theme": "Cómo seguir al dinero inteligente en blockchain"
+  },
+  "tweets": [
+    "🧵 THREAD: Smart Money Analytics\n\n¿Cómo saber a dónde fluye el dinero en crypto?\n\nOn-chain analytics te da la respuesta.\n\n⬇️",
+    "1️⃣ El dinero inteligente deja rastros.\n\nLas whales y VCs acumulan antes de que el mercado lo sepa. On-chain analytics revela estos movimientos.",
+    "2️⃣ Tools clave:\n\n• Nansen (smart money labels)\n• Dune Analytics (custom dashboards)\n• Arkham (entity tracking)\n• Glassnode (on-chain metrics)",
+    "3️⃣ ¿Qué buscar?\n\n• Wallets acumulando\n• Transacciones entre exchanges\n• Flujos de stablecoins\n• Actividad en DeFi",
+    "4️⃣ Los datos de esta semana:\n\n• Whales han movido $340M a L2s\n• Stablecoins en CEX: -12%\n• Smart money acumulando en ARB, OP",
+    "📊 Números:\n\n• Volumen smart money: $2.1B/semana\n• Top accumulators: 847 wallets\n• Sentiment: Neutral-bullish",
+    "🔍 Insight clave:\n\nCuando smart money acumula en silencio, el mercado suele despertar 2-3 semanas después.",
+    "📌 Conclusión:\n\nNo predices el futuro, observas quién está apostando. Los datos on-chain no mienten.",
+    "🔗 Fuentes:\n• https://nansen.ai/research\n• https://dune.com/browse/dashboards\n\n#SmartMoney #OnChain #DeFi"
+  ],
+  "approval_required": true,
+  "note": "Este thread requiere aprobación del Jefe antes de publicar",
+  "published": true,
+  "thread_url": "https://twitter.com/yhas1984/status/2041302451765071879"
+}

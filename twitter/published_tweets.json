@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-03-28T10:14:18.416214+00:00",
+  "results": [
+    {
+      "success": false,
+      "topic": "Smart Money signals",
+      "error": "{'title': 'Unauthorized', 'type': 'about:blank', 'status': 401, 'detail': 'Unauthorized'}"
+    },
+    {
+      "success": false,
+      "topic": "Trading con IA",
+      "error": "{'title': 'Unauthorized', 'type': 'about:blank', 'status': 401, 'detail': 'Unauthorized'}"
+    },
+    {
+      "success": false,
+      "topic": "Educaci\u00f3n financiera",
+      "error": "{'title': 'Unauthorized', 'type': 'about:blank', 'status': 401, 'detail': 'Unauthorized'}"
+    }
+  ]
+}

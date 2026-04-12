@@ -1,0 +1,100 @@
+{
+  "yhasclaw": {
+    "status": "online",
+    "version": "1.0",
+    "lastUpdate": "2026-03-28T10:20:00Z",
+    "skills": {
+      "total": 122,
+      "categories": {
+        "finance": 10,
+        "marketing": 4,
+        "development": 15,
+        "productivity": 50,
+        "voice": 3
+      }
+    },
+    "voice": {
+      "tts": "ElevenLabs - Brian",
+      "stt": "OpenAI Whisper"
+    },
+    "trading": {
+      "signals": {
+        "lastFetch": "2026-03-28T10:17:00Z",
+        "totalAnalyzed": 40,
+        "topSignals": [
+          {"token": "SIREN", "chain": "BSC", "gain": "+214%", "type": "ALPHA"},
+          {"token": "Binance Ai Pro", "chain": "BSC", "gain": "+1100%", "type": "timeout"},
+          {"token": "Token 7", "chain": "Solana", "gain": "+461%", "type": "timeout"}
+        ]
+      },
+      "activeTrades": 0,
+      "apiConfigured": false
+    },
+    "marketing": {
+      "twitterConfigured": false,
+      "twitterStatus": "CREDENCIALES CADUCADAS - Requiere renovación OAuth 2.0",
+      "lastPost": null,
+      "contentReady": true,
+      "pendingThreads": 3,
+      "pendingTweetsFile": "/root/.openclaw/workspace/twitter/content_threads.md",
+      "contentQuality": "HIGH - Basado en datos reales de Smart Money"
+    },
+    "plans": [
+      {
+        "id": 1,
+        "title": "Generar ingresos autónomos",
+        "description": "Objetivo principal del Jefe",
+        "status": "active",
+        "priority": 1
+      },
+      {
+        "id": 2,
+        "title": "Configurar Binance API",
+        "description": "Necesario para trading automático",
+        "status": "pending",
+        "priority": 2
+      },
+      {
+        "id": 3,
+        "title": "Renovar Twitter API",
+        "description": "Tokens OAuth 2.0 caducados - Elon no puede publicar",
+        "status": "blocked",
+        "priority": 3
+      },
+      {
+        "id": 4,
+        "title": "Dashboard de monitoreo",
+        "description": "Panel de control para ver actividades",
+        "status": "completed",
+        "priority": 4
+      }
+    ],
+    "activityLog": [
+      {
+        "timestamp": "2026-03-28T10:20:00Z",
+        "action": "Elon Agent - Contenido creado",
+        "details": "3 hilos educativos creados con datos REALES de Smart Money (+40 señales analizadas)"
+      },
+      {
+        "timestamp": "2026-03-28T10:17:00Z",
+        "action": "Smart Money data fetched",
+        "details": "40 señales obtenidas de Solana y BSC vía Binance Web3 API"
+      },
+      {
+        "timestamp": "2026-03-28T10:15:00Z",
+        "action": "Elon Agent - Intento de publicación",
+        "details": "ERROR: Twitter tokens caducados. 3 tweets preparados pendientes de credenciales."
+      },
+      {
+        "timestamp": "2026-03-28T10:11:00Z",
+        "action": "Elon Agent activado",
+        "details": "Agente de marketing iniciado - Misión: Publicar contenido en Twitter"
+      },
+      {
+        "timestamp": "2026-03-27T22:42:00Z",
+        "action": "Dashboard creado",
+        "details": "Iniciando desarrollo del panel de control"
+      }
+    ]
+  }
+}

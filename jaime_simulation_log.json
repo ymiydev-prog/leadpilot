@@ -1,0 +1,766 @@
+{
+  "trades": [
+    {
+      "id": "sim_20260330103013",
+      "timestamp": "2026-03-30T10:30:13.139588+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "ETHUSDT",
+      "side": "BUY",
+      "qty": 0.021212,
+      "price": 2054.0,
+      "value": 43.569448,
+      "analysis": {
+        "rsi": 37,
+        "macd": "bearish",
+        "volume": "increasing",
+        "signals": [
+          "MACD bearish",
+          "Volumen en aumento"
+        ],
+        "decision": "BUY",
+        "confidence": "medium"
+      },
+      "result": "WIN",
+      "pnl": 1.5260490581357282,
+      "pnl_pct": 0.035025668861715396,
+      "balance_after": 1001.5260490581358
+    },
+    {
+      "id": "sim_20260330103016",
+      "timestamp": "2026-03-30T10:30:16.412005+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BTCUSDT",
+      "side": "SELL",
+      "qty": 0.000558,
+      "price": 67424.43,
+      "value": 37.62283194,
+      "analysis": {
+        "rsi": 67,
+        "macd": "neutral",
+        "volume": "increasing",
+        "signals": [
+          "Volumen en aumento"
+        ],
+        "decision": "SELL",
+        "confidence": "medium"
+      },
+      "result": "LOSS",
+      "pnl": -1.0976334726673604,
+      "pnl_pct": -0.029174663789739173,
+      "balance_after": 1000.4284155854684
+    },
+    {
+      "id": "sim_20260330103019",
+      "timestamp": "2026-03-30T10:30:19.669850+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BTCUSDT",
+      "side": "SELL",
+      "qty": 0.00016,
+      "price": 67424.43,
+      "value": 10.7879088,
+      "analysis": {
+        "rsi": 67,
+        "macd": "bullish",
+        "volume": "increasing",
+        "signals": [
+          "MACD bullish",
+          "Volumen en aumento"
+        ],
+        "decision": "SELL",
+        "confidence": "medium"
+      },
+      "result": "WIN",
+      "pnl": 0.21940349005183218,
+      "pnl_pct": 0.02033790738496345,
+      "balance_after": 1000.6478190755203
+    },
+    {
+      "id": "sim_20260331090003",
+      "timestamp": "2026-03-31T09:00:03.361953+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "XRPUSDT",
+      "side": "SELL",
+      "qty": 21.023844,
+      "price": 1.3141,
+      "value": 27.6274334004,
+      "analysis": {
+        "rsi": 80,
+        "macd": "bearish",
+        "volume": "stable",
+        "signals": [
+          "RSI sobrecomprado (80)",
+          "MACD bearish"
+        ],
+        "decision": "SELL",
+        "confidence": "high"
+      },
+      "result": "WIN",
+      "pnl": 1.528668831486216,
+      "pnl_pct": 0.05533155430442856,
+      "balance_after": 1001.5286688314862
+    },
+    {
+      "id": "sim_20260331090006",
+      "timestamp": "2026-03-31T09:00:06.690281+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "XRPUSDT",
+      "side": "BUY",
+      "qty": 25.616573,
+      "price": 1.3143,
+      "value": 33.667861893899996,
+      "analysis": {
+        "rsi": 45,
+        "macd": "bullish",
+        "volume": "increasing",
+        "signals": [
+          "MACD bullish",
+          "Volumen en aumento"
+        ],
+        "decision": "BUY",
+        "confidence": "low"
+      },
+      "result": "LOSS",
+      "pnl": -0.8349650135959829,
+      "pnl_pct": -0.024800060551135365,
+      "balance_after": 1000.6937038178903
+    },
+    {
+      "id": "sim_20260331090009",
+      "timestamp": "2026-03-31T09:00:09.965411+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BNBUSDT",
+      "side": "SELL",
+      "qty": 0.0372,
+      "price": 607.31,
+      "value": 22.591931999999996,
+      "analysis": {
+        "rsi": 78,
+        "macd": "bullish",
+        "volume": "decreasing",
+        "signals": [
+          "RSI sobrecomprado (78)",
+          "MACD bullish"
+        ],
+        "decision": "SELL",
+        "confidence": "medium"
+      },
+      "result": "WIN",
+      "pnl": 0.9265385183137393,
+      "pnl_pct": 0.041011920464072725,
+      "balance_after": 1001.620242336204
+    },
+    {
+      "id": "sim_20260401090002",
+      "timestamp": "2026-04-01T09:00:02.901802+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "XRPUSDT",
+      "side": "SELL",
+      "qty": 25.157847,
+      "price": 1.3526,
+      "value": 34.028503852200004,
+      "analysis": {
+        "rsi": 44,
+        "macd": "bearish",
+        "volume": "stable",
+        "signals": [
+          "MACD bearish"
+        ],
+        "decision": "SELL",
+        "confidence": "low"
+      },
+      "result": "WIN",
+      "pnl": 1.8134349419426279,
+      "pnl_pct": 0.05329164484630687,
+      "balance_after": 1001.8134349419427
+    },
+    {
+      "id": "sim_20260401090006",
+      "timestamp": "2026-04-01T09:00:06.176063+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BNBUSDT",
+      "side": "BUY",
+      "qty": 0.078545,
+      "price": 615.34,
+      "value": 48.3318803,
+      "analysis": {
+        "rsi": 32,
+        "macd": "neutral",
+        "volume": "stable",
+        "signals": [],
+        "decision": "BUY",
+        "confidence": "medium"
+      },
+      "result": "WIN",
+      "pnl": 3.7566317290061213,
+      "pnl_pct": 0.07772575173339824,
+      "balance_after": 1005.5700666709488
+    },
+    {
+      "id": "sim_20260401090009",
+      "timestamp": "2026-04-01T09:00:09.437396+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "SOLUSDT",
+      "side": "SELL",
+      "qty": 0.474407,
+      "price": 83.59,
+      "value": 39.655681130000005,
+      "analysis": {
+        "rsi": 72,
+        "macd": "bearish",
+        "volume": "stable",
+        "signals": [
+          "RSI sobrecomprado (72)",
+          "MACD bearish"
+        ],
+        "decision": "SELL",
+        "confidence": "high"
+      },
+      "result": "WIN",
+      "pnl": 1.731741909289028,
+      "pnl_pct": 0.04366945315128995,
+      "balance_after": 1007.3018085802378
+    },
+    {
+      "id": "sim_20260402090001",
+      "timestamp": "2026-04-02T09:00:01.938224+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BTCUSDT",
+      "side": "SELL",
+      "qty": 0.000597,
+      "price": 66437.21,
+      "value": 39.663014370000006,
+      "analysis": {
+        "rsi": 68,
+        "macd": "bullish",
+        "volume": "stable",
+        "signals": [
+          "MACD bullish"
+        ],
+        "decision": "SELL",
+        "confidence": "medium"
+      },
+      "result": "WIN",
+      "pnl": 2.4157466808294537,
+      "pnl_pct": 0.06090678480193015,
+      "balance_after": 1002.4157466808294
+    },
+    {
+      "id": "sim_20260402090005",
+      "timestamp": "2026-04-02T09:00:05.223175+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BTCUSDT",
+      "side": "BUY",
+      "qty": 0.00069,
+      "price": 66432.23,
+      "value": 45.8382387,
+      "analysis": {
+        "rsi": 31,
+        "macd": "bullish",
+        "volume": "decreasing",
+        "signals": [
+          "MACD bullish"
+        ],
+        "decision": "BUY",
+        "confidence": "high"
+      },
+      "result": "LOSS",
+      "pnl": -1.0989261507804504,
+      "pnl_pct": -0.02397400471629488,
+      "balance_after": 1001.316820530049
+    },
+    {
+      "id": "sim_20260402090008",
+      "timestamp": "2026-04-02T09:00:08.486332+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "XRPUSDT",
+      "side": "BUY",
+      "qty": 31.399414,
+      "price": 1.3118,
+      "value": 41.1897512852,
+      "analysis": {
+        "rsi": 24,
+        "macd": "neutral",
+        "volume": "stable",
+        "signals": [
+          "RSI sobrevendido (24)"
+        ],
+        "decision": "BUY",
+        "confidence": "medium"
+      },
+      "result": "WIN",
+      "pnl": 2.7170932902113836,
+      "pnl_pct": 0.06596527547345665,
+      "balance_after": 1004.0339138202604
+    },
+    {
+      "id": "sim_20260403090002",
+      "timestamp": "2026-04-03T09:00:02.654339+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "XRPUSDT",
+      "side": "BUY",
+      "qty": 17.285813,
+      "price": 1.3175,
+      "value": 22.7740586275,
+      "analysis": {
+        "rsi": 24,
+        "macd": "bearish",
+        "volume": "increasing",
+        "signals": [
+          "RSI sobrevendido (24)",
+          "MACD bearish",
+          "Volumen en aumento"
+        ],
+        "decision": "BUY",
+        "confidence": "medium"
+      },
+      "result": "WIN",
+      "pnl": 0.6931356189270903,
+      "pnl_pct": 0.030435313716551126,
+      "balance_after": 1000.693135618927
+    },
+    {
+      "id": "sim_20260403090006",
+      "timestamp": "2026-04-03T09:00:06.024215+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BTCUSDT",
+      "side": "BUY",
+      "qty": 0.000243,
+      "price": 66958.34,
+      "value": 16.27087662,
+      "analysis": {
+        "rsi": 44,
+        "macd": "neutral",
+        "volume": "stable",
+        "signals": [],
+        "decision": "BUY",
+        "confidence": "low"
+      },
+      "result": "WIN",
+      "pnl": 0.6827212338360575,
+      "pnl_pct": 0.04195970812026584,
+      "balance_after": 1001.3758568527631
+    },
+    {
+      "id": "sim_20260403090009",
+      "timestamp": "2026-04-03T09:00:09.287123+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BNBUSDT",
+      "side": "SELL",
+      "qty": 0.081996,
+      "price": 585.8,
+      "value": 48.0332568,
+      "analysis": {
+        "rsi": 75,
+        "macd": "bullish",
+        "volume": "stable",
+        "signals": [
+          "RSI sobrecomprado (75)",
+          "MACD bullish"
+        ],
+        "decision": "SELL",
+        "confidence": "medium"
+      },
+      "result": "WIN",
+      "pnl": 1.6858795732003056,
+      "pnl_pct": 0.035098173338941815,
+      "balance_after": 1003.0617364259634
+    },
+    {
+      "id": "sim_20260404090002",
+      "timestamp": "2026-04-04T09:00:02.299292+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BTCUSDT",
+      "side": "SELL",
+      "qty": 0.000478,
+      "price": 66940.81,
+      "value": 31.99770718,
+      "analysis": {
+        "rsi": 55,
+        "macd": "bearish",
+        "volume": "stable",
+        "signals": [
+          "MACD bearish"
+        ],
+        "decision": "SELL",
+        "confidence": "low"
+      },
+      "result": "WIN",
+      "pnl": 1.4304059088442584,
+      "pnl_pct": 0.044703387677049754,
+      "balance_after": 1001.4304059088443
+    },
+    {
+      "id": "sim_20260404090005",
+      "timestamp": "2026-04-04T09:00:05.637184+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "XRPUSDT",
+      "side": "SELL",
+      "qty": 15.110937,
+      "price": 1.3141,
+      "value": 19.8572823117,
+      "analysis": {
+        "rsi": 61,
+        "macd": "bullish",
+        "volume": "increasing",
+        "signals": [
+          "MACD bullish",
+          "Volumen en aumento"
+        ],
+        "decision": "SELL",
+        "confidence": "medium"
+      },
+      "result": "LOSS",
+      "pnl": -0.5446632079172341,
+      "pnl_pct": -0.02742888978298486,
+      "balance_after": 1000.885742700927
+    },
+    {
+      "id": "sim_20260404090008",
+      "timestamp": "2026-04-04T09:00:08.908776+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BNBUSDT",
+      "side": "BUY",
+      "qty": 0.053535,
+      "price": 589.33,
+      "value": 31.549781550000002,
+      "analysis": {
+        "rsi": 41,
+        "macd": "bearish",
+        "volume": "stable",
+        "signals": [
+          "MACD bearish"
+        ],
+        "decision": "BUY",
+        "confidence": "low"
+      },
+      "result": "LOSS",
+      "pnl": -1.5294648312722217,
+      "pnl_pct": -0.048477826347175505,
+      "balance_after": 999.3562778696548
+    },
+    {
+      "id": "sim_20260405090002",
+      "timestamp": "2026-04-05T09:00:02.732267+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "SOLUSDT",
+      "side": "BUY",
+      "qty": 0.551461,
+      "price": 79.67,
+      "value": 43.93489787,
+      "analysis": {
+        "rsi": 47,
+        "macd": "bearish",
+        "volume": "decreasing",
+        "signals": [
+          "MACD bearish"
+        ],
+        "decision": "BUY",
+        "confidence": "low"
+      },
+      "result": "LOSS",
+      "pnl": -1.4711385431339874,
+      "pnl_pct": -0.033484510365472425,
+      "balance_after": 998.528861456866
+    },
+    {
+      "id": "sim_20260405090006",
+      "timestamp": "2026-04-05T09:00:06.072874+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BNBUSDT",
+      "side": "BUY",
+      "qty": 0.032228,
+      "price": 592.59,
+      "value": 19.09799052,
+      "analysis": {
+        "rsi": 31,
+        "macd": "neutral",
+        "volume": "stable",
+        "signals": [],
+        "decision": "BUY",
+        "confidence": "medium"
+      },
+      "result": "LOSS",
+      "pnl": -0.6747455369439677,
+      "pnl_pct": -0.03533070854953842,
+      "balance_after": 997.854115919922
+    },
+    {
+      "id": "sim_20260405090009",
+      "timestamp": "2026-04-05T09:00:09.338387+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "SOLUSDT",
+      "side": "BUY",
+      "qty": 0.265855,
+      "price": 79.67,
+      "value": 21.180667850000003,
+      "analysis": {
+        "rsi": 58,
+        "macd": "bullish",
+        "volume": "decreasing",
+        "signals": [
+          "MACD bullish"
+        ],
+        "decision": "BUY",
+        "confidence": "low"
+      },
+      "result": "LOSS",
+      "pnl": -0.7876107204209449,
+      "pnl_pct": -0.037185358176557444,
+      "balance_after": 997.0665051995011
+    },
+    {
+      "id": "sim_20260406090002",
+      "timestamp": "2026-04-06T09:00:02.084174+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "ETHUSDT",
+      "side": "SELL",
+      "qty": 0.015514,
+      "price": 2138.58,
+      "value": 33.17793012,
+      "analysis": {
+        "rsi": 67,
+        "macd": "bearish",
+        "volume": "decreasing",
+        "signals": [
+          "MACD bearish"
+        ],
+        "decision": "SELL",
+        "confidence": "high"
+      },
+      "result": "LOSS",
+      "pnl": -1.1847373071306815,
+      "pnl_pct": -0.03570859613139367,
+      "balance_after": 998.8152626928693
+    },
+    {
+      "id": "sim_20260406090005",
+      "timestamp": "2026-04-06T09:00:05.374163+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BTCUSDT",
+      "side": "SELL",
+      "qty": 0.000673,
+      "price": 69232.07,
+      "value": 46.593183110000005,
+      "analysis": {
+        "rsi": 49,
+        "macd": "bullish",
+        "volume": "increasing",
+        "signals": [
+          "MACD bullish",
+          "Volumen en aumento"
+        ],
+        "decision": "SELL",
+        "confidence": "low"
+      },
+      "result": "WIN",
+      "pnl": 2.717763011421299,
+      "pnl_pct": 0.058329627426506575,
+      "balance_after": 1001.5330257042906
+    },
+    {
+      "id": "sim_20260406090008",
+      "timestamp": "2026-04-06T09:00:08.646634+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BNBUSDT",
+      "side": "SELL",
+      "qty": 0.047905,
+      "price": 604.25,
+      "value": 28.946596250000002,
+      "analysis": {
+        "rsi": 72,
+        "macd": "bullish",
+        "volume": "decreasing",
+        "signals": [
+          "RSI sobrecomprado (72)",
+          "MACD bullish"
+        ],
+        "decision": "SELL",
+        "confidence": "medium"
+      },
+      "result": "LOSS",
+      "pnl": -1.4299181604135685,
+      "pnl_pct": -0.0493984905190215,
+      "balance_after": 1000.1031075438771
+    },
+    {
+      "id": "sim_20260407090001",
+      "timestamp": "2026-04-07T09:00:01.827813+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BNBUSDT",
+      "side": "BUY",
+      "qty": 0.074425,
+      "price": 602.37,
+      "value": 44.831387250000006,
+      "analysis": {
+        "rsi": 27,
+        "macd": "bullish",
+        "volume": "stable",
+        "signals": [
+          "RSI sobrevendido (27)",
+          "MACD bullish"
+        ],
+        "decision": "BUY",
+        "confidence": "high"
+      },
+      "result": "WIN",
+      "pnl": 2.8395910904242534,
+      "pnl_pct": 0.06333935362270667,
+      "balance_after": 1002.8395910904243
+    },
+    {
+      "id": "sim_20260407090005",
+      "timestamp": "2026-04-07T09:00:05.105085+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BNBUSDT",
+      "side": "BUY",
+      "qty": 0.023777,
+      "price": 602.37,
+      "value": 14.32255149,
+      "analysis": {
+        "rsi": 33,
+        "macd": "bearish",
+        "volume": "stable",
+        "signals": [
+          "MACD bearish"
+        ],
+        "decision": "BUY",
+        "confidence": "medium"
+      },
+      "result": "WIN",
+      "pnl": 0.32843771620388584,
+      "pnl_pct": 0.022931508846953764,
+      "balance_after": 1003.1680288066282
+    },
+    {
+      "id": "sim_20260407090008",
+      "timestamp": "2026-04-07T09:00:08.375592+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "ETHUSDT",
+      "side": "SELL",
+      "qty": 0.00664,
+      "price": 2115.24,
+      "value": 14.0451936,
+      "analysis": {
+        "rsi": 46,
+        "macd": "neutral",
+        "volume": "decreasing",
+        "signals": [],
+        "decision": "SELL",
+        "confidence": "low"
+      },
+      "result": "LOSS",
+      "pnl": -0.541960080639623,
+      "pnl_pct": -0.0385868715002706,
+      "balance_after": 1002.6260687259886
+    },
+    {
+      "id": "sim_20260408090002",
+      "timestamp": "2026-04-08T09:00:02.750747+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "BNBUSDT",
+      "side": "SELL",
+      "qty": 0.080673,
+      "price": 612.9,
+      "value": 49.4444817,
+      "analysis": {
+        "rsi": 68,
+        "macd": "neutral",
+        "volume": "decreasing",
+        "signals": [],
+        "decision": "SELL",
+        "confidence": "medium"
+      },
+      "result": "LOSS",
+      "pnl": -1.4727068423348548,
+      "pnl_pct": -0.02978505976198462,
+      "balance_after": 998.5272931576651
+    },
+    {
+      "id": "sim_20260408090006",
+      "timestamp": "2026-04-08T09:00:06.030426+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "SOLUSDT",
+      "side": "BUY",
+      "qty": 0.493797,
+      "price": 84.87,
+      "value": 41.90855139,
+      "analysis": {
+        "rsi": 49,
+        "macd": "bearish",
+        "volume": "increasing",
+        "signals": [
+          "MACD bearish",
+          "Volumen en aumento"
+        ],
+        "decision": "BUY",
+        "confidence": "low"
+      },
+      "result": "LOSS",
+      "pnl": -0.997357912422087,
+      "pnl_pct": -0.02379843443264592,
+      "balance_after": 997.529935245243
+    },
+    {
+      "id": "sim_20260408090009",
+      "timestamp": "2026-04-08T09:00:09.304393+00:00",
+      "agent": "Jaime",
+      "platform": "Simulation",
+      "symbol": "ETHUSDT",
+      "side": "SELL",
+      "qty": 0.005843,
+      "price": 2257.02,
+      "value": 13.187767860000001,
+      "analysis": {
+        "rsi": 42,
+        "macd": "neutral",
+        "volume": "increasing",
+        "signals": [
+          "Volumen en aumento"
+        ],
+        "decision": "SELL",
+        "confidence": "low"
+      },
+      "result": "LOSS",
+      "pnl": -0.28419587991964884,
+      "pnl_pct": -0.021549960761869887,
+      "balance_after": 997.2457393653234
+    }
+  ],
+  "stats": {
+    "total_trades": 30,
+    "balance": 997.2457393653234,
+    "win_rate": {
+      "wins": 0,
+      "losses": 3
+    }
+  }
+}

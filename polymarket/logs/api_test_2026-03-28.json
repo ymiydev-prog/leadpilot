@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-03-28T09:48:24Z",
+  "operation": "BUY NO Russia-Ukraine Ceasefire before GTA VI",
+  "status": "FAILED",
+  "error": "GEOBLOCK",
+  "error_message": "Trading restricted in your region, please refer to available regions - https://docs.polymarket.com/developers/CLOB/geoblock",
+  "details": {
+    "market_found": "Russia-Ukraine Ceasefire before GTA VI?",
+    "token_id_no": "2527312495175492857904889758552137141356236738032676480522356889996545113869",
+    "current_prices": {
+      "YES": 0.54,
+      "NO": 0.46
+    },
+    "order_params": {
+      "side": "BUY",
+      "price": 0.4550,
+      "size": 21.32,
+      "total_cost_usdc": 9.70,
+      "order_type": "GTC"
+    },
+    "api_credentials": {
+      "api_key": "c5247f9a-ab31-1e54-b...",
+      "derived": true,
+      "auth_level": "L2"
+    },
+    "block_reason": "Geographic restriction",
+    "block_status_code": 403
+  },
+  "next_steps": [
+    "Use VPN connected to an allowed region (US, UK, etc.)",
+    "Deploy the bot server in an allowed geographic region",
+    "Use a proxy server in an allowed region",
+    "Consider using Polymarket's web interface directly from allowed location"
+  ],
+  "allowed_regions_url": "https://docs.polymarket.com/developers/CLOB/geoblock"
+}

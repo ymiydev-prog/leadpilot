@@ -1,0 +1,72 @@
+[
+  {
+    "sector": "Consultoría en IA para pymes",
+    "tipo": "servicio",
+    "trend_score": 9.4,
+    "growth_yoy": "68%",
+    "source": "Adlanter - Ideas negocio 2026",
+    "pain": "Las pymes no saben dónde aplicar IA ni cómo hacerlo sin riesgos",
+    "model": "Proyectos + mantenimiento mensual",
+    "niche": "Pymes España €100k-2M facturación"
+  },
+  {
+    "sector": "Automatización no-code para empresas",
+    "tipo": "servicio",
+    "trend_score": 9.1,
+    "growth_yoy": "52%",
+    "source": "InfoAutonomos - Negocios 2026",
+    "pain": "Empresas quieren automatizar tareas sin desarrollar software",
+    "model": "Paquetes mensuales + implementaciones",
+    "niche": "Restaurantes, clínicas, tiendas pequeñas"
+  },
+  {
+    "sector": "Micro-SaaS especializado",
+    "tipo": "digital",
+    "trend_score": 8.8,
+    "growth_yoy": "45%",
+    "source": "NexenCapital - Startups 2026",
+    "pain": "Software pequeño centrado en un problema concreto recurrente",
+    "model": "Suscripción mensual/anual",
+    "niche": "Sectores específicos (fisioterapeutas, academias, restaurantes)"
+  },
+  {
+    "sector": "Servicios para nómadas digitales",
+    "tipo": "servicio",
+    "trend_score": 8.6,
+    "growth_yoy": "40%",
+    "source": "Adlanter - España destino expatriados",
+    "pain": "Trámites complejos: NIE, NIF, cuentas, alquiler para extranjeros",
+    "model": "Servicios por trámite + asesoría mensual",
+    "niche": "Trabajadores remotos, expatriados en España"
+  },
+  {
+    "sector": "Agencia de contenidos especializada",
+    "tipo": "servicio",
+    "trend_score": 8.4,
+    "growth_yoy": "35%",
+    "source": "Adlanter - Contenidos por sector",
+    "pain": "Empresas necesitan contenido SEO y marketing pero no saben especializarse",
+    "model": "Paquetes mensuales + proyectos premium",
+    "niche": "Salud, estética, jurídico, inmobiliario"
+  },
+  {
+    "sector": "Club de formación profesionales",
+    "tipo": "suscripcion",
+    "trend_score": 8.2,
+    "growth_yoy": "38%",
+    "source": "InfoAutonomos - Formación senior",
+    "pain": "Profesionales senior buscan formación avanzada práctica",
+    "model": "Suscripción mensual",
+    "niche": "Directivos, profesionales senior (IA, liderazgo, productividad)"
+  },
+  {
+    "sector": "Ciberseguridad para pymes",
+    "tipo": "servicio",
+    "trend_score": 8.0,
+    "growth_yoy": "55%",
+    "source": "Adlanter - Top 10 ideas",
+    "pain": "Pymes vulnerables a ataques, no tienen recursos para equipos internos",
+    "model": "Auditoría + mantenimiento mensual",
+    "niche": "Pymes digitales, e-commerce, SaaS"
+  }
+]

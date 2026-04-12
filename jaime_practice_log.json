@@ -1,0 +1,4 @@
+{"timestamp": "2026-03-30T10:01:13.770485+00:00", "agent": "Jaime", "platform": "Bybit Testnet", "type": "Sell", "symbol": "ETHUSDT", "qty": 0.02, "price": 5174.78, "order_id": null, "status": "FAILED"}
+{"timestamp": "2026-03-30T10:01:19.534087+00:00", "agent": "Jaime", "platform": "Bybit Testnet", "type": "Buy", "symbol": "ETHUSDT", "qty": 0.02, "price": 5174.78, "order_id": null, "status": "FAILED"}
+{"timestamp": "2026-03-30T10:02:53.133728+00:00", "agent": "Jaime", "platform": "Bybit Testnet", "type": "Sell", "symbol": "SOLUSDT", "qty": 0.5, "price": 84.6, "order_id": null, "status": "FAILED"}
+{"timestamp": "2026-03-30T10:02:58.517477+00:00", "agent": "Jaime", "platform": "Bybit Testnet", "type": "Buy", "symbol": "SOLUSDT", "qty": 0.5, "price": 84.6, "order_id": null, "status": "FAILED"}

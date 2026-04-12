@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "skills": {
+    "sag": {
+      "version": "1.0.0",
+      "installedAt": 1774648269535
+    },
+    "openmm-grid-trading": {
+      "version": "0.1.0",
+      "installedAt": 1775122330047
+    },
+    "autonomous-trading-system": {
+      "version": "14.0.1",
+      "installedAt": 1775122332422
+    },
+    "skill-trading-journal": {
+      "version": "1.0.0",
+      "installedAt": 1775122334483
+    },
+    "finance-trading": {
+      "version": "1.0.0",
+      "installedAt": 1775122336437
+    },
+    "gog": {
+      "version": "1.0.0",
+      "installedAt": 1775515329439
+    },
+    "capability-evolver": {
+      "version": "1.41.0",
+      "installedAt": 1775515514258
+    },
+    "evolver": {
+      "version": "1.51.3",
+      "installedAt": 1775865881087
+    },
+    "feishu-evolver-wrapper": {
+      "version": "1.7.1",
+      "installedAt": 1775865883915
+    },
+    "sales-mastery": {
+      "version": "1.0.0",
+      "installedAt": 1775520265442
+    },
+    "sales-dialogue": {
+      "version": "1.0.0",
+      "installedAt": 1775520267488
+    },
+    "persona-sales-ops": {
+      "version": "1.0.12",
+      "installedAt": 1775520269718
+    },
+    "market-research-agent": {
+      "version": "1.0.0",
+      "installedAt": 1775520431778
+    },
+    "in-depth-research": {
+      "version": "1.0.0",
+      "installedAt": 1775520433612
+    },
+    "market-analysis-cn": {
+      "version": "1.0.0",
+      "installedAt": 1775520434993
+    },
+    "marketing-strategy-pmm": {
+      "version": "2.1.1",
+      "installedAt": 1775522497135
+    },
+    "content-marketing": {
+      "version": "1.0.0",
+      "installedAt": 1775522499430
+    },
+    "ai-social-media-manager": {
+      "version": "1.0.0",
+      "installedAt": 1775522511365
+    },
+    "self-improving-agent": {
+      "version": "3.0.13",
+      "installedAt": 1775586217534
+    },
+    "autonomous-research": {
+      "version": "1.0.0",
+      "installedAt": 1775586219568
+    },
+    "project-manager": {
+      "version": "1.0.0",
+      "installedAt": 1775586221703
+    },
+    "html-coder": {
+      "version": "2.0.1",
+      "installedAt": 1775685267995
+    },
+    "elite-frontend-design": {
+      "version": "1.0.0",
+      "installedAt": 1775685271838
+    },
+    "react": {
+      "version": "1.0.4",
+      "installedAt": 1775685279290
+    },
+    "copywriting-pro": {
+      "version": "1.0.0",
+      "installedAt": 1775685570875
+    },
+    "superdesign": {
+      "version": "1.0.0",
+      "installedAt": 1775685576852
+    },
+    "frontend-design-skill": {
+      "version": "1.0.2",
+      "installedAt": 1775685579301
+    },
+    "ui-ux-design": {
+      "version": "1.0.0",
+      "installedAt": 1775685582213
+    },
+    "landing-page-design": {
+      "version": "0.1.5",
+      "installedAt": 1775685596213
+    },
+    "minimax-cli-web-search": {
+      "version": "0.1.1",
+      "installedAt": 1775845854057
+    },
+    "marketing-ideas": {
+      "version": "1.0.0",
+      "installedAt": 1775855446098
+    },
+    "insforge": {
+      "version": "0.1.0",
+      "installedAt": 1775856428374
+    },
+    "insforge-cli": {
+      "version": "0.1.0",
+      "installedAt": 1775856447507
+    }
+  }
+}

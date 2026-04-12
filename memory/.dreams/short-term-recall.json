@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-12T17:15:43.075Z",
+  "entries": {
+    "memory:memory/2026-04-08.md:37:91": {
+      "key": "memory:memory/2026-04-08.md:37:91",
+      "path": "memory/2026-04-08.md",
+      "startLine": 37,
+      "endLine": 91,
+      "source": "memory",
+      "snippet": "- Idea de hoy: Automatización no-code para empresas (Score 9.1/10, fuente real) ### 5. LeadPilot SaaS - EL PROYECTO PRINCIPAL #### Arquitectura: ``` Frontend (nginx): http://88.223.95.118:8082/ - Landing page: /index.html - Dashboard: /dashboard.html Backend API (FastAPI): http://88.223.95.118:8083/ - /api/leads/search - Buscar leads (Firecrawl API) - /api/leads/list - Listar leads guardados - /api/emails/generate - Generar email con IA - /api/campaigns/create - Crear campañas - /api/stats - Estadísticas - /api/register - Registro usuarios - /api/login - Login Servicio systemd: leadpilot.service (puerto 8083) Nginx proxy: puerto 8082 → 8083 ``` #### Archivos: ``` /root",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7043641477823257,
+      "maxScore": 0.35224748551845547,
+      "firstRecalledAt": "2026-04-08T21:03:26.780Z",
+      "lastRecalledAt": "2026-04-12T16:11:41.135Z",
+      "queryHashes": [
+        "cbc99c703878",
+        "b04ade2d6113"
+      ],
+      "recallDays": [
+        "2026-04-08",
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "no-code",
+        "9.1/10",
+        "88.223.95.118",
+        "index.html",
+        "dashboard.html",
+        "api/leads/search",
+        "api/leads/list",
+        "api/emails/generate"
+      ]
+    },
+    "memory:memory/2026-04-09.md:1:34": {
+      "key": "memory:memory/2026-04-09.md:1:34",
+      "path": "memory/2026-04-09.md",
+      "startLine": 1,
+      "endLine": 34,
+      "source": "memory",
+      "snippet": "# Memory - 2026-04-09 ## Sesión con TuEnvioExpress (Jefe) ### Landing Page Professional - Landing page completa rediseñada: `/var/www/html/leadpilot/index.html` - Nuevo diseño: hero con gradient, stats bar, problems/solution, features, pricing, FAQ, CTA - Favicon con 🚀 emoji añadido ### Usuarios limpiados - Quedan 3 usuarios: y.h.a.s1984@gmail.com, ymiyo2021@gmail.com, demo@leadpilot.es - Eliminados 6 usuarios de prueba ### Research completado - Archivo: `/root/.openclaw/workspace/leadpilot/RESEARCH.md` - Mercado $9B global, 15-20% crecimiento - Competencia: Apollo.io, ZoomInfo, Hunter.io, Cognism - Diferenciador: España/Europa + GDPR compliant + precio menor - Features roadmap: email w",
+      "recallCount": 8,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 3.2099539851420182,
+      "maxScore": 0.44407902289843737,
+      "firstRecalledAt": "2026-04-12T13:30:30.990Z",
+      "lastRecalledAt": "2026-04-12T16:59:19.618Z",
+      "queryHashes": [
+        "05eeecb2609a",
+        "6af5ea414a95",
+        "e06a62a2381b",
+        "b04ade2d6113",
+        "66c69836d240",
+        "afa09e5f5d22"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "problems/solution",
+        "y.h.a.s1984",
+        "gmail.com",
+        "leadpilot.es",
+        "15-20",
+        "apollo.io",
+        "hunter.io",
+        "españa/europa"
+      ]
+    },
+    "memory:memory/2026-04-10.md:112:164": {
+      "key": "memory:memory/2026-04-10.md:112:164",
+      "path": "memory/2026-04-10.md",
+      "startLine": 112,
+      "endLine": 164,
+      "source": "memory",
+      "snippet": "## Stripe Webhook Configuration (Completado) ### Tunnel Cloudflare - cloudflared instalado y corriendo como systemd service - Token: eyJhIjoiNWZkNGZhY2M0ZjM2NTIyMGFiNjFmZWFlYTA1MTFhMmEi... - Tunnel UUID: 5fd4facc4f365220ab61feaea0511a2a - Rutas configuradas en Cloudflare Dashboard: webhook.leadpilot.es -> localhost:8083 ### Webhook Endpoint - URL: https://webhook.leadpilot.es/api/stripe/webhook - Secret configurado en: /etc/systemd/system/leadpilot.service.d/webhook.conf - STRIPE_WEBHOOK_SECRET=whsec_C722s0MbWQudSGqDBf53vaWhn15HKDNd ### Eventos configurados en Stripe - checkout.session.completed (principal) - checkout.session.expired ### Notas - Modo LIVE requiere tarjeta real (no test c",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3654943883419037,
+      "maxScore": 0.3654943883419037,
+      "firstRecalledAt": "2026-04-12T15:36:13.239Z",
+      "lastRecalledAt": "2026-04-12T15:36:13.239Z",
+      "queryHashes": [
+        "32dc49e42b22"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "webhook.leadpilot.es",
+        "stripe-webhook-secret",
+        "checkout.session.completed",
+        "checkout.session.expired",
+        "stripe",
+        "webhook",
+        "configuration",
+        "completado"
+      ]
+    },
+    "memory:memory/2026-04-10.md:222:270": {
+      "key": "memory:memory/2026-04-10.md:222:270",
+      "path": "memory/2026-04-10.md",
+      "startLine": 222,
+      "endLine": 270,
+      "source": "memory",
+      "snippet": "2. Stripe webhook para upgrades automáticos 3. Email profesional hola@leadpilot.es 4. Registrar dominio leadpilot.es (pendiente, €12) ## Notas - Jefe quiere dashboard responsive (ya implementado) - Capacidad evolver con problemas de validación (SIGKILL) - ARIA ejecuta daily a las 07:00 UTC ## Stripe Webhook Configuration (Completado) ### Tunnel Cloudflare - cloudflared instalado y corriendo como systemd service - Token: eyJhIjoiNWZkNGZhY2M0ZjM2NTIyMGFiNjFmZWFlYTA1MTFhMmEi... - Tunnel UUID: 5fd4facc4f365220ab61feaea0511a2a - Rutas configuradas en Cloudflare Dashboard: webhook.leadpilot.es -> localhost:8083 ### Webhook Endpoint - URL: https://webhook.leadpilot.es/api/stripe/webhook - Secret",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3595802009105682,
+      "maxScore": 0.3595802009105682,
+      "firstRecalledAt": "2026-04-12T15:36:13.239Z",
+      "lastRecalledAt": "2026-04-12T15:36:13.239Z",
+      "queryHashes": [
+        "32dc49e42b22"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "leadpilot.es",
+        "webhook.leadpilot.es",
+        "stripe",
+        "webhook",
+        "upgrades",
+        "automáticos",
+        "email",
+        "profesional"
+      ]
+    },
+    "memory:memory/2026-04-10.md:36:87": {
+      "key": "memory:memory/2026-04-10.md:36:87",
+      "path": "memory/2026-04-10.md",
+      "startLine": 36,
+      "endLine": 87,
+      "source": "memory",
+      "snippet": "- Token: eyJhIjoiNWZkNGZhY2M0ZjM2NTIyMGFiNjFmZWFlYTA1MTFhMmEi... - Tunnel UUID: 5fd4facc4f365220ab61feaea0511a2a - Rutas configuradas en Cloudflare Dashboard: webhook.leadpilot.es -> localhost:8083 ### Webhook Endpoint - URL: https://webhook.leadpilot.es/api/stripe/webhook - Secret configurado en: /etc/systemd/system/leadpilot.service.d/webhook.conf - STRIPE_WEBHOOK_SECRET=whsec_C722s0MbWQudSGqDBf53vaWhn15HKDNd ### Eventos configurados en Stripe - checkout.session.completed (principal) - checkout.session.expired ### Notas - Modo LIVE requiere tarjeta real (no test cards) - Keys usadas: pk_live_..., sk_live_... ## LeadPilot Estado - Frontend: https://leadpilot.es/ (Cloudflare Pages) - Das",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3509736746549606,
+      "maxScore": 0.3509736746549606,
+      "firstRecalledAt": "2026-04-12T15:36:13.239Z",
+      "lastRecalledAt": "2026-04-12T15:36:13.239Z",
+      "queryHashes": [
+        "32dc49e42b22"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "webhook.leadpilot.es",
+        "stripe-webhook-secret",
+        "checkout.session.completed",
+        "checkout.session.expired",
+        "pk-live",
+        "sk-live",
+        "leadpilot.es",
+        "token"
+      ]
+    },
+    "memory:memory/2026-04-07.md:70:86": {
+      "key": "memory:memory/2026-04-07.md:70:86",
+      "path": "memory/2026-04-07.md",
+      "startLine": 70,
+      "endLine": 86,
+      "source": "memory",
+      "snippet": "| dev1/dev2 | Development | ✅ Activo | Dashboard v5.0 | --- ## 📈 Dashboard - URL: http://88.223.95.118:8080/dashboard.html - Versión: v5.0 con auto-update AJAX cada 30s - Precios BTC/ETH en tiempo real (Bybit API) - Señales Smart Money en vivo --- ## ⚠️ Pendientes 1. MAX: Configurar envío real de emails (SMTP o gws auth) 2. gws: Completar OAuth setup para Gmail/Calendar integration 3. MAX: Ejecutar primer batch de outreach a 10 prospects",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3548806399106979,
+      "maxScore": 0.3548806399106979,
+      "firstRecalledAt": "2026-04-12T16:08:42.113Z",
+      "lastRecalledAt": "2026-04-12T16:08:42.113Z",
+      "queryHashes": [
+        "e06a62a2381b"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "dev1/dev2",
+        "v5.0",
+        "88.223.95.118",
+        "8080/dashboard.html",
+        "auto-update",
+        "btc/eth",
+        "gmail/calendar",
+        "dev1"
+      ]
+    },
+    "memory:memory/2026-04-07.md:34:83": {
+      "key": "memory:memory/2026-04-07.md:34:83",
+      "path": "memory/2026-04-07.md",
+      "startLine": 34,
+      "endLine": 83,
+      "source": "memory",
+      "snippet": "- **Skills:** marketing-strategy-pmm, content-marketing, ai-social-media-manager - **Autoridad:** Decide cantidad de tweets, horarios, temas - **Flujo:** ZARA investiga → genera hooks → Elon publica auto (score ≥7/10) - **Archivos:** ZARA_MARKETING.md, zara_workflow.py --- ## 🔧 Configuraciones Actualizadas ### Publicación Twitter Automática - Elon YA NO requiere aprobación del Jefe - Publica automáticamente si ZARA valida (score ≥7/10) - ZARA decide frecuencia (2-5 threads/semana) y horarios ### Email ARIA - SMTP Configurado - Gmail App Password configurado - Destinatario: ymiy2021@gmail.com - Formato HTML profesional con CSS inline - Contexto España/Europa (EUR, CET, fuentes ES) ### G",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.35002730786800385,
+      "maxScore": 0.35002730786800385,
+      "firstRecalledAt": "2026-04-12T17:11:52.241Z",
+      "lastRecalledAt": "2026-04-12T17:11:52.241Z",
+      "queryHashes": [
+        "27d217e2740d"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "marketing-strategy-pmm",
+        "content-marketing",
+        "ai-social-media-manager",
+        "7/10",
+        "zara-marketing.md",
+        "zara-workflow.py",
+        "2-5",
+        "threads/semana"
+      ]
+    },
+    "memory:memory/2026-03-27.md:1:50": {
+      "key": "memory:memory/2026-03-27.md:1:50",
+      "path": "memory/2026-03-27.md",
+      "startLine": 1,
+      "endLine": 50,
+      "source": "memory",
+      "snippet": "# 2026-03-27 - Memory Log ## First Session ### Identity Established - Name: **YhasClaw** - Jefe: **TuEnvioExpress** (yhas1984) - Role: Mano derecha, agentic assistant ### Voice Configuration - TTS: **OpenAI TTS** (gratuito) - Default Voice: **onyx** - Voz masculina profunda - STT: **OpenAI Whisper** - API key configurado ### Sub-Agentes **Elon** - Agente de Marketing y Redes Sociales - Creado: 2026-03-27 23:30 UTC - Estado: Online - Especialidad: Twitter content, engagement, trending topics - Skills: twitter-automation, marketing-psychology, marketing-ideas - Tasks: 5 tweets generados, esperando aprobación ### Agentes Activos | Agente | Rol | Estado | Plataforma | |--------|-----|----",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.35810430347919464,
+      "maxScore": 0.35810430347919464,
+      "firstRecalledAt": "2026-04-12T17:15:43.075Z",
+      "lastRecalledAt": "2026-04-12T17:15:43.075Z",
+      "queryHashes": [
+        "dbcff2e602fd"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "openai",
+        "sub-agentes",
+        "twitter-automation",
+        "marketing-psychology",
+        "marketing-ideas",
+        "log",
+        "first",
+        "identity"
+      ]
+    }
+  }
+}
