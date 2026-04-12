@@ -254,7 +254,7 @@ button:active { transform: scale(0.98); }
 <div class="nav-item" data-tab="search" onclick="switchTab('search')">Buscar Leads</div>
 <div class="nav-item" data-tab="leads" onclick="switchTab('leads')">Mis Leads</div>
 <div class="nav-item" data-tab="emails" onclick="switchTab('emails')">Emails</div>
-<div class="nav-item" data-tab="campaigns" onclick="switchTab('campaigns')">Campanas</div>
+<div class="nav-item" data-tab="campaigns" onclick="switchTab('campaigns')">Campañas</div>
 <div class="nav-item" data-tab="settings" onclick="switchTab('settings')">Mi Perfil</div>
 <div class="nav-item" data-tab="analytics" onclick="switchTab('analytics')">Analytics</div>
         
@@ -286,7 +286,7 @@ button:active { transform: scale(0.98); }
 <h3>Buscar Leads</h3>
 <div class="flex">
 <input type="text" id="q-niche" placeholder="Ej: restaurants, dentistas">
-<input type="text" id="q-loc" placeholder="Ubicacion" value="Espania" style="max-width:150px;flex:none">
+<input type="text" id="q-loc" placeholder="Ubicacion" value="España" style="max-width:150px;flex:none">
 <select id="q-max" style="max-width:100px;flex:none">
 <option value="5">5</option><option value="10">10</option><option value="20" selected>20</option>
 </select>
@@ -344,14 +344,14 @@ button:active { transform: scale(0.98); }
 
 <div class="panel" id="panel-campaigns">
 <div class="card">
-<h3>Crear Campana</h3>
+<h3>Crear Campaña</h3>
 <input type="text" id="camp-name" placeholder="Nombre">
 <input type="text" id="camp-subject" placeholder="Asunto" style="margin-top:8px">
 <textarea id="camp-template" placeholder="Plantilla (usa {{nombre}}, {{empresa}})" style="margin-top:8px;min-height:80px"></textarea>
 <button class="btn" style="margin-top:10px" onclick="createCampaign()">Crear</button>
 </div>
 <div class="card" style="margin-top:12px">
-<h3>Campanas</h3>
+<h3>Campañas</h3>
 <div class="loading" id="camp-loading">Cargando...</div>
 <table id="camp-table" style="display:none">
 <thead><tr><th>Nombre</th><th>Leads</th><th>Enviados</th><th>Estado</th><th></th></tr></thead>
@@ -396,7 +396,7 @@ button:active { transform: scale(0.98); }
 <div style="font-size:20px;font-weight:700;color:#6366f1;margin-bottom:8px" id="current-plan-name">FREE</div>
 <div><b>Leads:</b> <span id="plan-leads">0</span> / 10</div>
 <div><b>Emails:</b> <span id="plan-emails">0</span> / 50</div>
-<div><b>Campanas:</b> <span id="plan-campaigns">0</span> / 1</div>
+<div><b>Campañas:</b> <span id="plan-campaigns">0</span> / 1</div>
 </div>
 </div>
 </div>
@@ -432,7 +432,7 @@ button:active { transform: scale(0.98); }
 <div style="font-size:20px;font-weight:700;color:#6366f1;margin-bottom:8px">FREE</div>
 <div><b>Leads:</b> <span id="plan-leads">0</span> / 10</div>
 <div><b>Emails:</b> <span id="plan-emails">0</span> / 50</div>
-<div><b>Campanas:</b> <span id="plan-campaigns">0</span> / 1</div>
+<div><b>Campañas:</b> <span id="plan-campaigns">0</span> / 1</div>
 </div>
 </div>
 </div>
@@ -494,7 +494,7 @@ button:active { transform: scale(0.98); }
 <span id="a-leads-month" style="color:#6366f1;font-weight:600">-</span>
 </div>
 <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #27272a">
-<span>Campanas activas</span>
+<span>Campañas activas</span>
 <span id="a-campaigns" style="color:#22c55e;font-weight:600">-</span>
 </div>
 <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #27272a">
@@ -649,7 +649,7 @@ function switchTab(name){
   document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("active"); });
   document.querySelector("[data-tab='" + name + "']").classList.add("active");
   document.getElementById("panel-" + name).classList.add("active");
-  var titles = {dashboard: "Dashboard", search: "Buscar Leads", leads: "Mis Leads", emails: "Emails", campaigns: "Campanas", settings: "Mi Perfil", analytics: "Analytics", plan: "Mi Plan"};
+  var titles = {dashboard: "Dashboard", search: "Buscar Leads", leads: "Mis Leads", emails: "Emails", campaigns: "Campañas", settings: "Mi Perfil", analytics: "Analytics", plan: "Mi Plan"};
   document.getElementById("tab-title").textContent = titles[name] || name;
   if(name === "leads") loadLeads();
   if(name === "emails") loadSent();
@@ -789,7 +789,7 @@ async function createCampaign(){
   var tmpl = document.getElementById("camp-template").value;
   if(!name || !subj || !tmpl){ toast("Completa todos los campos"); return; }
   var d = await apiPost("/api/campaigns/create", {name: name, subject: subj, template: tmpl});
-  if(d && d.success === true){ toast("Campana creada!"); loadCampaigns(); loadStats(); }
+  if(d && d.success === true){ toast("Campaña creada!"); loadCampaigns(); loadStats(); }
 }
 
 async function loadCampaigns(){
