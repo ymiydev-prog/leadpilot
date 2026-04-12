@@ -634,7 +634,7 @@ function saveSess(d){
   currentUser = d.user;
   localStorage.setItem("lp_token", token);
   localStorage.setItem("lp_user", currentUser);
-  document.getElementById("user-info").innerHTML = "<b>" + currentUser + "</b>";
+  document.getElementById("user-info").innerHTML = "<b>" + (currentUser.email || currentUser) + "</b>";
 }
 
 function logout(){
