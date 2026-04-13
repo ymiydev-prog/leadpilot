@@ -89,3 +89,32 @@ Add whatever helps you do your job. This is your cheat sheet.
 ### En el código
 - Backend: /root/.openclaw/workspace/leadpilot/backend/main.py
 - Función: send_email(to_email, subject, body_html)
+
+## InsForge MCP (Base de datos)
+
+### Configuración
+```json
+{
+  "mcpServers": {
+    "insforge": {
+      "command": "npx",
+      "args": ["-y", "@insforge/mcp@latest"],
+      "env": {
+        "API_KEY": "ik_35c9fe063dc416d6bb3a636dc44b067c",
+        "API_BASE_URL": "https://nv96hw8d.eu-central.insforge.app"
+      }
+    }
+  }
+}
+```
+
+### Comandos útiles
+```bash
+mcporter list insforge --schema   # Ver herramientas disponibles
+mcporter call insforge.run-raw-sql query="SELECT * FROM plans"
+mcporter call insforge.get-backend-metadata
+mcporter call insforge.fetch-docs docType="db-sdk"
+```
+
+### Tablas disponibles
+- `users`, `leads`, `campaigns`, `emails`, `plans`, `stripe_payments`

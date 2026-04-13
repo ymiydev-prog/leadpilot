@@ -27,15 +27,50 @@ INSFORGE_KEY = "ik_35c9fe063dc416d6bb3a636dc44b067c"
 USERS_FILE = "/root/.openclaw/workspace/leadpilot/data/users.json"
 SMTP_HOST, SMTP_PORT = "smtp.gmail.com", 587
 SMTP_USER, SMTP_PASS = "yhasvenezuela@gmail.com", "ificahhweilgwfjb"
-PLANS = {"free": {"leads": 10, "emails": 50, "campaigns": 1, "price": 0},
-         "starter": {"leads": 100, "emails": 500, "campaigns": 10, "price": 29},
-         "pro": {"leads": 500, "emails": 2000, "campaigns": -1, "price": 79},
-         "business": {"leads": -1, "emails": -1, "campaigns": -1, "price": 149}}
+# Load plans from InsForge
+def load_plans():
+    plans = {}
+    try:
+        plans_data = if_request("/plans", "GET")
+        if isinstance(plans_data, list):
+            for p in plans_data:
+                plans[p['id']] = {
+                    "leads": p.get('leads_limit', 10),
+                    "emails": p.get('emails_limit', 50),
+                    "campaigns": p.get('campaigns_limit', 1),
+                    "price": p.get('price_month', 0)
+                }
+    except Exception as e:
+        print(f"Error loading plans: {e}")
+    if not plans:
+        plans = {"free": {"leads": 10, "emails": 50, "campaigns": 1, "price": 0},
+                 "starter": {"leads": 100, "emails": 500, "campaigns": 10, "price": 29},
+                 "pro": {"leads": 500, "emails": 2000, "campaigns": -1, "price": 79},
+                 "business": {"leads": -1, "emails": -1, "campaigns": -1, "price": 149}}
+    return plans
+
+PLANS = load_plans()
+print(f"Loaded {len(PLANS)} plans from InsForge")
 
 # ─── InsForge Helpers ───
 def if_request(path, method="GET", body=None):
-    headers = {"Authorization": f"Bearer {INSFORGE_KEY}", "Content-Type": "application/json"}
+    headers = {"X-Api-Key": INSFORGE_KEY, "Content-Type": "application/json"}
     url = f"{INSFORGE_URL}/api/database/records/{path}"
+    if method == "POST" and body:
+        r = requests.post(url, headers=headers, json=body)
+    elif method == "PUT":
+        r = requests.put(url, headers=headers, json=body)
+    elif method == "DELETE":
+        r = requests.delete(url, headers=headers)
+    else:
+        r = requests.get(url, headers=headers)
+    if r.status_code >= 400:
+        print(f"InsForge error: {r.status_code} - {r.text[:200]}")
+        return {}
+    try:
+        return r.json()
+    except:
+        return {}
     try:
         if method == "GET": r = requests.get(url, headers=headers)
         elif method == "POST": r = requests.post(url, headers=headers, json=body)
@@ -75,6 +110,19 @@ def if_leads_create(user_id, lead):
     }
     return if_request("/leads", "POST", [data])
 
+
+
+def if_emails_create(user_id, email_data):
+    data = {
+        "user_id": user_id,
+        "to_email": email_data.get("to_email", ""),
+        "subject": email_data.get("subject", ""),
+        "body_html": email_data.get("body_html", ""),
+        "status": email_data.get("status", "sent"),
+        "sent_at": datetime.utcnow().isoformat()
+    }
+    return if_request("/emails", "POST", [data])
+
 def if_leads_delete(lead_id):
     return if_request(f"/leads/{lead_id}", "DELETE")
 
@@ -111,11 +159,6 @@ def verify_token(t):
 def get_user(email):
     d = if_users_find(email)
     if d and len(d) > 0: return d[0]
-    try:
-        with open(USERS_FILE) as f:
-            u = json.load(f)
-        if email in u: return u[email]
-    except: pass
     return None
 
 def get_current_user(req: Request):
@@ -125,7 +168,7 @@ def get_current_user(req: Request):
     if not e: raise HTTPException(401, "Token inválido")
     return e
 
-def send_email(to_email, subject, body_html):
+def send_email(to_email, subject, body_html, user_id=None):
     try:
         msg = MIMEMultipart()
         msg["From"] = "LeadPilot <contacto@leadpilot.es>"
@@ -136,6 +179,19 @@ def send_email(to_email, subject, body_html):
             s.starttls()
             s.login(SMTP_USER, SMTP_PASS)
             s.sendmail(SMTP_USER, to_email, msg.as_string())
+        
+        # Log to InsForge
+        if user_id:
+            try:
+                if_emails_create(user_id, {
+                    "to_email": to_email,
+                    "subject": subject,
+                    "body_html": body_html[:500],
+                    "status": "sent"
+                })
+            except Exception as log_err:
+                print(f"Email log error: {log_err}")
+        
         return True
     except Exception as e:
         print(f"Email error: {e}")
@@ -165,11 +221,6 @@ async def register(d: R):
     month = datetime.now().strftime("%Y-%m")
     hashed = hash_pw(d.password)
     if_users_create(d.email, hashed, d.name)
-    u[d.email] = {"name": d.name, "email": d.email, "password": hashed, "plan": "free",
-                  "leads_used": 0, "leads_limit": 10, "usage_month": month,
-                  "created": datetime.utcnow().isoformat()}
-    with open(USERS_FILE, 'w') as f:
-        json.dump(u, f, indent=2, ensure_ascii=False)
     return {"success": True, "token": make_token(d.email),
             "user": {"email": d.email, "name": d.name, "plan": "free"}, "limits": PLANS["free"]}
 
@@ -478,10 +529,155 @@ async def stats(req: Request):
             "campaigns_limit": PLANS.get(plan, PLANS["free"])["campaigns"],
             "plan": plan}
 
-@app.get("/api/stats")
-async def stats_alias(req: Request):
-    return await stats(req)
+# ─── ASSISTANT - Customer Service Webhook ───
+def generate_ai_response(message):
+    """Generate AI response using GPT-3.5 via OpenAI API"""
+    try:
+        api_key = os.environ.get("OPENAI_API_KEY", "")
+        
+        system_prompt = """Eres el asistente de ventas de LeadPilot, una herramienta SaaS que genera leads B2B para agencias de marketing en España.
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8083)
+Información clave:
+- Planes: Free (10 leads/mes gratis), Starter €29, Pro €79, Business €149
+- Website: https://leadpilot.es
+- Email: contacto@leadpilot.es
+
+Responde en español, sé útil y profesional. Si no sabes algo, di que pasarás la pregunta a un agente. No inventes datos."""
+
+        resp = requests.post(
+            "https://api.openai.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "gpt-3.5-turbo",
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": message}
+                ],
+                "max_tokens": 300,
+                "temperature": 0.7
+            },
+            timeout=15
+        )
+        
+        data = resp.json()
+        return data["choices"][0]["message"]["content"]
+    except Exception as e:
+        print(f"OpenAI error: {e}")
+        return "Gracias por tu mensaje. Un agente te responderá pronto. https://leadpilot.es"
+
+
+
+
+@app.post("/api/contact")
+async def contact_webhook(req: Request):
+    """Receive contact form submissions and chat messages with AI response"""
+    try:
+        data = await req.json()
+    except:
+        return {"success": False, "error": "Invalid JSON"}
+    
+    name = data.get("name", "Usuario")
+    email = data.get("email", "")
+    company = data.get("company", "")
+    message = data.get("message", "")
+    source = data.get("source", "contact_form")
+    
+    # Get AI response
+    ai_response = generate_ai_response(message)
+    
+    # If it's from chat widget, also notify Telegram and return AI response
+    if source == "chat_widget":
+        telegram_msg = f"""💬 <b>Chat LeadPilot</b>
+
+👤 {name}
+💬 {message[:300]}
+
+⏰ {datetime.now().strftime('%H:%M:%S')}"""
+        try:
+            requests.post(
+                f"https://api.telegram.org/bot8278104837:AAF8Lo9Gm-qTaGMPYMQ1hr-9GHw51cU-qXs/sendMessage",
+                json={"chat_id": "1058105434", "text": telegram_msg, "parse_mode": "HTML"},
+                timeout=10
+            )
+        except:
+            pass
+        
+        return {
+            "success": True,
+            "response": ai_response,
+            "ai": True
+        }
+    
+    # For contact form submissions, send to Telegram
+    BOT_TOKEN = "8278104837:AAF8Lo9Gm-qTaGMPYMQ1hr-9GHw51cU-qXs"
+    CHAT_ID = "1058105434"
+    
+    telegram_msg = f"""🔔 <b>Nuevo Lead de LeadPilot</b>
+
+👤 <b>Nombre:</b> {name}
+📧 <b>Email:</b> {email}
+🏢 <b>Empresa:</b> {company or 'No especificada'}
+💬 <b>Mensaje:</b>
+{message[:500]}
+
+⏰ {datetime.now().strftime('%H:%M:%S')}"""
+    
+    try:
+        requests.post(
+            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+            json={"chat_id": CHAT_ID, "text": telegram_msg, "parse_mode": "HTML"},
+            timeout=10
+        )
+    except:
+        pass
+    
+    try:
+        if_request("leads", "POST", [{
+            "name": name,
+            "email": email,
+            "company": company or "",
+            "message": message,
+            "source": source,
+            "created_at": datetime.utcnow().isoformat()
+        }])
+    except:
+        pass
+    
+    return {"success": True, "message": "Contacto recibido"}
+
+
+# ─── Telegram Bot Webhook for ASSISTANT ───
+@app.post("/api/telegram/webhook")
+async def telegram_webhook(req: Request):
+    """Receive messages from Telegram and respond with AI via ASSISTANT logic"""
+    try:
+        data = await req.json()
+    except:
+        return {"ok": True}
+    
+    message = data.get("message", {})
+    chat_id = message.get("chat", {}).get("id")
+    text = message.get("text", "")
+    first_name = message.get("from", {}).get("first_name", "Usuario")
+    
+    if not chat_id or not text:
+        return {"ok": True}
+    
+    # Generate AI response
+    ai_response = generate_ai_response(text)
+    
+    # Send response back to user via Telegram
+    try:
+        requests.post(
+            f"https://api.telegram.org/bot8278104837:AAF8Lo9Gm-qTaGMPYMQ1hr-9GHw51cU-qXs/sendMessage",
+            json={"chat_id": chat_id, "text": ai_response, "parse_mode": "HTML"},
+            timeout=15
+        )
+    except Exception as e:
+        print(f"Telegram send error: {e}")
+    
+    return {"ok": True}
+

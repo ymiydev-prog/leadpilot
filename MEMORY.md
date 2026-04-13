@@ -101,6 +101,7 @@
 | Telegram Bot | ✅ |
 | Firecrawl | ✅ |
 | Gmail SMTP | ✅ |
+| InsForge MCP | ✅ Configurado |
 
 ---
 
@@ -150,6 +151,33 @@ Leads se guardan en JSON. API sirve `/api/leads/list`. Dashboard carga automáti
 ---
 
 *YhasClaw v2026.4.8 - LeadPilot Edition* 🐾
+## InsForge MCP - Base de datos
+
+### Configuración
+```json
+{
+  "mcpServers": {
+    "insforge": {
+      "command": "npx",
+      "args": ["-y", "@insforge/mcp@latest"],
+      "env": {
+        "API_KEY": "ik_35c9fe063dc416d6bb3a636dc44b067c",
+        "API_BASE_URL": "https://nv96hw8d.eu-central.insforge.app"
+      }
+    }
+  }
+}
+```
+
+### Comandos
+```bash
+mcporter list insforge --schema   # Ver herramientas
+mcporter call insforge.run-raw-sql query="SELECT * FROM plans"
+```
+
+### Tablas
+- `users`, `leads`, `campaigns`, `emails`, `plans`, `stripe_payments`
+
 ## Email Sistema LeadPilot
 
 ### Cuenta SMTP
