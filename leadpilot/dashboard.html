@@ -670,7 +670,7 @@ async function apiPut(url, body){ var r = await fetch(url, {method: "PUT", heade
 async function apiPost(url, body){ var r = await fetch(url, {method: "POST", headers: auth(), body: JSON.stringify(body)}); if(r.status === 401){ logout(); return null;} return r.json(); }
 
 async function loadStats(){
-  var d = await apiGet("/api/analytics/stats");
+  var d = await apiGet("https://webhook.leadpilot.es/api/analytics/stats");
   if(!d) return;
   document.getElementById("s-leads").textContent = d.leads_used || d.leads || 0;
   document.getElementById("s-sent").textContent = d.emails_sent || d.emails_used || 0;
@@ -685,7 +685,7 @@ async function doSearch(){
   if(!q){ toast("Introduce un nicho"); return; }
   document.getElementById("search-loading").style.display = "block";
   document.getElementById("search-table").style.display = "none";
-  var d = await apiPost("/api/leads/search", {query: q, location: loc, max_results: parseInt(max)});
+  var d = await apiPost("https://webhook.leadpilot.es/api/leads/search", {query: q, location: loc, max_results: parseInt(max)});
   document.getElementById("search-loading").style.display = "none";
   if(!d) return;
   if(d.leads && d.leads.length > 0){
@@ -718,7 +718,7 @@ function quickEmail(name, email){
 async function loadLeads(){
   document.getElementById("leads-loading").style.display = "block";
   document.getElementById("leads-table").style.display = "none";
-  var d = await apiGet("/api/leads");
+  var d = await apiGet("https://webhook.leadpilot.es/api/leads");
   document.getElementById("leads-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("leads-body");
@@ -743,11 +743,11 @@ async function loadLeads(){
   document.getElementById("leads-table").style.display = idx > 0 ? "table" : "none";
 }
 
-function exportCSV(){ window.open("/api/leads/export", "_blank"); }
+function exportCSV(){ window.open("https://webhook.leadpilot.es/api/leads/export", "_blank"); }
 
 async function genEmail(tone){
   var name = document.getElementById("em-name").value || "Contacto";
-  var d = await apiPost("/api/emails/generate", {lead_name: name, tone: tone});
+  var d = await apiPost("https://webhook.leadpilot.es/api/emails/generate", {lead_name: name, tone: tone});
   if(d && d.email){ document.getElementById("em-body").value = d.email; toast("Generado"); }
 }
 
@@ -757,14 +757,14 @@ async function sendEmail(){
   var subj = document.getElementById("em-subject").value;
   var body = document.getElementById("em-body").value;
   if(!to || !subj || !body){ toast("Completa todos los campos"); return; }
-  var d = await apiPost("/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
+  var d = await apiPost("https://webhook.leadpilot.es/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
   if(d && d.success === true){ toast("Email enviado!"); loadStats(); loadSent(); }
 }
 
 async function loadSent(){
   document.getElementById("sent-loading").style.display = "block";
   document.getElementById("sent-table").style.display = "none";
-  var d = await apiGet("/api/emails/sent");
+  var d = await apiGet("https://webhook.leadpilot.es/api/emails/sent");
   document.getElementById("sent-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("sent-body");
@@ -788,14 +788,14 @@ async function createCampaign(){
   var subj = document.getElementById("camp-subject").value;
   var tmpl = document.getElementById("camp-template").value;
   if(!name || !subj || !tmpl){ toast("Completa todos los campos"); return; }
-  var d = await apiPost("/api/campaigns/create", {name: name, subject: subj, template: tmpl});
+  var d = await apiPost("https://webhook.leadpilot.es/api/campaigns/create", {name: name, subject: subj, template: tmpl});
   if(d && d.success === true){ toast("Campaña creada!"); loadCampaigns(); loadStats(); }
 }
 
 async function loadCampaigns(){
   document.getElementById("camp-loading").style.display = "block";
   document.getElementById("camp-table").style.display = "none";
-  var d = await apiGet("/api/campaigns");
+  var d = await apiGet("https://webhook.leadpilot.es/api/campaigns");
   document.getElementById("camp-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("camp-body");
@@ -822,12 +822,12 @@ async function loadCampaigns(){
 
 async function sendCampaign(id){
   if(!confirm("Enviar a todos los leads?")) return;
-  var d = await apiPost("/api/campaigns/" + id + "/send", {});
+  var d = await apiPost("https://webhook.leadpilot.es/api/campaigns/" + id + "/send", {});
   if(d){ toast("Enviados: " + (d.sent || 0)); loadCampaigns(); loadStats(); }
 }
 
 async function loadUserInfo(){
-  var d = await apiGet("/api/user/me");
+  var d = await apiGet("https://webhook.leadpilot.es/api/user/me");
   var el = document.getElementById("plan-info-detailed");
   if(d && d.user){
     var u = d.user;
@@ -839,18 +839,18 @@ async function loadUserInfo(){
 
 async function upgradePlan(plan){
   if(plan === "free"){
-    var d = await apiPost("/api/plans/upgrade", {plan: plan});
+    var d = await apiPost("https://webhook.leadpilot.es/api/plans/upgrade", {plan: plan});
     if(d && d.success === true){ toast("Plan actualizado!"); loadUserInfo(); loadStats(); }
     return;
   }
   toast("Abriendo Stripe...");
-  var d = await apiPost("/api/stripe/create-checkout", {plan: plan});
+  var d = await apiPost("https://webhook.leadpilot.es/api/stripe/create-checkout", {plan: plan});
   if(d && d.url){ window.location.href = d.url; }
   else if(d){ toast(d.error || d.detail || "Error"); }
 }
 
 async function loadAnalytics(){
-  var d = await apiGet("/api/analytics/stats");
+  var d = await apiGet("https://webhook.leadpilot.es/api/analytics/stats");
   if(!d) return;
   var leads = d.leads || 0;
   var sent = d.emails_sent || 0;
