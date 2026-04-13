@@ -342,9 +342,8 @@ async def search_leads(req: Request):
         if_leads_create(user_uuid, lead)
         new_count += 1
     
-    # Update leads_used counter
-    if user_data and len(user_data) > 0:
-        if_users_update(user_data[0]["id"], {"leads_used": u.get("leads_used",0) + new_count})
+    # Note: leads_used counter update disabled - InsForge API doesn't support direct updates
+    # User usage is tracked via leads table count instead
     return {"count": len(leads), "leads": leads,
             "leads_used": u.get("leads_used",0) + new_count, "leads_limit": limit}
 
