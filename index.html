@@ -638,7 +638,7 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 
 <script>
 let isOpen=false;function toggleChat(){isOpen=!isOpen;document.getElementById('chatModal').classList.toggle('active',isOpen)}
-async function sendMessage(e){e.preventDefault();const i=document.getElementById('chatInput'),b=e.target.querySelector('button'),m=i.value.trim();if(!m)return;addMessage(m,'user');i.value='';b.disabled=true;try{await fetch('https://webhook.leadpilot.es/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Chat Visitor',email:'chat@leadpilot.es',company:'',message:m,source:'chat_widget'})});addMessage('¡Mensaje enviado! Te responderemos pronto. 🚀','bot')}catch{addMessage('Error al enviar. Intenta de nuevo.','bot')}b.disabled=false}
+async function sendMessage(e){e.preventDefault();const i=document.getElementById('chatInput'),b=e.target.querySelector('button'),m=i.value.trim();if(!m)return;addMessage(m,'user');i.value='';b.disabled=true;try{const resp=await fetch('https://webhook.leadpilot.es/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Chat Visitor',email:'chat@leadpilot.es',company:'',message:m,source:'chat_widget'})});const data=await resp.json();if(data.response){addMessage(data.response,'bot')}else{addMessage('Mensaje enviado. Te responderemos pronto. 🚀','bot')}}catch{addMessage('Error al enviar. Intenta de nuevo.','bot')}b.disabled=false}
 function addMessage(t,n){const c=document.getElementById('chatMessages'),d=document.createElement('div');d.className='msg '+n;d.textContent=t;c.appendChild(d);c.scrollTop=c.scrollHeight}
 setTimeout(()=>{if(!isOpen)toggleChat()},5000);
 </script>
