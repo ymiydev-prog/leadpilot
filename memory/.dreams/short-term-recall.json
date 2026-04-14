@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-14T09:03:41.625Z",
+  "updatedAt": "2026-04-14T09:16:31.077Z",
   "entries": {
     "memory:memory/2026-04-08.md:37:91": {
       "key": "memory:memory/2026-04-08.md:37:91",
@@ -44,13 +44,13 @@
       "endLine": 34,
       "source": "memory",
       "snippet": "# Memory - 2026-04-09 ## Sesión con TuEnvioExpress (Jefe) ### Landing Page Professional - Landing page completa rediseñada: `/var/www/html/leadpilot/index.html` - Nuevo diseño: hero con gradient, stats bar, problems/solution, features, pricing, FAQ, CTA - Favicon con 🚀 emoji añadido ### Usuarios limpiados - Quedan 3 usuarios: y.h.a.s1984@gmail.com, ymiyo2021@gmail.com, demo@leadpilot.es - Eliminados 6 usuarios de prueba ### Research completado - Archivo: `/root/.openclaw/workspace/leadpilot/RESEARCH.md` - Mercado $9B global, 15-20% crecimiento - Competencia: Apollo.io, ZoomInfo, Hunter.io, Cognism - Diferenciador: España/Europa + GDPR compliant + precio menor - Features roadmap: email w",
-      "recallCount": 21,
+      "recallCount": 22,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 8.386501603523127,
+      "totalScore": 8.840609378924103,
       "maxScore": 0.45410777540097647,
       "firstRecalledAt": "2026-04-12T13:30:30.990Z",
-      "lastRecalledAt": "2026-04-13T20:26:16.449Z",
+      "lastRecalledAt": "2026-04-14T09:16:31.077Z",
       "queryHashes": [
         "05eeecb2609a",
         "6af5ea414a95",
@@ -72,7 +72,8 @@
       ],
       "recallDays": [
         "2026-04-12",
-        "2026-04-13"
+        "2026-04-13",
+        "2026-04-14"
       ],
       "conceptTags": [
         "problems/solution",
