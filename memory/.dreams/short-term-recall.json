@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-14T09:16:31.077Z",
+  "updatedAt": "2026-04-14T11:06:53.107Z",
   "entries": {
     "memory:memory/2026-04-08.md:37:91": {
       "key": "memory:memory/2026-04-08.md:37:91",
@@ -163,21 +163,23 @@
       "endLine": 87,
       "source": "memory",
       "snippet": "- Token: eyJhIjoiNWZkNGZhY2M0ZjM2NTIyMGFiNjFmZWFlYTA1MTFhMmEi... - Tunnel UUID: 5fd4facc4f365220ab61feaea0511a2a - Rutas configuradas en Cloudflare Dashboard: webhook.leadpilot.es -> localhost:8083 ### Webhook Endpoint - URL: https://webhook.leadpilot.es/api/stripe/webhook - Secret configurado en: /etc/systemd/system/leadpilot.service.d/webhook.conf - STRIPE_WEBHOOK_SECRET=whsec_C722s0MbWQudSGqDBf53vaWhn15HKDNd ### Eventos configurados en Stripe - checkout.session.completed (principal) - checkout.session.expired ### Notas - Modo LIVE requiere tarjeta real (no test cards) - Keys usadas: pk_live_..., sk_live_... ## LeadPilot Estado - Frontend: https://leadpilot.es/ (Cloudflare Pages) - Das",
-      "recallCount": 3,
+      "recallCount": 4,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 1.1278726518154143,
+      "totalScore": 1.4794012457132337,
       "maxScore": 0.39120183587074275,
       "firstRecalledAt": "2026-04-12T15:36:13.239Z",
-      "lastRecalledAt": "2026-04-13T14:00:06.024Z",
+      "lastRecalledAt": "2026-04-14T11:06:53.107Z",
       "queryHashes": [
         "32dc49e42b22",
         "fb672eac18ea",
-        "ce744a78c078"
+        "ce744a78c078",
+        "50d6ac17fa48"
       ],
       "recallDays": [
         "2026-04-12",
-        "2026-04-13"
+        "2026-04-13",
+        "2026-04-14"
       ],
       "conceptTags": [
         "webhook.leadpilot.es",
