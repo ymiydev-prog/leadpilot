@@ -670,7 +670,7 @@ async function apiPut(url, body){ var r = await fetch(url, {method: "PUT", heade
 async function apiPost(url, body){ var r = await fetch(url, {method: "POST", headers: auth(), body: JSON.stringify(body)}); if(r.status === 401){ logout(); return null;} return r.json(); }
 
 async function loadStats(){
-  var d = await apiGet("/api/stats");
+  var d = await apiGet("https://webhook.leadpilot.es/api/analytics/stats");
   if(!d) return;
   document.getElementById("s-leads").textContent = d.leads_used || d.leads || 0;
   document.getElementById("s-sent").textContent = d.emails_sent || d.emails_used || 0;
@@ -685,7 +685,7 @@ async function doSearch(){
   if(!q){ toast("Introduce un nicho"); return; }
   document.getElementById("search-loading").style.display = "block";
   document.getElementById("search-table").style.display = "none";
-  var d = await apiPost("/api/leads/search", {query: q, location: loc, max_results: parseInt(max)});
+  var d = await apiPost("https://webhook.leadpilot.es/api/leads/search", {query: q, location: loc, max_results: parseInt(max)});
   document.getElementById("search-loading").style.display = "none";
   if(!d) return;
   if(d.leads && d.leads.length > 0){
@@ -718,7 +718,7 @@ function quickEmail(name, email){
 async function loadLeads(){
   document.getElementById("leads-loading").style.display = "block";
   document.getElementById("leads-table").style.display = "none";
-  var d = await apiGet("/api/leads");
+  var d = await apiGet("https://webhook.leadpilot.es/api/leads");
   document.getElementById("leads-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("leads-body");
@@ -743,11 +743,11 @@ async function loadLeads(){
   document.getElementById("leads-table").style.display = idx > 0 ? "table" : "none";
 }
 
-function exportCSV(){ window.open("/api/leads/export", "_blank"); }
+function exportCSV(){ window.open("https://webhook.leadpilot.es/api/leads/export", "_blank"); }
 
 async function genEmail(tone){
   var name = document.getElementById("em-name").value || "Contacto";
-  var d = await apiPost("/api/emails/generate", {lead_name: name, tone: tone});
+  var d = await apiPost("https://webhook.leadpilot.es/api/emails/generate", {lead_name: name, tone: tone});
   if(d && d.email){ document.getElementById("em-body").value = d.email; toast("Generado"); }
 }
 
@@ -757,14 +757,14 @@ async function sendEmail(){
   var subj = document.getElementById("em-subject").value;
   var body = document.getElementById("em-body").value;
   if(!to || !subj || !body){ toast("Completa todos los campos"); return; }
-  var d = await apiPost("/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
+  var d = await apiPost("https://webhook.leadpilot.es/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
   if(d && d.success === true){ toast("Email enviado!"); loadStats(); loadSent(); }
 }
 
 async function loadSent(){
   document.getElementById("sent-loading").style.display = "block";
   document.getElementById("sent-table").style.display = "none";
-  var d = await apiGet("/api/emails/sent");
+  var d = await apiGet("https://webhook.leadpilot.es/api/emails/sent");
   document.getElementById("sent-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("sent-body");
@@ -788,14 +788,14 @@ async function createCampaign(){
   var subj = document.getElementById("camp-subject").value;
   var tmpl = document.getElementById("camp-template").value;
   if(!name || !subj || !tmpl){ toast("Completa todos los campos"); return; }
-  var d = await apiPost("/api/campaigns/create", {name: name, subject: subj, template: tmpl});
+  var d = await apiPost("https://webhook.leadpilot.es/api/campaigns/create", {name: name, subject: subj, template: tmpl});
   if(d && d.success === true){ toast("Campaña creada!"); loadCampaigns(); loadStats(); }
 }
 
 async function loadCampaigns(){
   document.getElementById("camp-loading").style.display = "block";
   document.getElementById("camp-table").style.display = "none";
-  var d = await apiGet("/api/campaigns");
+  var d = await apiGet("https://webhook.leadpilot.es/api/campaigns");
   document.getElementById("camp-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("camp-body");
@@ -822,12 +822,12 @@ async function loadCampaigns(){
 
 async function sendCampaign(id){
   if(!confirm("Enviar a todos los leads?")) return;
-  var d = await apiPost("/api/campaigns/" + id + "/send", {});
+  var d = await apiPost("https://webhook.leadpilot.es/api/campaigns/" + id + "/send", {});
   if(d){ toast("Enviados: " + (d.sent || 0)); loadCampaigns(); loadStats(); }
 }
 
 async function loadUserInfo(){
-  var d = await apiGet("/api/user/me");
+  var d = await apiGet("https://webhook.leadpilot.es/api/user/me");
   var el = document.getElementById("plan-info-detailed");
   if(d && d.user){
     var u = d.user;
@@ -839,18 +839,18 @@ async function loadUserInfo(){
 
 async function upgradePlan(plan){
   if(plan === "free"){
-    var d = await apiPost("/api/plans/upgrade", {plan: plan});
+    var d = await apiPost("https://webhook.leadpilot.es/api/plans/upgrade", {plan: plan});
     if(d && d.success === true){ toast("Plan actualizado!"); loadUserInfo(); loadStats(); }
     return;
   }
   toast("Abriendo Stripe...");
-  var d = await apiPost("/api/stripe/create-checkout", {plan: plan});
+  var d = await apiPost("https://webhook.leadpilot.es/api/stripe/create-checkout", {plan: plan});
   if(d && d.url){ window.location.href = d.url; }
   else if(d){ toast(d.error || d.detail || "Error"); }
 }
 
 async function loadAnalytics(){
-  var d = await apiGet("/api/stats");
+  var d = await apiGet("https://webhook.leadpilot.es/api/analytics/stats");
   if(!d) return;
   var leads = d.leads || 0;
   var sent = d.emails_sent || 0;
@@ -872,5 +872,50 @@ async function loadAnalytics(){
   new Chart(document.getElementById("chart-emails"), {type: "doughnut", data: {labels: ["Enviados", "Abiertos"], datasets: [{data: [sent - opened, opened], backgroundColor: ["#3f3f46", "#22c55e"]}]}});
 }
 </script>
-    <!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6af8386be5b84bd3bf67cab7caa6aa6a"}'></script><!-- Cloudflare Pages Analytics --></body>
+    <!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6af8386be5b84bd3bf67cab7caa6aa6a"}'></script><!-- Cloudflare Pages Analytics -->
+<!-- Floating Chat Widget -->
+<style>
+.chat-btn{position:fixed;bottom:24px;right:24px;width:60px;height:60px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(99,102,241,0.4);z-index:9999;transition:transform .3s}
+.chat-btn:hover{transform:scale(1.1)}.chat-btn svg{width:28px;height:28px;fill:#fff}
+.chat-modal{position:fixed;bottom:100px;right:24px;width:380px;max-width:calc(100vw-48px);background:#18181b;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.5);z-index:9998;display:none;flex-direction:column;overflow:hidden;border:1px solid #27272a;min-width:320px}
+.chat-modal.active{display:flex}
+.chat-header{background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.chat-header h3{color:#fff;font-size:16px;margin:0}
+.chat-header p{color:rgba(255,255,255,.8);font-size:12px;margin:2px 0 0}
+.chat-messages{flex:1;padding:20px;overflow-y:auto;max-height:300px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:80%;padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.5}
+.msg.bot{background:#27272a;color:#fafafa;align-self:flex-start;border-bottom-left-radius:4px}
+.msg.user{background:#6366f1;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-form{padding:16px;border-top:1px solid #27272a;display:flex;gap:10px;align-items:stretch;background:#18181b}
+.chat-form input{flex:1 1 auto;padding:12px 16px;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fafafa;font-size:14px;min-width:0;box-sizing:border-box}
+.chat-form input:focus{outline:none;border-color:#6366f1;border-width:1px}
+.chat-form button{flex:0 0 auto;padding:12px 24px;background:#6366f1;border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .2s}
+.chat-form button:hover{background:#4f46e5}
+</style>
+
+<div class="chat-btn" onclick="toggleChat()">
+<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+</div>
+
+<div class="chat-modal" id="chatModal">
+<div class="chat-header">
+<h3>LeadPilot Assistant</h3>
+<p>Te responde al instante</p>
+</div>
+<div class="chat-messages" id="chatMessages">
+<div class="msg bot">¡Hola! 👋 Soy el asistente de LeadPilot. ¿En qué puedo ayudarte?</div>
+</div>
+<form class="chat-form" id="chatForm" onsubmit="sendMessage(event)">
+<input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+<button type="submit">Enviar</button>
+</form>
+</div>
+
+<script>
+let isOpen=false;function toggleChat(){isOpen=!isOpen;document.getElementById('chatModal').classList.toggle('active',isOpen)}
+async function sendMessage(e){e.preventDefault();const i=document.getElementById('chatInput'),b=e.target.querySelector('button'),m=i.value.trim();if(!m)return;addMessage(m,'user');i.value='';b.disabled=true;try{const resp=await fetch('https://webhook.leadpilot.es/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Dashboard User',email:'user@leadpilot.es',company:'',message:m,source:'chat_widget'})});const data=await resp.json();if(data.response){addMessage(data.response,'bot')}else{addMessage('Mensaje enviado. Te responderemos pronto. 🚀','bot')}}catch{addMessage('Error al enviar. Intenta de nuevo.','bot')}b.disabled=false}
+function addMessage(t,n){const c=document.getElementById('chatMessages'),d=document.createElement('div');d.className='msg '+n;if(n==='bot'){d.innerHTML=t}else{d.textContent=t}c.appendChild(d);c.scrollTop=c.scrollHeight}
+setTimeout(()=>{if(!isOpen)toggleChat()},5000);
+</script>
+</body>
 </html>
