@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-12T17:15:43.075Z",
+  "updatedAt": "2026-04-14T09:03:41.625Z",
   "entries": {
     "memory:memory/2026-04-08.md:37:91": {
       "key": "memory:memory/2026-04-08.md:37:91",
@@ -9,20 +9,22 @@
       "endLine": 91,
       "source": "memory",
       "snippet": "- Idea de hoy: Automatización no-code para empresas (Score 9.1/10, fuente real) ### 5. LeadPilot SaaS - EL PROYECTO PRINCIPAL #### Arquitectura: ``` Frontend (nginx): http://88.223.95.118:8082/ - Landing page: /index.html - Dashboard: /dashboard.html Backend API (FastAPI): http://88.223.95.118:8083/ - /api/leads/search - Buscar leads (Firecrawl API) - /api/leads/list - Listar leads guardados - /api/emails/generate - Generar email con IA - /api/campaigns/create - Crear campañas - /api/stats - Estadísticas - /api/register - Registro usuarios - /api/login - Login Servicio systemd: leadpilot.service (puerto 8083) Nginx proxy: puerto 8082 → 8083 ``` #### Archivos: ``` /root",
-      "recallCount": 2,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.7043641477823257,
-      "maxScore": 0.35224748551845547,
+      "totalScore": 1.1629071652889251,
+      "maxScore": 0.45854301750659937,
       "firstRecalledAt": "2026-04-08T21:03:26.780Z",
-      "lastRecalledAt": "2026-04-12T16:11:41.135Z",
+      "lastRecalledAt": "2026-04-13T13:19:23.340Z",
       "queryHashes": [
         "cbc99c703878",
-        "b04ade2d6113"
+        "b04ade2d6113",
+        "7c07105a4977"
       ],
       "recallDays": [
         "2026-04-08",
-        "2026-04-12"
+        "2026-04-12",
+        "2026-04-13"
       ],
       "conceptTags": [
         "no-code",
@@ -42,23 +44,35 @@
       "endLine": 34,
       "source": "memory",
       "snippet": "# Memory - 2026-04-09 ## Sesión con TuEnvioExpress (Jefe) ### Landing Page Professional - Landing page completa rediseñada: `/var/www/html/leadpilot/index.html` - Nuevo diseño: hero con gradient, stats bar, problems/solution, features, pricing, FAQ, CTA - Favicon con 🚀 emoji añadido ### Usuarios limpiados - Quedan 3 usuarios: y.h.a.s1984@gmail.com, ymiyo2021@gmail.com, demo@leadpilot.es - Eliminados 6 usuarios de prueba ### Research completado - Archivo: `/root/.openclaw/workspace/leadpilot/RESEARCH.md` - Mercado $9B global, 15-20% crecimiento - Competencia: Apollo.io, ZoomInfo, Hunter.io, Cognism - Diferenciador: España/Europa + GDPR compliant + precio menor - Features roadmap: email w",
-      "recallCount": 8,
+      "recallCount": 21,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 3.2099539851420182,
-      "maxScore": 0.44407902289843737,
+      "totalScore": 8.386501603523127,
+      "maxScore": 0.45410777540097647,
       "firstRecalledAt": "2026-04-12T13:30:30.990Z",
-      "lastRecalledAt": "2026-04-12T16:59:19.618Z",
+      "lastRecalledAt": "2026-04-13T20:26:16.449Z",
       "queryHashes": [
         "05eeecb2609a",
         "6af5ea414a95",
         "e06a62a2381b",
         "b04ade2d6113",
         "66c69836d240",
-        "afa09e5f5d22"
+        "afa09e5f5d22",
+        "e8d9f699dfc5",
+        "fb672eac18ea",
+        "700b8149bd5b",
+        "ae97fcbcd525",
+        "fff46bef251b",
+        "7017adcd12cb",
+        "399c7545aa53",
+        "2f86a0d3af56",
+        "9fc1b691a767",
+        "ce744a78c078",
+        "2524d11c1193"
       ],
       "recallDays": [
-        "2026-04-12"
+        "2026-04-12",
+        "2026-04-13"
       ],
       "conceptTags": [
         "problems/solution",
@@ -78,18 +92,22 @@
       "endLine": 164,
       "source": "memory",
       "snippet": "## Stripe Webhook Configuration (Completado) ### Tunnel Cloudflare - cloudflared instalado y corriendo como systemd service - Token: eyJhIjoiNWZkNGZhY2M0ZjM2NTIyMGFiNjFmZWFlYTA1MTFhMmEi... - Tunnel UUID: 5fd4facc4f365220ab61feaea0511a2a - Rutas configuradas en Cloudflare Dashboard: webhook.leadpilot.es -> localhost:8083 ### Webhook Endpoint - URL: https://webhook.leadpilot.es/api/stripe/webhook - Secret configurado en: /etc/systemd/system/leadpilot.service.d/webhook.conf - STRIPE_WEBHOOK_SECRET=whsec_C722s0MbWQudSGqDBf53vaWhn15HKDNd ### Eventos configurados en Stripe - checkout.session.completed (principal) - checkout.session.expired ### Notas - Modo LIVE requiere tarjeta real (no test c",
-      "recallCount": 1,
+      "recallCount": 4,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3654943883419037,
-      "maxScore": 0.3654943883419037,
+      "totalScore": 1.4749527942259542,
+      "maxScore": 0.375562144430422,
       "firstRecalledAt": "2026-04-12T15:36:13.239Z",
-      "lastRecalledAt": "2026-04-12T15:36:13.239Z",
+      "lastRecalledAt": "2026-04-13T12:22:09.789Z",
       "queryHashes": [
-        "32dc49e42b22"
+        "32dc49e42b22",
+        "0a9eede1ce8b",
+        "adca187546aa",
+        "b09a9added33"
       ],
       "recallDays": [
-        "2026-04-12"
+        "2026-04-12",
+        "2026-04-13"
       ],
       "conceptTags": [
         "webhook.leadpilot.es",
@@ -109,18 +127,22 @@
       "endLine": 270,
       "source": "memory",
       "snippet": "2. Stripe webhook para upgrades automáticos 3. Email profesional hola@leadpilot.es 4. Registrar dominio leadpilot.es (pendiente, €12) ## Notas - Jefe quiere dashboard responsive (ya implementado) - Capacidad evolver con problemas de validación (SIGKILL) - ARIA ejecuta daily a las 07:00 UTC ## Stripe Webhook Configuration (Completado) ### Tunnel Cloudflare - cloudflared instalado y corriendo como systemd service - Token: eyJhIjoiNWZkNGZhY2M0ZjM2NTIyMGFiNjFmZWFlYTA1MTFhMmEi... - Tunnel UUID: 5fd4facc4f365220ab61feaea0511a2a - Rutas configuradas en Cloudflare Dashboard: webhook.leadpilot.es -> localhost:8083 ### Webhook Endpoint - URL: https://webhook.leadpilot.es/api/stripe/webhook - Secret",
-      "recallCount": 1,
+      "recallCount": 4,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3595802009105682,
-      "maxScore": 0.3595802009105682,
+      "totalScore": 1.5245019525289534,
+      "maxScore": 0.4142525553703308,
       "firstRecalledAt": "2026-04-12T15:36:13.239Z",
-      "lastRecalledAt": "2026-04-12T15:36:13.239Z",
+      "lastRecalledAt": "2026-04-13T14:00:06.024Z",
       "queryHashes": [
-        "32dc49e42b22"
+        "32dc49e42b22",
+        "fb672eac18ea",
+        "62cf1eba1f0d",
+        "ce744a78c078"
       ],
       "recallDays": [
-        "2026-04-12"
+        "2026-04-12",
+        "2026-04-13"
       ],
       "conceptTags": [
         "leadpilot.es",
@@ -140,18 +162,21 @@
       "endLine": 87,
       "source": "memory",
       "snippet": "- Token: eyJhIjoiNWZkNGZhY2M0ZjM2NTIyMGFiNjFmZWFlYTA1MTFhMmEi... - Tunnel UUID: 5fd4facc4f365220ab61feaea0511a2a - Rutas configuradas en Cloudflare Dashboard: webhook.leadpilot.es -> localhost:8083 ### Webhook Endpoint - URL: https://webhook.leadpilot.es/api/stripe/webhook - Secret configurado en: /etc/systemd/system/leadpilot.service.d/webhook.conf - STRIPE_WEBHOOK_SECRET=whsec_C722s0MbWQudSGqDBf53vaWhn15HKDNd ### Eventos configurados en Stripe - checkout.session.completed (principal) - checkout.session.expired ### Notas - Modo LIVE requiere tarjeta real (no test cards) - Keys usadas: pk_live_..., sk_live_... ## LeadPilot Estado - Frontend: https://leadpilot.es/ (Cloudflare Pages) - Das",
-      "recallCount": 1,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3509736746549606,
-      "maxScore": 0.3509736746549606,
+      "totalScore": 1.1278726518154143,
+      "maxScore": 0.39120183587074275,
       "firstRecalledAt": "2026-04-12T15:36:13.239Z",
-      "lastRecalledAt": "2026-04-12T15:36:13.239Z",
+      "lastRecalledAt": "2026-04-13T14:00:06.024Z",
       "queryHashes": [
-        "32dc49e42b22"
+        "32dc49e42b22",
+        "fb672eac18ea",
+        "ce744a78c078"
       ],
       "recallDays": [
-        "2026-04-12"
+        "2026-04-12",
+        "2026-04-13"
       ],
       "conceptTags": [
         "webhook.leadpilot.es",
@@ -171,18 +196,20 @@
       "endLine": 86,
       "source": "memory",
       "snippet": "| dev1/dev2 | Development | ✅ Activo | Dashboard v5.0 | --- ## 📈 Dashboard - URL: http://88.223.95.118:8080/dashboard.html - Versión: v5.0 con auto-update AJAX cada 30s - Precios BTC/ETH en tiempo real (Bybit API) - Señales Smart Money en vivo --- ## ⚠️ Pendientes 1. MAX: Configurar envío real de emails (SMTP o gws auth) 2. gws: Completar OAuth setup para Gmail/Calendar integration 3. MAX: Ejecutar primer batch de outreach a 10 prospects",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3548806399106979,
-      "maxScore": 0.3548806399106979,
+      "totalScore": 0.7266254633665084,
+      "maxScore": 0.3717448234558105,
       "firstRecalledAt": "2026-04-12T16:08:42.113Z",
-      "lastRecalledAt": "2026-04-12T16:08:42.113Z",
+      "lastRecalledAt": "2026-04-14T09:03:35.093Z",
       "queryHashes": [
-        "e06a62a2381b"
+        "e06a62a2381b",
+        "ff89f1ee0f25"
       ],
       "recallDays": [
-        "2026-04-12"
+        "2026-04-12",
+        "2026-04-14"
       ],
       "conceptTags": [
         "dev1/dev2",
@@ -202,15 +229,16 @@
       "endLine": 83,
       "source": "memory",
       "snippet": "- **Skills:** marketing-strategy-pmm, content-marketing, ai-social-media-manager - **Autoridad:** Decide cantidad de tweets, horarios, temas - **Flujo:** ZARA investiga → genera hooks → Elon publica auto (score ≥7/10) - **Archivos:** ZARA_MARKETING.md, zara_workflow.py --- ## 🔧 Configuraciones Actualizadas ### Publicación Twitter Automática - Elon YA NO requiere aprobación del Jefe - Publica automáticamente si ZARA valida (score ≥7/10) - ZARA decide frecuencia (2-5 threads/semana) y horarios ### Email ARIA - SMTP Configurado - Gmail App Password configurado - Destinatario: ymiy2021@gmail.com - Formato HTML profesional con CSS inline - Contexto España/Europa (EUR, CET, fuentes ES) ### G",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.35002730786800385,
-      "maxScore": 0.35002730786800385,
+      "totalScore": 0.7430687427520752,
+      "maxScore": 0.39304143488407134,
       "firstRecalledAt": "2026-04-12T17:11:52.241Z",
-      "lastRecalledAt": "2026-04-12T17:11:52.241Z",
+      "lastRecalledAt": "2026-04-12T17:28:46.815Z",
       "queryHashes": [
-        "27d217e2740d"
+        "27d217e2740d",
+        "3c120ce5fc03"
       ],
       "recallDays": [
         "2026-04-12"
@@ -255,6 +283,494 @@
         "log",
         "first",
         "identity"
+      ]
+    },
+    "memory:memory/2026-04-10.md:77:120": {
+      "key": "memory:memory/2026-04-10.md:77:120",
+      "path": "memory/2026-04-10.md",
+      "startLine": 77,
+      "endLine": 120,
+      "source": "memory",
+      "snippet": "- https://leadpilot.es/ - https://leadpilot.es/dashboard - https://leadpilot.es/privacy.html - https://leadpilot.es/terms.html # Memory 2026-04-10 ## LeadPilot.es - Deploy a Cloudflare Pages ### Problema resuelto - Cloudflare Pages buscaba archivos en raíz, no en `/frontend/` - Solución: mover index.html y dashboard.html al root del repo - API calls usaban URLs relativas (/api/) que no funcionan desde otro dominio - Arreglado: todas las llamadas API usan `http://88.223.95.118:8083/api/` ### Estado actual - Landing: https://leadpilot.es/ ✅ - Dashboard: https://leadpilot.es/dashboard ✅ - Login/registro funcionando ✅ - Dashboard responsive para móviles ✅ ### Archivos en GitHub - https://git",
+      "recallCount": 9,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 3.4335714936256405,
+      "maxScore": 0.4294932663440704,
+      "firstRecalledAt": "2026-04-12T17:47:04.268Z",
+      "lastRecalledAt": "2026-04-14T09:03:41.625Z",
+      "queryHashes": [
+        "e8d9f699dfc5",
+        "fb672eac18ea",
+        "62cf1eba1f0d",
+        "700b8149bd5b",
+        "fff46bef251b",
+        "41a07559482d",
+        "b1aed837af71",
+        "ce744a78c078",
+        "cf3a3d81f017"
+      ],
+      "recallDays": [
+        "2026-04-12",
+        "2026-04-13",
+        "2026-04-14"
+      ],
+      "conceptTags": [
+        "leadpilot.es",
+        "leadpilot.es/dashboard",
+        "leadpilot.es/privacy.html",
+        "leadpilot.es/terms.html",
+        "index.html",
+        "dashboard.html",
+        "88.223.95.118",
+        "8083/api"
+      ]
+    },
+    "memory:memory/2026-03-30.md:31:76": {
+      "key": "memory:memory/2026-03-30.md:31:76",
+      "path": "memory/2026-03-30.md",
+      "startLine": 31,
+      "endLine": 76,
+      "source": "memory",
+      "snippet": "## Twitter/X - CONFIGURADO ✅ - Autenticación: OAuth 1.0a - Consumer Key: `Larb2XdDIubuV2SXjBs1lyKuv` - Consumer Secret: `7OdE1qqSL4T6Pjaqz4O7yuVIHlOXSk410doHNNJkzfAVKXeRMe` - Access Token: `339920284-DPw5XcmrEa2AWgEEAKfvybH0AbXzfJ5TKydJS44r` - Access Token Secret: `zmIhr026BMp7y925tnjsdyP84fxD3DF1QIMmzWdBFwGtN` - Usuario: @yhas1984 - Tweet de prueba publicado: ID 2038420014609416609 - Cliente actualizado: /root/.openclaw/workspace/twitter/client.py ## Twitter/X - PUBLICACIÓN APROBADA ✅ **Hilo publicado:** https://twitter.com/yhas1984/status/2038519374873518305 - 9 tweets sobre \"IA y Smart Money\" - 4 fuentes incluidas - Formato: Thread profesional ## Twitter - Reglas de Publicación Aprobada",
+      "recallCount": 4,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.4627813309431075,
+      "maxScore": 0.38714059889316554,
+      "firstRecalledAt": "2026-04-12T17:47:04.268Z",
+      "lastRecalledAt": "2026-04-13T13:31:20.901Z",
+      "queryHashes": [
+        "e8d9f699dfc5",
+        "bb65d625b249",
+        "14dd25a8be4f",
+        "c44cb6625071"
+      ],
+      "recallDays": [
+        "2026-04-12",
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "twitter/x",
+        "1.0a",
+        "twitter",
+        "configurado",
+        "autenticación",
+        "oauth",
+        "consumer",
+        "key"
+      ]
+    },
+    "memory:memory/2026-04-08.md:1:48": {
+      "key": "memory:memory/2026-04-08.md:1:48",
+      "path": "memory/2026-04-08.md",
+      "startLine": 1,
+      "endLine": 48,
+      "source": "memory",
+      "snippet": "# 2026-04-08 - YhasClaw Daily Log ## 🚀 PROYECTO PRINCIPAL: LeadPilot.es ### Estado: MVP FUNCIONANDO ### Inicio: 10:57 UTC ### Dominio: leadpilot.es (pendiente registro) --- ## 📋 Todo lo construido hoy ### 1. Dashboard v7/v8/v9 - Intentos fallidos de dashboard - Problema: JSON externo no cargaba por caché de nginx - Solución final: LobsterBoard + LeadPilot ### 2. LobsterBoard - Repositorio: https://github.com/Curbob/LobsterBoard - Instalado en: /var/www/html/lobsterboard/ - Puerto: 8081 - Config: /var/www/html/lobsterboard/config.json ### 3. Thread Twitter Miércoles - Tema: AI Agents en Trading - Score ZARA: 8.5/10 - Tweets publicados: 5/9 (rate limited, tweets 6-9 fallaron con 403)",
+      "recallCount": 7,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 2.9294827152928837,
+      "maxScore": 0.6683195014438164,
+      "firstRecalledAt": "2026-04-12T17:47:04.268Z",
+      "lastRecalledAt": "2026-04-14T09:03:41.625Z",
+      "queryHashes": [
+        "e8d9f699dfc5",
+        "fb672eac18ea",
+        "62cf1eba1f0d",
+        "b1aed837af71",
+        "7c07105a4977",
+        "ec17e38aa4f8",
+        "cf3a3d81f017"
+      ],
+      "recallDays": [
+        "2026-04-12",
+        "2026-04-13",
+        "2026-04-14"
+      ],
+      "conceptTags": [
+        "leadpilot.es",
+        "v7/v8/v9",
+        "github.com/curbob/lobsterboard",
+        "var/www/html/lobsterboard",
+        "8.5/10",
+        "5/9",
+        "6-9",
+        "yhasclaw"
+      ]
+    },
+    "memory:memory/2026-04-10.md:1:42": {
+      "key": "memory:memory/2026-04-10.md:1:42",
+      "path": "memory/2026-04-10.md",
+      "startLine": 1,
+      "endLine": 42,
+      "source": "memory",
+      "snippet": "# Memory 2026-04-10 ## LeadPilot.es - Deploy a Cloudflare Pages ### Problema resuelto - Cloudflare Pages buscaba archivos en raíz, no en `/frontend/` - Solución: mover index.html y dashboard.html al root del repo - API calls usaban URLs relativas (/api/) que no funcionan desde otro dominio - Arreglado: todas las llamadas API usan `http://88.223.95.118:8083/api/` ### Estado actual - Landing: https://leadpilot.es/ ✅ - Dashboard: https://leadpilot.es/dashboard ✅ - Login/registro funcionando ✅ - Dashboard responsive para móviles ✅ ### Archivos en GitHub - https://github.com/ymiydev-prog/leadpilot - Versión en port 8082 (localhost) subida a Cloudflare - Frontend ahora usa API endpoint: `http:",
+      "recallCount": 6,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 2.282797262072563,
+      "maxScore": 0.4158654302358627,
+      "firstRecalledAt": "2026-04-12T17:59:43.382Z",
+      "lastRecalledAt": "2026-04-14T09:03:41.625Z",
+      "queryHashes": [
+        "fb672eac18ea",
+        "700b8149bd5b",
+        "fff46bef251b",
+        "b1aed837af71",
+        "ce744a78c078",
+        "cf3a3d81f017"
+      ],
+      "recallDays": [
+        "2026-04-12",
+        "2026-04-13",
+        "2026-04-14"
+      ],
+      "conceptTags": [
+        "leadpilot.es",
+        "index.html",
+        "dashboard.html",
+        "88.223.95.118",
+        "8083/api",
+        "leadpilot.es/dashboard",
+        "login/registro",
+        "cloudflare"
+      ]
+    },
+    "memory:memory/2026-04-10.md:257:305": {
+      "key": "memory:memory/2026-04-10.md:257:305",
+      "path": "memory/2026-04-10.md",
+      "startLine": 257,
+      "endLine": 305,
+      "source": "memory",
+      "snippet": "## LeadPilot Launch Progress ### Completed: - Privacy Policy + Terms of Service created - Open Graph tags added - Favicon SVG created - Legal links in footer - Analytics endpoint added - Launch plan created (LAUNCH_PLAN.md) - marketing-ideas skill installed ### Pending: - Stripe test mode setup - Email warmup (SPF/DKIM) - Analytics service (Umami/Plausible) - Professional logo ### URLs Published: - https://leadpilot.es/ - https://leadpilot.es/dashboard - https://leadpilot.es/privacy.html - https://leadpilot.es/terms.html ## InsForge Integration (Completado 2026-04-10 21:38) ### Configuración - Project ID: 072773a9-b3d8-475e-ad39-124f68580a99 - App Key: nv96hw8d - Region: eu-central - OS",
+      "recallCount": 5,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.9604708010094904,
+      "maxScore": 0.4319593691962506,
+      "firstRecalledAt": "2026-04-12T17:59:46.831Z",
+      "lastRecalledAt": "2026-04-13T13:16:56.489Z",
+      "queryHashes": [
+        "62cf1eba1f0d",
+        "adca187546aa",
+        "b09a9added33",
+        "a0a728d7ec00",
+        "b1aed837af71"
+      ],
+      "recallDays": [
+        "2026-04-12",
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "configuración",
+        "launch-plan.md",
+        "marketing-ideas",
+        "spf/dkim",
+        "umami/plausible",
+        "leadpilot.es",
+        "leadpilot.es/dashboard",
+        "leadpilot.es/privacy.html"
+      ]
+    },
+    "memory:memory/2026-04-08.md:195:206": {
+      "key": "memory:memory/2026-04-08.md:195:206",
+      "path": "memory/2026-04-08.md",
+      "startLine": 195,
+      "endLine": 206,
+      "source": "memory",
+      "snippet": "### Lección aprendida: - NO usar sed para editar archivos JS grandes - Usar Python scripting para cambios complejos en HTML - Cuando el form se rompe, reconstruir el bloque completo ### Pendiente: - [ ] Stripe webhook para upgrade automático post-pago - [ ] Registrar dominio leadpilot.es - [ ] Testing completo de registro/login - [ ] Email real de recuperación (Gmail SMTP ya configurado)",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7231128245592118,
+      "maxScore": 0.36323094367980957,
+      "firstRecalledAt": "2026-04-12T18:14:19.891Z",
+      "lastRecalledAt": "2026-04-12T19:42:38.617Z",
+      "queryHashes": [
+        "6121b4bb8b3f",
+        "7017adcd12cb"
+      ],
+      "recallDays": [
+        "2026-04-12"
+      ],
+      "conceptTags": [
+        "post-pago",
+        "leadpilot.es",
+        "registro/login",
+        "lección",
+        "aprendida",
+        "usar",
+        "sed",
+        "editar"
+      ]
+    },
+    "memory:memory/2026-04-10.md:151:195": {
+      "key": "memory:memory/2026-04-10.md:151:195",
+      "path": "memory/2026-04-10.md",
+      "startLine": 151,
+      "endLine": 195,
+      "source": "memory",
+      "snippet": "- Stripe test mode setup - Email warmup (SPF/DKIM) - Analytics service (Umami/Plausible) - Professional logo ### URLs Published: - https://leadpilot.es/ - https://leadpilot.es/dashboard - https://leadpilot.es/privacy.html - https://leadpilot.es/terms.html ## InsForge Integration (Completado 2026-04-10 21:38) ### Configuración - Project ID: 072773a9-b3d8-475e-ad39-124f68580a99 - App Key: nv96hw8d - Region: eu-central - OSS Host: https://nv96hw8d.eu-central.insforge.app - API Key: isf_phu_XK2wWM3uWnE8nqSp8Qa3f7d9h2k5m6p8r1t4v6x8y0z2 - Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... ### Tablas creadas - users (id, email, password_hash, name, plan, created_at, updated_at) - leads (id, user",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.248967103145715,
+      "maxScore": 0.4602372685891356,
+      "firstRecalledAt": "2026-04-13T12:02:57.453Z",
+      "lastRecalledAt": "2026-04-13T12:59:58.496Z",
+      "queryHashes": [
+        "adca187546aa",
+        "b09a9added33",
+        "a0a728d7ec00"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "configuración",
+        "spf/dkim",
+        "umami/plausible",
+        "leadpilot.es",
+        "leadpilot.es/dashboard",
+        "leadpilot.es/privacy.html",
+        "leadpilot.es/terms.html",
+        "eu-central"
+      ]
+    },
+    "memory:memory/2026-04-10.md:297:348": {
+      "key": "memory:memory/2026-04-10.md:297:348",
+      "path": "memory/2026-04-10.md",
+      "startLine": 297,
+      "endLine": 348,
+      "source": "memory",
+      "snippet": "- ~/.insforge/insforge_api_key - API key de admin ### Backend LeadPilot actualizado - /root/.openclaw/workspace/leadpilot/backend/main.py - Agregado soporte InsForge (INSERT, SELECT, UPDATE, DELETE) - Fallback a JSON si InsForge no disponible - Registro y Login funcionando con InsForge ### Verificación API (21:38 UTC) - POST /api/auth/register → user_id devuelto ✅ - POST /api/auth/login → authentication successful ✅ - GET /api/plans → plans list ✅ ### Próximos pasos 1. Migrar users.json existente a InsForge 2. Integrar leads y campaigns con InsForge 3. Probar búsqueda de leads con Firecrawl 4. Configurar Stripe Checkout en backend ## Auth System Fixes (22:52 UTC) ### Problemas encontrad",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.809949487551425,
+      "maxScore": 0.45816047798034965,
+      "firstRecalledAt": "2026-04-13T12:02:57.453Z",
+      "lastRecalledAt": "2026-04-13T12:47:47.809Z",
+      "queryHashes": [
+        "adca187546aa",
+        "57fca93502e6"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "insforge/insforge-api-key",
+        "api/auth/register",
+        "user-id",
+        "api/auth/login",
+        "api/plans",
+        "users.json",
+        "insforge",
+        "insforge-api-key"
+      ]
+    },
+    "memory:memory/2026-04-10.md:185:232": {
+      "key": "memory:memory/2026-04-10.md:185:232",
+      "path": "memory/2026-04-10.md",
+      "startLine": 185,
+      "endLine": 232,
+      "source": "memory",
+      "snippet": "- Registro y Login funcionando con InsForge ### Verificación API (21:38 UTC) - POST /api/auth/register → user_id devuelto ✅ - POST /api/auth/login → authentication successful ✅ - GET /api/plans → plans list ✅ ### Próximos pasos 1. Migrar users.json existente a InsForge 2. Integrar leads y campaigns con InsForge 3. Probar búsqueda de leads con Firecrawl 4. Configurar Stripe Checkout en backend NO_REPLY # Memory 2026-04-10 ## LeadPilot.es - Deploy a Cloudflare Pages ### Problema resuelto - Cloudflare Pages buscaba archivos en raíz, no en `/frontend/` - Solución: mover index.html y dashboard.html al root del repo - API calls usaban URLs relativas (/api/) que no funcionan desde otro dominio",
+      "recallCount": 4,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.5428587221059222,
+      "maxScore": 0.40673777987092935,
+      "firstRecalledAt": "2026-04-13T12:02:57.453Z",
+      "lastRecalledAt": "2026-04-13T20:26:16.449Z",
+      "queryHashes": [
+        "adca187546aa",
+        "b09a9added33",
+        "ce744a78c078",
+        "2524d11c1193"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "api/auth/register",
+        "user-id",
+        "api/auth/login",
+        "api/plans",
+        "users.json",
+        "no-reply",
+        "leadpilot.es",
+        "index.html"
+      ]
+    },
+    "memory:memory/2026-04-12.md:96:131": {
+      "key": "memory:memory/2026-04-12.md:96:131",
+      "path": "memory/2026-04-12.md",
+      "startLine": 96,
+      "endLine": 131,
+      "source": "memory",
+      "snippet": "- Bug: init() mostraba app sin validar token → ahora valida con /api/user/me - Bug: `d = get_user(d.email)` en funciones sin `d` → corregido a `email = get_current_user(req)` - Bug: export_leads usaba `email = get_current_user(email)` (variable duplicada) - Bug: endpoints `/api/leads` y `/api/campaigns` no existían (frontend los usa) - Bug: `/api/stats` no existía (frontend lo usa para dashboard) - Todo conectado a InsForge (users, leads, campaigns) - Añadido endpoint `/api/emails/generate` y `/api/emails/send` ## Bugs pendientes por arreglar 1. `if_users_find` usa `user_id=eq.{email}` pero InsForge puede usar `email=eq.{email}` 2. No store sent emails en InsForge (devuelve array vacío) 3.",
+      "recallCount": 4,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.5123810301889016,
+      "maxScore": 0.40663447380065915,
+      "firstRecalledAt": "2026-04-13T12:02:57.453Z",
+      "lastRecalledAt": "2026-04-13T20:26:16.449Z",
+      "queryHashes": [
+        "adca187546aa",
+        "b09a9added33",
+        "7c07105a4977",
+        "2524d11c1193"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "api/user/me",
+        "get-user",
+        "d.email",
+        "get-current-user",
+        "export-leads",
+        "api/leads",
+        "api/campaigns",
+        "api/stats"
+      ]
+    },
+    "memory:memory/2026-04-12.md:35:70": {
+      "key": "memory:memory/2026-04-12.md:35:70",
+      "path": "memory/2026-04-12.md",
+      "startLine": 35,
+      "endLine": 70,
+      "source": "memory",
+      "snippet": "- Bug: `d = get_user(d.email)` en funciones sin `d` → corregido a `email = get_current_user(req)` - Bug: export_leads usaba `email = get_current_user(email)` (variable duplicada) - Bug: endpoints `/api/leads` y `/api/campaigns` no existían (frontend los usa) - Bug: `/api/stats` no existía (frontend lo usa para dashboard) - Todo conectado a InsForge (users, leads, campaigns) - Añadido endpoint `/api/emails/generate` y `/api/emails/send` ## Bugs pendientes por arreglar 1. `if_users_find` usa `user_id=eq.{email}` pero InsForge puede usar `email=eq.{email}` 2. No store sent emails en InsForge (devuelve array vacío) 3. Campañas no tienen IDs en frontend (usa Object.entries con indices) ## Email",
+      "recallCount": 5,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.9143079787492752,
+      "maxScore": 0.40834500193595885,
+      "firstRecalledAt": "2026-04-13T12:22:09.789Z",
+      "lastRecalledAt": "2026-04-13T20:26:16.449Z",
+      "queryHashes": [
+        "b09a9added33",
+        "bc5b84c77446",
+        "a0a728d7ec00",
+        "7c07105a4977",
+        "2524d11c1193"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "get-user",
+        "d.email",
+        "get-current-user",
+        "export-leads",
+        "api/leads",
+        "api/campaigns",
+        "api/stats",
+        "api/emails/generate"
+      ]
+    },
+    "memory:memory/2026-04-12.md:62:99": {
+      "key": "memory:memory/2026-04-12.md:62:99",
+      "path": "memory/2026-04-12.md",
+      "startLine": 62,
+      "endLine": 99,
+      "source": "memory",
+      "snippet": "## LeadPilot Sales Campaign - Started 16:11 UTC ### Mission: Generate revenue autonomously - Jefe said: \"encárgate tú de todo\", \"grábatelo bien\" - Goal: Make LeadPilot generate money with minimal human intervention ### Infrastructure Ready - ✅ Prospect list: 44 unique companies (campaigns/prospects_2026-04-12.json) - ✅ Email templates: 3 tones (profesional, casual, directo) - campaigns/email_template.md - ✅ Outreach script: 3-email sequence + objection handling - campaigns/outreach_script.md - ✅ Campaign folder created with run_gen.sh for generating more prospects ### Stats - 44 prospects ready - Email templates prepared for immediate use - SMTP working (contacto@leadpilot.es) ### Next",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.1587203413248062,
+      "maxScore": 0.4299876242876053,
+      "firstRecalledAt": "2026-04-13T13:16:56.489Z",
+      "lastRecalledAt": "2026-04-13T20:26:16.449Z",
+      "queryHashes": [
+        "b1aed837af71",
+        "7c07105a4977",
+        "2524d11c1193"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "campaigns/email-template.md",
+        "3-email",
+        "campaigns/outreach-script.md",
+        "run-gen.sh",
+        "leadpilot.es",
+        "leadpilot",
+        "sales",
+        "campaign"
+      ]
+    },
+    "memory:memory/2026-04-08.md:77:136": {
+      "key": "memory:memory/2026-04-08.md:77:136",
+      "path": "memory/2026-04-08.md",
+      "startLine": 77,
+      "endLine": 136,
+      "source": "memory",
+      "snippet": "└── api.log (logs del servidor) /var/www/html/leadpilot/ (frontend servido por nginx) /etc/nginx/sites-available/leadpilot /etc/systemd/system/leadpilot.service ``` #### API Key Firecrawl: ``` fc-7d9a7bd9c81346dfbfba5c7d55743bd5 ``` #### Modelo de negocio: - Free: 10 leads/mes - Starter €29/mes: 100 leads + 500 emails - Pro €79/mes: 500 leads + 2000 emails - Business €149/mes: ilimitado --- ## ⚠️ LECCIONES APRENDIDAS ### 1. NUNCA SIMULAR DATOS (Regla grabada en MEMORY.md) - ARIA falló porque usaba datos hardcoded - LeadPilot scraper original usaba curl a Google (bloqueado) - Solución: Firecrawl API directamente ### 2. Nginx timeout - Default: 60s timeout - Firecrawl scra",
+      "recallCount": 4,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.8646770675619986,
+      "maxScore": 0.6680249710520652,
+      "firstRecalledAt": "2026-04-13T13:19:23.340Z",
+      "lastRecalledAt": "2026-04-14T09:03:41.625Z",
+      "queryHashes": [
+        "7c07105a4977",
+        "ff89f1ee0f25",
+        "ec17e38aa4f8",
+        "cf3a3d81f017"
+      ],
+      "recallDays": [
+        "2026-04-13",
+        "2026-04-14"
+      ],
+      "conceptTags": [
+        "api.log",
+        "var/www/html/leadpilot",
+        "leads/mes",
+        "29/mes",
+        "79/mes",
+        "149/mes",
+        "memory.md",
+        "logs"
+      ]
+    },
+    "memory:memory/2026-04-12.md:188:204": {
+      "key": "memory:memory/2026-04-12.md:188:204",
+      "path": "memory/2026-04-12.md",
+      "startLine": 188,
+      "endLine": 204,
+      "source": "memory",
+      "snippet": "- password: demo123 - plan: starter ### Contact Page Created - File: /var/www/html/leadpilot/contact.html - Form with name, email, company, message - Sends to API or fallback to mailto: ### Pending Cloudflare Actions 1. PURGE CACHE: Required to show new logo 2. Check if Cloudflare Pages is connected or just DNS proxy 3. If Pages not updating, may need to re-upload files ## Compromised Creds (rotate when possible) - SMTP: yhasvenezuela@gmail.com / ificahhweilgwfjb - InsForge: nv96hw8d.eu-central.insforge.app / ik_35c9fe063dc416d6bb3a636dc44b067c",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.358027970790863,
+      "maxScore": 0.358027970790863,
+      "firstRecalledAt": "2026-04-13T14:35:55.741Z",
+      "lastRecalledAt": "2026-04-13T14:35:55.741Z",
+      "queryHashes": [
+        "639e60a0e20d"
+      ],
+      "recallDays": [
+        "2026-04-13"
+      ],
+      "conceptTags": [
+        "re-upload",
+        "gmail.com",
+        "nv96hw8d.eu-central.insforge.app",
+        "password",
+        "demo123",
+        "plan",
+        "starter",
+        "contact"
       ]
     }
   }

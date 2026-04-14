@@ -2,9 +2,15 @@
 <html lang="es">
 <head>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta property="og:title" content="LeadPilot - Generador de Leads B2B para España">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="LeadPilot">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="canonical" href="https://leadpilot.es/">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:title" content="LeadPilot - Generador de Leads B2B para España">
     <meta property="og:description" content="Encuentra empresas y contactos verificados en España. 100+ leads gratis. Sin tarjeta de crédito.">
-    <meta property="og:image" content="https://leadpilot.es/og-image.png">
+    
     <meta property="og:url" content="https://leadpilot.es">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
@@ -30,7 +36,11 @@
             --green: #22c55e;
             --amber: #f59e0b;
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        
+        /* Skip link for accessibility */
+        .skip-link { position: absolute; top: -40px; left: 0; background: #6366f1; color: #fff; padding: 8px 16px; z-index: 1000; transition: top 0.3s; }
+        .skip-link:focus { top: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
         
         /* NAV */
         nav {
@@ -359,10 +369,11 @@
         }
     </style>
 </head>
-<body>
+<body>    <a href="#main" class="skip-link">Saltar al contenido principal</a>
 
-<nav>
-    <img src="assets/logo.png" alt="LeadPilot" style="height:36px;margin:0 20px 24px 0;">
+
+<nav aria-label="Navegación principal">
+    <img src="assets/logo.svg" alt="LeadPilot - Generador de Leads B2B" width="160" height="40" style="height:36px;margin:0 20px 24px 0;">
     <a href="#features">Funciones</a>
     <a href="#pricing">Precios</a>
     <a href="#faq">FAQ</a>
@@ -577,12 +588,57 @@
 <section class="cta-section">
     <h2>Empieza a generar leads hoy</h2>
     <p>Tu primera lista de prospectos en menos de 5 minutos.</p>
-    <a href="https://leadpilot.es/dashboard#register" class="btn-primary">Crear Cuenta Gratis →</a>
+    <a href="https://leadpilot.es/dashboard#register" class="btn-primary" title="Crear cuenta gratuita en LeadPilot">Crear Cuenta Gratis →</a>
 </section>
 
-<footer>
+<footer role="contentinfo">
     <p>© 2026 LeadPilot · <a href="https://leadpilot.es/dashboard">App</a> · <a href="mailto:hola@leadpilot.es">Contacto</a> · <a href="/privacy.html" style="color:#71717a">Privacidad</a> · <a href="/terms.html" style="color:#71717a">Términos</a></p>
 </footer>
 
-</body>
-</html>
+    </body>
+</html><!-- Updated: 2026-04-12T19:44:26Z -->
+
+<!-- Floating Chat Widget -->
+<style>
+.chat-btn{position:fixed;bottom:24px;right:24px;width:60px;height:60px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(99,102,241,0.4);z-index:9999;transition:transform .3s}
+.chat-btn:hover{transform:scale(1.1)}.chat-btn svg{width:28px;height:28px;fill:#fff}
+.chat-modal{position:fixed;bottom:100px;right:24px;width:380px;max-width:calc(100vw-48px);background:#18181b;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.5);z-index:9998;display:none;flex-direction:column;overflow:hidden;border:1px solid #27272a}
+.chat-modal.active{display:flex}
+.chat-header{background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.chat-header h3{color:#fff;font-size:16px;margin:0}
+.chat-header p{color:rgba(255,255,255,.8);font-size:12px;margin:2px 0 0}
+.chat-messages{flex:1;padding:20px;overflow-y:auto;max-height:300px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:80%;padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.5}
+.msg.bot{background:#27272a;color:#fafafa;align-self:flex-start;border-bottom-left-radius:4px}
+.msg.user{background:#6366f1;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-form{padding:16px;border-top:1px solid #27272a;display:flex;gap:10px}
+.chat-form input{flex:1;padding:12px 16px;background:#27272a;border:1px solid #3f3f46;border-radius:8px;color:#fafafa;font-size:14px}
+.chat-form input:focus{outline:none;border-color:#6366f1}
+.chat-form button{padding:12px 20px;background:#6366f1;border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer}
+.chat-form button:hover{background:#4f46e5}
+</style>
+
+<div class="chat-btn" onclick="toggleChat()">
+<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+</div>
+
+<div class="chat-modal" id="chatModal">
+<div class="chat-header">
+<h3>LeadPilot Assistant</h3>
+<p>Te responde al instante</p>
+</div>
+<div class="chat-messages" id="chatMessages">
+<div class="msg bot">¡Hola! 👋 Soy el asistente de LeadPilot. ¿En qué puedo ayudarte?</div>
+</div>
+<form class="chat-form" id="chatForm" onsubmit="sendMessage(event)">
+<input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+<button type="submit">Enviar</button>
+</form>
+</div>
+
+<script>
+let isOpen=false;function toggleChat(){isOpen=!isOpen;document.getElementById('chatModal').classList.toggle('active',isOpen)}
+async function sendMessage(e){e.preventDefault();const i=document.getElementById('chatInput'),b=e.target.querySelector('button'),m=i.value.trim();if(!m)return;addMessage(m,'user');i.value='';b.disabled=true;try{const resp=await fetch('https://webhook.leadpilot.es/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Chat Visitor',email:'chat@leadpilot.es',company:'',message:m,source:'chat_widget'})});const data=await resp.json();if(data.response){addMessage(data.response,'bot')}else{addMessage('Mensaje enviado. Te responderemos pronto. 🚀','bot')}}catch{addMessage('Error al enviar. Intenta de nuevo.','bot')}b.disabled=false}
+function addMessage(t,n){const c=document.getElementById('chatMessages'),d=document.createElement('div');d.className='msg '+n;if(n==='bot'){d.innerHTML=t}else{d.textContent=t}c.appendChild(d);c.scrollTop=c.scrollHeight}
+/* v2 */ setTimeout(()=>{if(!isOpen)toggleChat()},5000);
+</script>

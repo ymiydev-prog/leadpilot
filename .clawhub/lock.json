@@ -132,6 +132,10 @@
     "insforge-cli": {
       "version": "0.1.0",
       "installedAt": 1775856447507
+    },
+    "obsidian-1-0-0": {
+      "version": "1.0.0",
+      "installedAt": 1776072889705
     }
   }
 }

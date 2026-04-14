@@ -1,7 +1,12 @@
-*.json
-!plans.json
-data/
+venv/
 __pycache__/
 *.pyc
+*.pyo
+data/
+insforge/
 .env
-credentials.json
+*.local
+.DS_Store
+Thumbs.db
+*.log
+node_modules/

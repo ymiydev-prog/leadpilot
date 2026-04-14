@@ -16,5 +16,77 @@
       "topic": "Educaci\u00f3n financiera",
       "error": "{'title': 'Unauthorized', 'type': 'about:blank', 'status': 401, 'detail': 'Unauthorized'}"
     }
-  ]
+  ],
+  "last_thread": {
+    "date": "2026-04-12",
+    "topic": "LeadPilot B2B Lead Generation",
+    "tweets": 10,
+    "result": {
+      "total_tweets": 10,
+      "published": 10,
+      "thread_url": "https://twitter.com/yhas1984/status/2043381440809672983",
+      "results": [
+        {
+          "tweet_number": 1,
+          "id": "2043381440809672983",
+          "text": "\ud83e\uddf5 C\u00f3mo conseguir leads cualificados sin pasar horas buscando empresas interesadas.\n\nThread sobre la herramienta que us\u00e9 para generar 50+ leads verificados esta semana \ud83d\udc47",
+          "status": "success"
+        },
+        {
+          "tweet_number": 2,
+          "id": "2043381446321025258",
+          "text": "El mayor problema de las agencias y consultoras:\n\nPasan 3-4 horas al d\u00eda buscando prospectos en Google, LinkedIn, directorios...\n\nY al final del d\u00eda tienen 5 contactos que ni responden.",
+          "status": "success"
+        },
+        {
+          "tweet_number": 3,
+          "id": "2043381451832303844",
+          "text": "La soluci\u00f3n no es buscar m\u00e1s.\n\nEs buscar MEJOR.\n\n@LeadPilot_es usa AI para encontrar empresas que YA est\u00e1n buscando tus servicios.\n\nB\u00fasqueda real, datos reales, contacto directo.",
+          "status": "success"
+        },
+        {
+          "tweet_number": 4,
+          "id": "2043381457431793742",
+          "text": "As\u00ed funciona:\n\n1\ufe0f\u20e3 Seleccionas nicho + ubicaci\u00f3n\n2\ufe0f\u20e3 AI busca empresas reales en Espa\u00f1a\n3\ufe0f\u20e3 Ves email, tel\u00e9fono, ubicaci\u00f3n\n4\ufe0f\u20e3 Contactas directo\n\nSin intermediarios. Sin datos obsoletos.",
+          "status": "success"
+        },
+        {
+          "tweet_number": 5,
+          "id": "2043381462980841793",
+          "text": "El resultado:\n\n\u2022 50 leads en 10 minutos (no 3 horas)\n\u2022 Datos verificados\n\u2022 Contacto directo con decisores\n\u2022 Dashboard para seguir tu pipeline",
+          "status": "success"
+        },
+        {
+          "tweet_number": 6,
+          "id": "2043381468576047142",
+          "text": "Precio:\n\nFree: 10 leads/mes (\u20ac0)\nStarter: 100 leads/mes (\u20ac29)\nPro: 500 leads/mes (\u20ac79)\nBusiness: ilimitado (\u20ac149)\n\nPor menos de lo que cuesta un caf\u00e9 puedes tener 100 leads cualificados.",
+          "status": "success"
+        },
+        {
+          "tweet_number": 7,
+          "id": "2043381474137620966",
+          "text": "Lo que nadie te dice sobre lead generation:\n\nEl mejor lead es el que ya est\u00e1 buscando lo que t\u00fa ofreces.\n\nNo necesitas interrumpir. Necesitas encontrar.\n\nY eso es exactamente lo que hace LeadPilot.",
+          "status": "success"
+        },
+        {
+          "tweet_number": 8,
+          "id": "2043381479724466562",
+          "text": "DATO:\n\nEmpresas que usan tools de lead generation cierran 40% m\u00e1s r\u00e1pido.\n\nNo porque el lead sea mejor.\n\nPorque tienen m\u00e1s tiempo para vender y menos para buscar.",
+          "status": "success"
+        },
+        {
+          "tweet_number": 9,
+          "id": "2043381485340647670",
+          "text": "Voy a hacer algo que nadie hace:\n\nPrimer mes gratis para que pruebes.\n\nSin compromiso. Sin tarjeta de cr\u00e9dito.\n\nLink en bio.\n\nSi no funciona para tu negocio, me lo dices y punto.",
+          "status": "success"
+        },
+        {
+          "tweet_number": 10,
+          "id": "2043381490919063653",
+          "text": "PD: Si conoces alguna agencia o consultora que est\u00e1 quemando horas buscando leads en vez de cerrando deals...\n\nRepost este thread.\n\nTodos necesitamos m\u00e1s tiempo para vender. \ud83e\uddf5",
+          "status": "success"
+        }
+      ]
+    }
+  }
 }

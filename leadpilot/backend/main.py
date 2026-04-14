@@ -4,6 +4,7 @@ InsForge Database + JWT Auth + Stripe Checkout + Real Email
 Bugs fixed: export_leads, leads list, missing endpoints
 """
 import os, json, hashlib, time, subprocess, uuid, smtplib, csv, io, requests
+from functools import lru_cache
 import jwt
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
@@ -28,6 +29,7 @@ USERS_FILE = "/root/.openclaw/workspace/leadpilot/data/users.json"
 SMTP_HOST, SMTP_PORT = "smtp.gmail.com", 587
 SMTP_USER, SMTP_PASS = "yhasvenezuela@gmail.com", "ificahhweilgwfjb"
 # Load plans from InsForge
+@lru_cache(maxsize=1)
 def load_plans():
     plans = {}
     try:

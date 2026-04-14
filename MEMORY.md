@@ -2,7 +2,7 @@
 
 ## Sistema YhasClaw - Estado Actual
 
-**Última actualización:** 2026-04-08 12:10 UTC
+**Última actualización:** 2026-04-13 13:20 UTC
 
 ---
 
@@ -194,3 +194,9 @@ mcporter call insforge.run-raw-sql query="SELECT * FROM plans"
 ### Regla CRÍTICA
 - NUNCA usar datos simulados
 - TODO en InsForge
+
+## GitHub
+
+### Repositorio
+- **LeadPilot:** https://github.com/ymiydev-prog/leadpilot.git
+- Token guardado en `~/.git-credentials`
