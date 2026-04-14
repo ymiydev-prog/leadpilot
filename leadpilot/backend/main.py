@@ -45,7 +45,7 @@ def load_plans():
     except Exception as e:
         print(f"Error loading plans: {e}")
     if not plans:
-        plans = {"free": {"leads": 10, "emails": 50, "campaigns": 1, "price": 0},
+        plans = {"free": {"leads": 100, "emails": 50, "campaigns": 1, "price": 0},
                  "starter": {"leads": 100, "emails": 500, "campaigns": 10, "price": 29},
                  "pro": {"leads": 500, "emails": 2000, "campaigns": -1, "price": 79},
                  "business": {"leads": -1, "emails": -1, "campaigns": -1, "price": 149}}
@@ -110,7 +110,26 @@ def if_leads_create(user_id, lead):
         "source": lead.get("source","")[:50] or None,
         "location": lead.get("location","")[:100] or None
     }
-    return if_request("/leads", "POST", [data])
+    try:
+        result = if_request("/leads", "POST", [data])
+        app.logger.info(f"Lead insert result: {result}")
+        return result
+    except Exception as e:
+        app.logger.error(f"Failed to insert lead via InsForge: {e}")
+        # Fallback: save lead locally as JSON file
+        import json, os
+        lead_file = "/root/.openclaw/workspace/leadpilot/data/leads_fallback.json"
+        os.makedirs(os.path.dirname(lead_file), exist_ok=True)
+        try:
+            with open(lead_file, "r") as f:
+                leads = json.load(f)
+        except:
+            leads = []
+        leads.append({"user_id": user_id, "data": lead, "saved_at": str(datetime.utcnow())})
+        with open(lead_file, "w") as f:
+            json.dump(leads, f, indent=2)
+        app.logger.info(f"Lead saved locally to {lead_file}")
+        return {"saved_locally": True, "error": str(e)}"
 
 
 

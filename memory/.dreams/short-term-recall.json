@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-14T11:06:53.107Z",
+  "updatedAt": "2026-04-14T13:19:14.557Z",
   "entries": {
     "memory:memory/2026-04-08.md:37:91": {
       "key": "memory:memory/2026-04-08.md:37:91",
@@ -774,6 +774,37 @@
         "plan",
         "starter",
         "contact"
+      ]
+    },
+    "memory:memory/2026-03-27.md:174:192": {
+      "key": "memory:memory/2026-03-27.md:174:192",
+      "path": "memory/2026-03-27.md",
+      "startLine": 174,
+      "endLine": 192,
+      "source": "memory",
+      "snippet": "### Memory Storage - MEMORY.md: Long-term curated memories - memory/2026-03-27.md: Session log - IDENTITY.md: Agent identity - TOOLS.md: Tools configuration ### Pending Items 1. ✅ Bybit API keys - CONFIGURADO MAINNET - API Key: IAc1B...IS - Balance: BTC 0.0001, USDT 4.6862 2. ✅ Twitter API keys - CONFIGURADO FULL ACCESS - Access Token OAuth 2.0: Funciona - Usuario: @yhas1984 - Permisos: Read + Write ✅ - Tweet de prueba publicado: ID 2037682486109499537 3. ✅ Elon puede publicar tweets 4. ⏳ Tweet approval from Jefe (si quiere revisar antes de publicar)",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3539882004261017,
+      "maxScore": 0.3539882004261017,
+      "firstRecalledAt": "2026-04-14T13:19:14.557Z",
+      "lastRecalledAt": "2026-04-14T13:19:14.557Z",
+      "queryHashes": [
+        "aab9a5637220"
+      ],
+      "recallDays": [
+        "2026-04-14"
+      ],
+      "conceptTags": [
+        "memory.md",
+        "long-term",
+        "memory/2026-03-27.md",
+        "identity.md",
+        "tools.md",
+        "0.0001",
+        "4.6862",
+        "2.0"
       ]
     }
   }
