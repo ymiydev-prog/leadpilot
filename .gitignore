@@ -14,7 +14,7 @@ node_modules/
 # InsForge & AI agent skills
 .insforge
 .agent
-.agents
+# .agents - kept in git for OpenClaw skills
 .augment
 .claude
 .cline
