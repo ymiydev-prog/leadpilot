@@ -575,7 +575,7 @@ async function doLogin(){
   try {
     var r = await fetch("https://webhook.leadpilot.es/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
     var d = await r.json();
-    if(d.success === true){ saveSess(d); showApp(); loadStats(); }
+    if(r.ok && d.status === "ok"){ saveSess(d); showApp(); loadStats(); }
     else { showErr("login", d.detail || "Email o contrasena incorrectos"); }
   } catch(e){ showErr("login", "Error de conexion. Intenta de nuevo."); }
 }
@@ -589,7 +589,7 @@ async function doRegister(){
   try {
     var r = await fetch("https://webhook.leadpilot.es/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
     var d = await r.json();
-    if(d.success === true){ saveSess(d); showApp(); toast("Cuenta creada!"); loadStats(); }
+    if(r.ok && d.status === "ok"){ saveSess(d); showApp(); toast("Cuenta creada!"); loadStats(); }
     else { showErr("reg", d.detail || "No se pudo crear la cuenta"); }
   } catch(e){ showErr("reg", "Error de conexion. Intenta de nuevo."); }
 }
@@ -601,32 +601,32 @@ async function doReset(){
   if(!code || !pass || !pass2){ showErr("reset", "Completa todos los campos"); return; }
   if(pass !== pass2){ showErr("reset", "Las contrasenas no coinciden"); return; }
   if(pass.length < 6){ showErr("reset", "Minimo 6 caracteres"); return; }
-  fetch("https://webhook.leadpilot.es/api/reset-password", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({token: code, new_password: pass})})
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      if(d.success === true){ toast("Contrasena cambiada!"); showAuthTab("login"); }
-      else { showErr("reset", d.detail || "Error"); }
-    })
-    .catch(function(){ showErr("reset", "Error de conexion"); });
+  try {
+    var r = await fetch("https://webhook.leadpilot.es/api/auth/reset", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({code: code, new_password: pass})});
+    var d = await r.json();
+    if(r.ok && d.status === "ok"){ toast("Contrasena cambiada!"); showAuthTab("login"); }
+    else { showErr("reset", d.detail || "Error"); }
+  } catch(e){ showErr("reset", "Error de conexion"); }
 }
 
 async function doForgot(){
   var email = document.getElementById("forgot-email").value;
   if(!email){ showErr("forgot", "Introduce tu email"); return; }
-  var r = await fetch("https://webhook.leadpilot.es/api/forgot-password", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
-  var d = await r.json();
-  if(d.success === true){
-    toast("Codigo enviado! Revisa tu email.");
-    // Show reset form
-    var tabs = document.querySelectorAll(".auth-tab");
-    var forms = document.querySelectorAll(".auth-form");
-    tabs.forEach(function(t){ t.classList.remove("active"); });
-    forms.forEach(function(f){ f.classList.remove("active"); f.style.display = "none"; });
-    document.getElementById("form-reset").classList.add("active");
-    document.getElementById("form-reset").style.display = "block";
-  } else {
-    showErr("forgot", d.detail || "Error");
-  }
+  try {
+    var r = await fetch("https://webhook.leadpilot.es/api/auth/forgot", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
+    var d = await r.json();
+    if(r.ok && d.status === "ok"){
+      toast("Codigo enviado! Revisa tu email.");
+      var tabs = document.querySelectorAll(".auth-tab");
+      var forms = document.querySelectorAll(".auth-form");
+      tabs.forEach(function(t){ t.classList.remove("active"); });
+      forms.forEach(function(f){ f.classList.remove("active"); f.style.display = "none"; });
+      document.getElementById("form-reset").classList.add("active");
+      document.getElementById("form-reset").style.display = "block";
+    } else {
+      showErr("forgot", d.detail || "Error");
+    }
+  } catch(e){ showErr("forgot", "Error de conexion"); }
 }
 
 function saveSess(d){
@@ -912,9 +912,63 @@ async function loadAnalytics(){
 </div>
 
 <script>
-let isOpen=false;function toggleChat(){isOpen=!isOpen;document.getElementById('chatModal').classList.toggle('active',isOpen)}
-async function sendMessage(e){e.preventDefault();const i=document.getElementById('chatInput'),b=e.target.querySelector('button'),m=i.value.trim();if(!m)return;addMessage(m,'user');i.value='';b.disabled=true;try{const resp=await fetch('https://webhook.leadpilot.es/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Dashboard User',email:'user@leadpilot.es',company:'',message:m,source:'chat_widget'})});const data=await resp.json();if(data.response){addMessage(data.response,'bot')}else{addMessage('Mensaje enviado. Te responderemos pronto. 🚀','bot')}}catch{addMessage('Error al enviar. Intenta de nuevo.','bot')}b.disabled=false}
-function addMessage(t,n){const c=document.getElementById('chatMessages'),d=document.createElement('div');d.className='msg '+n;if(n==='bot'){d.innerHTML=t}else{d.textContent=t}c.appendChild(d);c.scrollTop=c.scrollHeight}
+let isOpen=false;
+let chatSessionId=null;
+let processedResponses=new Set();
+
+function toggleChat(){isOpen=!isOpen;document.getElementById('chatModal').classList.toggle('active',isOpen)}
+
+async function sendMessage(e){
+  e.preventDefault();
+  const i=document.getElementById('chatInput'),b=e.target.querySelector('button'),m=i.value.trim();
+  if(!m)return;
+  addMessage(m,'user');
+  i.value='';
+  b.disabled=true;
+  try{
+    const resp=await fetch('https://leadpilot.es/api/contact',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:'Dashboard User',email: currentUser && currentUser.email ? currentUser.email : 'user@leadpilot.es',company:'',message:m,source:'chat_dashboard'})
+    });
+    const data=await resp.json();
+    if(data.session_id){
+      chatSessionId=data.session_id;
+    }
+    addMessage('Mensaje enviado. Te respondo en breve...','bot');
+  }catch{
+    addMessage('Error al enviar. Intenta de nuevo.','bot');
+  }
+  b.disabled=false
+}
+
+function addMessage(t,n){
+  const c=document.getElementById('chatMessages'),d=document.createElement('div');
+  d.className='msg '+n;
+  if(n==='bot'){d.innerHTML=t}else{d.textContent=t}
+  c.appendChild(d);
+  c.scrollTop=c.scrollHeight;
+}
+
+async function pollResponses(){
+  if(!chatSessionId)return;
+  try{
+    const resp=await fetch(`https://leadpilot.es/api/contact/responses?session_id=${chatSessionId}`);
+    const data=await resp.json();
+    if(data.responses && data.responses.length>0){
+      data.responses.forEach(r=>{
+        if(!processedResponses.has(r.session_id)){
+          processedResponses.add(r.session_id);
+          if(r.bot_response){
+            addMessage(r.bot_response,'bot');
+          }
+        }
+      });
+    }
+  }catch(e){}
+}
+
+setInterval(pollResponses,3000);
 setTimeout(()=>{if(!isOpen)toggleChat()},5000);
 </script>
 </body>

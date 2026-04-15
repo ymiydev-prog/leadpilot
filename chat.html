@@ -165,7 +165,7 @@ async function sendMessage(e) {
     
     // Send to backend
     try {
-        await fetch('https://webhook.leadpilot.es/api/contact', {
+        const resp = await fetch('https://leadpilot.es/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -173,9 +173,13 @@ async function sendMessage(e) {
                 email: 'chat@leadpilot.es',
                 company: '',
                 message: msg,
-                source: 'chat_widget'
+                source: 'chat_page'
             })
         });
+        const data = await resp.json();
+        if (data.session_id) {
+            chatSessionId = data.session_id;
+        }
         
         // Add bot confirmation
         addMessage('¡Mensaje enviado! Te responderemos pronto. 🚀', 'bot');
@@ -190,10 +194,33 @@ function addMessage(text, type) {
     const container = document.getElementById('chatMessages');
     const div = document.createElement('div');
     div.className = 'msg ' + type;
-    div.textContent = text;
+    div.innerHTML = type === 'bot' ? text : text;
     container.appendChild(div);
     container.scrollTop = container.scrollHeight;
 }
+
+let chatSessionId = null;
+let processedResponses = new Set();
+
+async function pollResponses() {
+    if (!chatSessionId) return;
+    try {
+        const resp = await fetch(`https://leadpilot.es/api/contact/responses?session_id=${chatSessionId}`);
+        const data = await resp.json();
+        if (data.responses && data.responses.length > 0) {
+            data.responses.forEach(r => {
+                if (!processedResponses.has(r.session_id)) {
+                    processedResponses.add(r.session_id);
+                    if (r.bot_response) {
+                        addMessage(r.bot_response, 'bot');
+                    }
+                }
+            });
+        }
+    } catch (e) {}
+}
+
+setInterval(pollResponses, 3000);
 
 // Auto-open after 3 seconds
 setTimeout(() => {
