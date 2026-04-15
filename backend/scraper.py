@@ -5,10 +5,14 @@ Busca empresas usando Firecrawl Search API
 """
 import sys
 import json
+import os
 import requests
 from urllib.parse import urlparse
 
-FIRECRAWL_API_KEY = "fc-7d9a7bd9c81346dfbfba5c7d55743bd5"
+FIRECRAWL_API_KEY = os.environ.get("FIRECRAWL_API_KEY")
+if not FIRECRAWL_API_KEY:
+    print("Error: FIRECRAWL_API_KEY not set", file=sys.stderr)
+    sys.exit(1)
 
 def extract_domain(url):
     if not url:
@@ -74,7 +78,7 @@ def search_leads(query, location="Madrid", max_results=20):
                 "name": company_name,
                 "domain": domain,
                 "url": url,
-                "email": f"info@{domain}" if domain else "",
+                "email": "",
                 "phone": "",
                 "company": company_name,
                 "source": "firecrawl",

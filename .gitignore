@@ -10,3 +10,18 @@ insforge/
 Thumbs.db
 *.log
 node_modules/
+
+# InsForge & AI agent skills
+.insforge
+.agent
+# .agents - kept in git for OpenClaw skills
+.augment
+.claude
+.cline
+.github/copilot*
+.kilocode
+.qoder
+.qwen
+.roo
+.trae
+.windsurf
