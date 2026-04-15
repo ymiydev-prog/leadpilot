@@ -165,7 +165,7 @@ async function sendMessage(e) {
     
     // Send to backend
     try {
-        const resp = await fetch('https://leadpilot.es/api/contact', {
+        const resp = await fetch('https://nv96hw8d.functions.insforge.app/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -205,7 +205,7 @@ let processedResponses = new Set();
 async function pollResponses() {
     if (!chatSessionId) return;
     try {
-        const resp = await fetch(`https://leadpilot.es/api/contact/responses?session_id=${chatSessionId}`);
+        const resp = await fetch(`https://nv96hw8d.functions.insforge.app/api/contact/responses?session_id=${chatSessionId}`);
         const data = await resp.json();
         if (data.responses && data.responses.length > 0) {
             data.responses.forEach(r => {

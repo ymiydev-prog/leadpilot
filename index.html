@@ -647,7 +647,7 @@ async function sendMessage(e){
   i.value='';
   b.disabled=true;
   try{
-    const resp=await fetch('https://leadpilot.es/api/contact',{
+    const resp=await fetch('https://nv96hw8d.functions.insforge.app/api/contact',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:'Chat Visitor',email:'chat@leadpilot.es',company:'',message:m,source:'chat_widget'})
@@ -674,7 +674,7 @@ function addMessage(t,n){
 async function pollResponses(){
   if(!chatSessionId)return;
   try{
-    const resp=await fetch(`https://leadpilot.es/api/contact/responses?session_id=${chatSessionId}`);
+    const resp=await fetch(`https://nv96hw8d.functions.insforge.app/api/contact/responses?session_id=${chatSessionId}`);
     const data=await resp.json();
     if(data.responses && data.responses.length>0){
       data.responses.forEach(r=>{
