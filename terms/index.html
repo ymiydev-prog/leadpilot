@@ -1,43 +1,829 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Términos de Servicio - LeadPilot</title>
-    <style>
-        body { font-family: Inter, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; background: #0a0a0a; color: #fafafa; line-height: 1.8; }
-        h1 { color: #6366f1; }
-        h2 { color: #22c55e; margin-top: 30px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="theme-color" content="#6366f1">
+<title>LeadPilot - Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --bg: #09090b;
+    --card: #18181b;
+    --card-hover: #1f1f23;
+    --border: #27272a;
+    --text: #fafafa;
+    --text-muted: #a1a1aa;
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --green: #22c55e;
+    --amber: #f59e0b;
+    --red: #ef4444;
+}
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+/* Auth Modal */
+.auth-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(9,9,11,0.95); backdrop-filter: blur(20px);
+    z-index: 1000; display: flex; justify-content: center; align-items: center;
+    padding: 24px;
+}
+.auth-box {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 24px; padding: 48px; width: 100%; max-width: 420px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    animation: authIn 0.4s ease;
+}
+@keyframes authIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.auth-logo { text-align: center; margin-bottom: 32px; }
+.auth-logo h1 { font-size: 28px; font-weight: 800; }
+.auth-logo h1 span { color: var(--primary); }
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 32px; background: var(--bg); padding: 6px; border-radius: 12px; }
+.auth-tab { flex: 1; padding: 12px; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--text-muted); transition: all 0.2s; }
+.auth-tab.active { background: var(--card); color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.auth-form { display: none; }
+.auth-form.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
+.form-input {
+    width: 100%; padding: 14px 16px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 12px; color: var(--text); font-size: 15px; transition: all 0.2s;
+}
+.form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.2); }
+.form-input::placeholder { color: var(--text-muted); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.3); }
+.btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--text-muted); }
+.btn-green { background: var(--green); color: white; }
+.btn-green:hover { background: #16a34a; transform: translateY(-2px); }
+.btn-block { width: 100%; }
+.error-msg { background: rgba(239,68,68,0.1); border: 1px solid var(--red); color: var(--red); padding: 12px 16px; border-radius: 8px; margin-top: 12px; font-size: 13px; display: none; }
+.error-msg.show { display: block; }
+.auth-link { text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-muted); }
+.auth-link a { color: var(--primary); text-decoration: none; }
+.auth-link a:hover { text-decoration: underline; }
+
+/* Password toggle */
+.pass-wrapper { position: relative; }
+.pass-toggle { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 18px; padding: 4px; }
+.pass-toggle:hover { color: var(--text); }
+.pass-wrapper .form-input { padding-right: 48px; }
+
+/* Layout */
+.layout { display: flex; min-height: 100vh; }
+/* Sidebar */
+.sidebar {
+    width: 260px; background: var(--card); border-right: 1px solid var(--border);
+    padding: 24px 0; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+}
+.sidebar-logo { padding: 0 24px 24px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+.sidebar-logo h1 { font-size: 22px; font-weight: 800; }
+.sidebar-logo h1 span { color: var(--primary); }
+.sidebar-nav { flex: 1; }
+.nav-item {
+    padding: 14px 24px; cursor: pointer; color: var(--text-muted); font-size: 14px; font-weight: 500;
+    display: flex; align-items: center; gap: 12px; transition: all 0.15s; border-left: 3px solid transparent;
+}
+.nav-item:hover { color: var(--text); background: var(--card-hover); }
+.nav-item.active { color: var(--text); background: rgba(99,102,241,0.1); border-left-color: var(--primary); }
+.nav-item svg { width: 20px; height: 20px; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; }
+.sidebar-footer { padding: 24px; border-top: 1px solid var(--border); }
+.user-info { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+.user-info strong { color: var(--text); }
+.btn-logout { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+/* Main Content */
+.main { flex: 1; margin-left: 260px; padding: 32px; max-width: 1200px; }
+/* Topbar */
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.topbar h2 { font-size: 24px; font-weight: 700; }
+.topbar-time { font-size: 13px; color: var(--text-muted); }
+
+/* Cards */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; transition: all 0.2s; }
+.card:hover { border-color: rgba(99,102,241,0.3); }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.card-title { font-size: 16px; font-weight: 600; color: var(--text-muted); }
+.card-action { font-size: 13px; color: var(--primary); cursor: pointer; }
+
+/* Stats Grid */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-align: center; transition: all 0.2s; }
+.stat-card:hover { border-color: var(--primary); transform: translateY(-4px); }
+.stat-value { font-size: 36px; font-weight: 800; margin-bottom: 4px; }
+.stat-value.leads { color: var(--primary); }
+.stat-value.emails { color: var(--green); }
+.stat-value.open { color: var(--amber); }
+.stat-value.plan { color: #ec4899; }
+.stat-label { font-size: 13px; color: var(--text-muted); }
+
+/* Search Form */
+.search-form { display: flex; gap: 12px; flex-wrap: wrap; }
+.search-input { flex: 1; min-width: 200px; padding: 14px 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; }
+.search-input:focus { outline: none; border-color: var(--primary); }
+.search-select { padding: 14px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; min-width: 100px; }
+
+/* Tables */
+.table { width: 100%; border-collapse: collapse; }
+.table th { text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+.table td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.table tr:hover { background: var(--card-hover); }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.badge-new { background: rgba(34,197,94,0.15); color: var(--green); }
+.badge-sent { background: rgba(99,102,241,0.15); color: var(--primary); }
+.badge-open { background: rgba(245,158,11,0.15); color: var(--amber); }
+
+/* Panels */
+.panel { display: none; }
+.panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+/* Email Editor */
+.email-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0; min-height: 150px; font-size: 14px; line-height: 1.7; white-space: pre-wrap; }
+.email-tone-btns { display: flex; gap: 8px; margin: 12px 0; }
+.tone-btn { padding: 8px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.tone-btn:hover, .tone-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+/* Plan Cards */
+.plan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.plan-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px; text-align: center; transition: all 0.2s; position: relative; }
+.plan-card.featured { border-color: var(--primary); background: linear-gradient(180deg, rgba(99,102,241,0.08), var(--card)); }
+.plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 4px 16px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.plan-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.plan-price { font-size: 40px; font-weight: 800; color: var(--primary); margin: 16px 0; }
+.plan-price span { font-size: 14px; color: var(--text-muted); font-weight: 400; }
+.plan-features { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 2; }
+.plan-btn { width: 100%; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; }
+.plan-btn.default { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+.plan-btn.default:hover { border-color: var(--text-muted); }
+.plan-btn.featured { background: var(--primary); color: white; }
+.plan-btn.featured:hover { background: var(--primary-hover); }
+
+/* Loading */
+.loading { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
+
+/* Toast */
+.toast { position: fixed; bottom: 32px; right: 32px; background: var(--green); color: white; padding: 16px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 2000; display: none; box-shadow: 0 10px 40px rgba(34,197,94,0.3); }
+.toast.show { display: block; animation: toastIn 0.3s ease; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Profile */
+.profile-section { margin-bottom: 24px; }
+.profile-label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; display: block; }
+.profile-input { width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 14px; margin-bottom: 12px; }
+.profile-input:focus { outline: none; border-color: var(--primary); }
+.profile-input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Charts */
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.chart-container { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+.chart-title { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 16px; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .plan-grid { grid-template-columns: 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .main { margin-left: 0; padding: 20px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .search-form { flex-direction: column; }
+    .search-input, .search-select { width: 100%; }
+}
+
+/* Chat Widget - matching landing page */
+.chat-btn{position:fixed;bottom:24px;right:24px;width:60px;height:60px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(99,102,241,0.4);z-index:9999;transition:transform .3s,box-shadow .3s}
+.chat-btn:hover{transform:scale(1.1);box-shadow:0 6px 25px rgba(99,102,241,0.6)}.chat-btn svg{width:28px;height:28px;fill:#fff}
+.chat-modal{position:fixed;bottom:100px;right:24px;width:380px;max-width:calc(100vw-48px);background:#18181b;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.5);z-index:9998;display:none;flex-direction:column;overflow:hidden;border:1px solid #27272a}
+.chat-modal.active{display:flex}
+.chat-header{background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.chat-header-info{flex:1}.chat-header-info h3{color:#fff;font-size:16px;margin:0}.chat-header-info p{color:rgba(255,255,255,.8);font-size:12px;margin:2px 0 0}
+.chat-close{width:32px;height:32px;background:rgba(255,255,255,0.1);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;transition:all .2s}
+.chat-close:hover{background:rgba(255,255,255,0.2);transform:rotate(90deg)}
+.chat-messages{flex:1;padding:20px;overflow-y:auto;max-height:300px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.chat-messages::-webkit-scrollbar{width:6px}.chat-messages::-webkit-scrollbar-track{background:transparent}.chat-messages::-webkit-scrollbar-thumb{background:#3f3f46;border-radius:3px}
+.msg{max-width:85%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.5;animation:fadeInUp .3s ease}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.msg.bot{background:#27272a;color:#fafafa;align-self:flex-start;border-bottom-left-radius:6px}.msg.user{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+.msg .time{font-size:10px;opacity:0.5;margin-top:6px;display:block}
+.chat-form{padding:16px;border-top:1px solid #27272a;display:flex;gap:10px;align-items:center}
+.chat-form input{flex:1;padding:12px 16px;background:#27272a;border:1px solid #3f3f46;border-radius:12px;color:#fafafa;font-size:14px}
+.chat-form input:focus{outline:none;border-color:#6366f1}
+.chat-form button{padding:12px 20px;background:#6366f1;border:none;border-radius:12px;color:#fff;font-weight:600;cursor:pointer;transition:all .2s}
+.chat-form button:hover{background:#4f46e5;transform:scale(1.02)}.chat-form button:disabled{background:#3f3f46;cursor:not-allowed;transform:none}
+.chat-typing{display:none;align-items:center;gap:8px;padding:8px 16px;color:#71717a;font-size:12px}.chat-typing.active{display:flex}
+.chat-typing-dot{width:6px;height:6px;background:#6366f1;border-radius:50%;animation:typingBounce 1.4s infinite ease-in-out}.chat-typing-dot:nth-child(2){animation-delay:.2s}.chat-typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-8px)}}
+</style>
 </head>
 <body>
-    <h1>Términos de Servicio</h1>
-    <p><strong>LeadPilot</strong> - Última actualización: Abril 2026</p>
-    
-    <h2>1. Servicio</h2>
-    <p>LeadPilot proporciona acceso a herramientas de generación de leads B2B, envío de emails, y gestión de campañas.</p>
-    
-    <h2>2. Cuenta</h2>
-    <p>Debes mantener la seguridad de tu cuenta. Eres responsable de toda actividad bajo tu cuenta.</p>
-    
-    <h2>3. Pago</h2>
-    <p>Los planes se facturan mensualmente. Puedes cancelar en cualquier momento desde tu panel. Los pagos no son reembolsables.</p>
-    
-    <h2>4. Uso aceptable</h2>
-    <p>No puedes usar LeadPilot para: spam, envío de emails no solicitados, actividades ilegales, o violationar leyes de protección de datos (GDPR).</p>
-    
-    <h2>5. Emails y GDPR</h2>
-    <p>Al usar LeadPilot, confirmas que tienes permiso para contactar a los leads que importes. Somos GDPR compliant.</p>
-    
-    <h2>6. Limitación de responsabilidad</h2>
-    <p>LeadPilot no se hace responsable de daños indirectos. Nuestra responsabilidad está limitada al monto pagado por el servicio.</p>
-    
-    <h2>7. Modificaciones</h2>
-    <p>Podemos modificar estos términos con 30 días de aviso previo.</p>
-    
-    <h2>8. Contacto</h2>
-    <p>Para preguntas: <a href="mailto:hola@leadpilot.es" style="color:#6366f1">hola@leadpilot.es</a></p>
-    
-    <p style="margin-top:40px"><a href="/" style="color:#6366f1">← Volver a LeadPilot</a></p>
+
+<!-- Auth Overlay -->
+<div class="auth-overlay" id="auth-overlay">
+<div class="auth-box">
+<div class="auth-logo"><h1>Lead<span>Pilot</span></h1></div>
+<div class="auth-tabs">
+<div class="auth-tab active" id="tab-login" onclick="showAuthTab('login')">Iniciar Sesión</div>
+<div class="auth-tab" id="tab-register" onclick="showAuthTab('register')">Registrarse</div>
+</div>
+
+<div class="auth-form active" id="form-login">
+<div class="form-group"><label>Email</label><input type="email" id="login-email" class="form-input" placeholder="tu@email.com"></div>
+<div class="form-group"><label>Contraseña</label><div class="pass-wrapper"><input type="password" id="login-pass" class="form-input" placeholder="••••••••"><button type="button" class="pass-toggle" onclick="togglePass('login-pass', this)">👁️</button></div></div>
+<div class="error-msg" id="login-error"></div>
+<div class="auth-link"><a href="javascript:void(0)" onclick="showAuthTab('forgot')">¿Olvidaste tu contraseña?</a></div>
+<button class="btn btn-primary btn-block" style="margin-top:20px" onclick="doLogin()">Entrar</button>
+</div>
+
+<div class="auth-form" id="form-register">
+<div class="form-group"><label>Nombre</label><input type="text" id="reg-name" class="form-input" placeholder="Tu nombre"></div>
+<div class="form-group"><label>Email</label><input type="email" id="reg-email" class="form-input" placeholder="tu@email.com"></div>
+<div class="form-group"><label>Contraseña</label><div class="pass-wrapper"><input type="password" id="reg-pass" class="form-input" placeholder="Mínimo 6 caracteres"><button type="button" class="pass-toggle" onclick="togglePass('reg-pass', this)">👁️</button></div></div>
+<div class="error-msg" id="reg-error"></div>
+<button class="btn btn-primary btn-block" style="margin-top:20px" onclick="doRegister()">Crear cuenta</button>
+</div>
+
+<div class="auth-form" id="form-forgot">
+<div class="form-group"><label>Email</label><input type="email" id="forgot-email" class="form-input" placeholder="tu@email.com"></div>
+<div class="error-msg" id="forgot-error"></div>
+<button class="btn btn-secondary btn-block" style="margin-top:20px" onclick="doForgot()">Enviar código</button>
+<div class="auth-link" style="margin-top:16px"><a href="javascript:void(0)" onclick="showAuthTab('login')">Volver al login</a></div>
+</div>
+
+<div class="auth-form" id="form-reset">
+<div class="form-group"><label>Código de recuperación</label><input type="text" id="reset-code" class="form-input" placeholder="123456"></div>
+<div class="form-group"><label>Nueva contraseña</label><div class="pass-wrapper"><input type="password" id="reset-pass" class="form-input" placeholder="••••••••"><button type="button" class="pass-toggle" onclick="togglePass('reset-pass', this)">👁️</button></div></div>
+<div class="form-group"><label>Confirmar contraseña</label><div class="pass-wrapper"><input type="password" id="reset-pass2" class="form-input" placeholder="••••••••"><button type="button" class="pass-toggle" onclick="togglePass('reset-pass2', this)">👁️</button></div></div>
+<div class="error-msg" id="reset-error"></div>
+<button class="btn btn-primary btn-block" style="margin-top:20px" onclick="doReset()">Cambiar contraseña</button>
+<div class="auth-link" style="margin-top:16px"><a href="javascript:void(0)" onclick="showAuthTab('login')">Volver al login</a></div>
+</div>
+</div>
+</div>
+
+<!-- Main Layout -->
+<div class="layout" id="app-layout" style="display:none">
+<!-- Sidebar -->
+<div class="sidebar">
+<div class="sidebar-logo"><h1>Lead<span>Pilot</span></h1></div>
+<div class="sidebar-nav">
+<div class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+Dashboard
+</div>
+<div class="nav-item" data-tab="search" onclick="switchTab('search')">
+<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+Buscar Leads
+</div>
+<div class="nav-item" data-tab="leads" onclick="switchTab('leads')">
+<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+Mis Leads
+</div>
+<div class="nav-item" data-tab="emails" onclick="switchTab('emails')">
+<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+Emails
+</div>
+<div class="nav-item" data-tab="campaigns" onclick="switchTab('campaigns')">
+<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+Campañas
+</div>
+<div class="nav-item" data-tab="settings" onclick="switchTab('settings')">
+<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+Mi Perfil
+</div>
+<div class="nav-item" data-tab="analytics" onclick="switchTab('analytics')">
+<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+Analytics
+</div>
+</div>
+<div class="sidebar-footer">
+<div class="user-info" id="user-info"><strong>-</strong></div>
+<button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+</div>
+</div>
+
+<!-- Main Content -->
+<main class="main">
+<div class="topbar">
+<h2 id="tab-title">Dashboard</h2>
+<div class="topbar-time" id="clock"></div>
+</div>
+
+<!-- Dashboard Panel -->
+<div class="panel active" id="panel-dashboard">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-value leads" id="s-leads">0</div><div class="stat-label">Leads</div></div>
+<div class="stat-card"><div class="stat-value emails" id="s-sent">0</div><div class="stat-label">Emails Enviados</div></div>
+<div class="stat-card"><div class="stat-value open" id="s-open">0%</div><div class="stat-label">Tasa Apertura</div></div>
+<div class="stat-card"><div class="stat-value plan" id="s-plan">FREE</div><div class="stat-label">Plan Actual</div></div>
+</div>
+<div class="card"><div class="card-title">Actividad Reciente</div><p style="color:var(--text-muted);margin-top:8px">Tu actividad aparecerá aquí cuando empieces a usar LeadPilot.</p></div>
+</div>
+
+<!-- Search Panel -->
+<div class="panel" id="panel-search">
+<div class="card">
+<div class="card-title">Buscar Leads B2B</div>
+<div class="search-form" style="margin-top:16px">
+<input type="text" id="q-niche" class="search-input" placeholder="Ej: restaurants, dentistas, inmobiliarias">
+<input type="text" id="q-loc" class="search-input" placeholder="Ubicación" value="España" style="max-width:150px">
+<select id="q-max" class="search-select">
+<option value="5">5</option><option value="10">10</option><option value="20" selected>20</option>
+</select>
+<button class="btn btn-primary" onclick="doSearch()">Buscar</button>
+</div>
+</div>
+<div class="loading" id="search-loading" style="display:none">Buscando leads...</div>
+<table class="table" id="search-table" style="display:none;margin-top:20px">
+<thead><tr><th>#</th><th>Empresa</th><th>Email</th><th>Teléfono</th><th></th></tr></thead>
+<tbody id="search-body"></tbody>
+</table>
+</div>
+
+<!-- Leads Panel -->
+<div class="panel" id="panel-leads">
+<div class="card">
+<div class="card-header">
+<div class="card-title">Mis Leads</div>
+<div style="display:flex;gap:8px">
+<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);cursor:pointer">
+<input type="checkbox" id="filter-contact" onchange="loadLeads()" checked> Solo con contacto
+</label>
+<button class="btn btn-secondary" onclick="loadLeads()" style="padding:8px 16px;font-size:13px">Actualizar</button>
+<button class="btn btn-secondary" onclick="exportCSV()" style="padding:8px 16px;font-size:13px">Exportar CSV</button>
+</div>
+</div>
+<div class="loading" id="leads-loading">Cargando leads...</div>
+<table class="table" id="leads-table" style="display:none">
+<thead><tr><th>#</th><th>Empresa</th><th>Email</th><th>Teléfono</th><th></th></tr></thead>
+<tbody id="leads-body"></tbody>
+</table>
+</div>
+</div>
+
+<!-- Emails Panel -->
+<div class="panel" id="panel-emails">
+<div class="card">
+<div class="card-title">Enviar Email</div>
+<div style="display:grid;gap:12px;margin-top:16px">
+<input type="email" id="em-to" class="search-input" placeholder="Email destinatario">
+<input type="text" id="em-name" class="search-input" placeholder="Nombre del contacto">
+<input type="text" id="em-subject" class="search-input" placeholder="Asunto del email">
+</div>
+<div class="email-tone-btns">
+<button class="tone-btn active" onclick="genEmail('profesional')">Profesional</button>
+<button class="tone-btn" onclick="genEmail('casual')">Casual</button>
+<button class="tone-btn" onclick="genEmail('directo')">Directo</button>
+</div>
+<textarea id="em-body" class="search-input" placeholder="Contenido del email..." style="min-height:120px;resize:vertical"></textarea>
+<button class="btn btn-green" onclick="sendEmail()">Enviar Email</button>
+</div>
+<div class="card" style="margin-top:20px">
+<div class="card-title">Emails Enviados</div>
+<div class="loading" id="sent-loading">Cargando...</div>
+<table class="table" id="sent-table" style="display:none;margin-top:16px">
+<thead><tr><th>Para</th><th>Asunto</th><th>Fecha</th><th>Estado</th></tr></thead>
+<tbody id="sent-body"></tbody>
+</table>
+</div>
+</div>
+
+<!-- Campaigns Panel -->
+<div class="panel" id="panel-campaigns">
+<div class="card">
+<div class="card-title">Crear Campaña</div>
+<div style="display:grid;gap:12px;margin-top:16px">
+<input type="text" id="camp-name" class="search-input" placeholder="Nombre de la campaña">
+<input type="text" id="camp-subject" class="search-input" placeholder="Asunto del email">
+<textarea id="camp-template" class="search-input" placeholder="Plantilla (usa {{nombre}}, {{empresa}})" style="min-height:80px"></textarea>
+</div>
+<button class="btn btn-primary" style="margin-top:16px" onclick="createCampaign()">Crear Campaña</button>
+</div>
+<div class="card" style="margin-top:20px">
+<div class="card-title">Campañas</div>
+<div class="loading" id="camp-loading">Cargando...</div>
+<table class="table" id="camp-table" style="display:none;margin-top:16px">
+<thead><tr><th>Nombre</th><th>Leads</th><th>Enviados</th><th>Estado</th><th></th></tr></thead>
+<tbody id="camp-body"></tbody>
+</table>
+</div>
+</div>
+
+<!-- Settings Panel -->
+<div class="panel" id="panel-settings">
+<div class="card">
+<div class="card-title">Mi Perfil</div>
+<div style="display:grid;gap:12px;margin-top:16px">
+<div class="profile-section"><label class="profile-label">Nombre</label><input type="text" id="profile-name" class="profile-input"></div>
+<div class="profile-section"><label class="profile-label">Email (no editable)</label><input type="email" id="profile-email" class="profile-input" disabled></div>
+</div>
+<button class="btn btn-primary" style="margin-top:16px" onclick="saveProfile()">Guardar Cambios</button>
+</div>
+<div class="card" style="margin-top:20px">
+<div class="card-title">Cambiar Contraseña</div>
+<div style="display:grid;gap:12px;margin-top:16px">
+<div class="profile-section"><label class="profile-label">Contraseña Actual</label><input type="password" id="old-password" class="profile-input" placeholder="••••••••"></div>
+<div class="profile-section"><label class="profile-label">Nueva Contraseña</label><input type="password" id="new-password" class="profile-input" placeholder="••••••••"></div>
+</div>
+<button class="btn btn-green" style="margin-top:16px" onclick="changePassword()">Actualizar Contraseña</button>
+</div>
+<div class="card" style="margin-top:20px">
+<div class="card-title">Mi Plan</div>
+<div id="plan-info" style="margin-top:16px;font-size:14px;color:var(--text-muted);line-height:2"></div>
+<div class="plan-grid" style="margin-top:24px">
+<div class="plan-card"><div class="plan-name">Starter</div><div class="plan-price">€29<span>/mes</span></div><div class="plan-features">100 leads<br>500 emails<br>5 campañas</div><button class="plan-btn default" onclick="upgradePlan('starter')">Elegir</button></div>
+<div class="plan-card featured"><div class="plan-badge">POPULAR</div><div class="plan-name">PRO</div><div class="plan-price">€79<span>/mes</span></div><div class="plan-features">500 leads<br>2000 emails<br>Campañas ilimitadas</div><button class="plan-btn featured" onclick="upgradePlan('pro')">Elegir</button></div>
+<div class="plan-card"><div class="plan-name">Business</div><div class="plan-price">€149<span>/mes</span></div><div class="plan-features">Leads ilimitados<br>Emails ilimitados<br>Campañas ilimitadas</div><button class="plan-btn default" onclick="upgradePlan('business')">Elegir</button></div>
+</div>
+</div>
+</div>
+
+<!-- Analytics Panel -->
+<div class="panel" id="panel-analytics">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-value leads" id="a-leads">0</div><div class="stat-label">Total Leads</div></div>
+<div class="stat-card"><div class="stat-value emails" id="a-emails">0</div><div class="stat-label">Emails Enviados</div></div>
+<div class="stat-card"><div class="stat-value open" id="a-rate">0%</div><div class="stat-label">Tasa Apertura</div></div>
+<div class="stat-card"><div class="stat-value" style="color:var(--green)" id="a-campaigns">0</div><div class="stat-label">Campañas</div></div>
+</div>
+<div class="charts-grid">
+<div class="chart-container"><div class="chart-title">Leads por Búsqueda</div><canvas id="chart-leads" height="200"></canvas></div>
+<div class="chart-container"><div class="chart-title">Rendimiento Emails</div><canvas id="chart-emails" height="200"></canvas></div>
+</div>
+</div>
+
+</main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Chat Widget -->
+<div class="chat-btn" onclick="toggleChat()">
+<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+</div>
+<div class="chat-modal" id="chatModal">
+<div class="chat-header">
+<div class="chat-header-info"><h3>LeadPilot Assistant</h3><p>Te responde al instante</p></div>
+<button class="chat-close" onclick="toggleChat()">×</button>
+</div>
+<div class="chat-messages" id="chatMessages"><div class="msg bot">¡Hola! 👋 Soy el asistente de LeadPilot. ¿En qué puedo ayudarte?</div></div>
+<div class="chat-typing" id="chatTyping"><span>Escribiendo</span><div class="chat-typing-dot"></div><div class="chat-typing-dot"></div><div class="chat-typing-dot"></div></div>
+<form class="chat-form" id="chatForm" onsubmit="sendMessage(event)">
+<input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+<button type="submit" id="chatSendBtn">Enviar</button>
+</form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+var token = localStorage.getItem("lp_token") || null;
+var currentUser = localStorage.getItem("lp_user") || null;
+
+(function init(){
+  var p = new URLSearchParams(window.location.search);
+  if(p.get("checkout") === "success"){ toast("¡Pago completado!"); }
+  else if(p.get("checkout") === "cancel"){ toast("Pago cancelado."); }
+  if(token){ checkAuth(); } else { showAuth(); }
+})();
+
+async function checkAuth(){
+  try { 
+    var r = await fetch("https://nv96hw8d.functions.insforge.app/api/user/me", {headers: {"Authorization": "Bearer " + token}}); 
+    if(r.ok){ showApp(); loadStats(); } else { logout(); } 
+  } catch(e){ logout(); }
+}
+
+function showAuth(){ document.getElementById("auth-overlay").style.display = "flex"; document.getElementById("app-layout").style.display = "none"; }
+function showApp(){ document.getElementById("auth-overlay").style.display = "none"; document.getElementById("app-layout").style.display = "flex"; }
+
+function togglePass(id, btn){
+  var i = document.getElementById(id);
+  if(i.type === "password"){ i.type = "text"; btn.textContent = "🙈"; }
+  else{ i.type = "password"; btn.textContent = "👁️"; }
+}
+
+function showAuthTab(tab){
+  document.querySelectorAll(".auth-tab").forEach(function(t){ t.classList.remove("active"); });
+  document.querySelectorAll(".auth-form").forEach(function(f){ f.classList.remove("active"); f.style.display = "none"; });
+  var t = document.getElementById("tab-" + tab);
+  if(t) t.classList.add("active");
+  var f = document.getElementById("form-" + tab);
+  if(f){ f.classList.add("active"); f.style.display = "block"; }
+}
+
+function toast(msg){ var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(function(){ t.classList.remove("show"); }, 3000); }
+function showErr(id, msg){ var e = document.getElementById(id + "-error"); if(e){ e.textContent = msg; e.classList.add("show"); setTimeout(function(){ e.classList.remove("show"); }, 4000); } }
+
+async function doLogin(){
+  var email = document.getElementById("login-email").value;
+  var pass = document.getElementById("login-pass").value;
+  if(!email || !pass){ showErr("login", "Completa todos los campos"); return; }
+  try {
+    var r = await fetch("https://nv96hw8d.functions.insforge.app/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
+    var d = await r.json();
+    if(r.ok && d.success){ saveSess(d); showApp(); loadStats(); }
+    else { showErr("login", d.error || "Email o contraseña incorrectos"); }
+  } catch(e){ showErr("login", "Error de conexión"); }
+}
+
+async function doRegister(){
+  var name = document.getElementById("reg-name").value;
+  var email = document.getElementById("reg-email").value;
+  var pass = document.getElementById("reg-pass").value;
+  if(!name || !email || !pass){ showErr("reg", "Completa todos los campos"); return; }
+  if(pass.length < 6){ showErr("reg", "Mínimo 6 caracteres"); return; }
+  try {
+    var r = await fetch("https://nv96hw8d.functions.insforge.app/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
+    var d = await r.json();
+    if(r.ok && d.success){ saveSess(d); showApp(); toast("¡Cuenta creada!"); loadStats(); }
+    else { showErr("reg", d.error || "No se pudo crear la cuenta"); }
+  } catch(e){ showErr("reg", "Error de conexión"); }
+}
+
+async function doReset(){
+  var code = document.getElementById("reset-code").value;
+  var pass = document.getElementById("reset-pass").value;
+  var pass2 = document.getElementById("reset-pass2").value;
+  if(!code || !pass || !pass2){ showErr("reset", "Completa todos los campos"); return; }
+  if(pass !== pass2){ showErr("reset", "Las contraseñas no coinciden"); return; }
+  try {
+    var r = await fetch("https://nv96hw8d.functions.insforge.app/api/auth/reset", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({code: code, new_password: pass})});
+    var d = await r.json();
+    if(r.ok){ toast("Contraseña cambiada"); showAuthTab("login"); }
+    else { showErr("reset", d.error); }
+  } catch(e){ showErr("reset", "Error de conexión"); }
+}
+
+async function doForgot(){
+  var email = document.getElementById("forgot-email").value;
+  if(!email){ showErr("forgot", "Introduce tu email"); return; }
+  try {
+    var r = await fetch("https://nv96hw8d.functions.insforge.app/api/auth/forgot", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
+    var d = await r.json();
+    if(r.ok){ toast("Código enviado"); showAuthTab("reset"); }
+    else { showErr("forgot", d.error); }
+  } catch(e){ showErr("forgot", "Error de conexión"); }
+}
+
+function saveSess(d){
+  token = d.token;
+  currentUser = d.user;
+  localStorage.setItem("lp_token", token);
+  localStorage.setItem("lp_user", JSON.stringify(currentUser));
+  document.getElementById("user-info").innerHTML = "<strong>" + (currentUser.email || currentUser) + "</strong>";
+}
+
+function logout(){
+  token = null; currentUser = null;
+  localStorage.removeItem("lp_token");
+  localStorage.removeItem("lp_user");
+  showAuth();
+}
+
+function switchTab(name){
+  document.querySelectorAll(".nav-item").forEach(function(n){ n.classList.remove("active"); });
+  document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("active"); });
+  document.querySelector("[data-tab='" + name + "']").classList.add("active");
+  document.getElementById("panel-" + name).classList.add("active");
+  var titles = {dashboard:"Dashboard",search:"Buscar Leads",leads:"Mis Leads",emails:"Emails",campaigns:"Campañas",settings:"Mi Perfil",analytics:"Analytics"};
+  document.getElementById("tab-title").textContent = titles[name] || name;
+  if(name === "leads") loadLeads();
+  if(name === "emails") loadSent();
+  if(name === "campaigns") loadCampaigns();
+  if(name === "settings") loadUserInfo();
+  if(name === "analytics") loadAnalytics();
+}
+
+function tick(){ document.getElementById("clock").textContent = new Date().toLocaleString('es-ES'); }
+setInterval(tick, 1000); tick();
+
+function auth(){ return {"Content-Type": "application/json", "Authorization": "Bearer " + token}; }
+async function apiGet(url){ var r = await fetch(url, {headers: auth()}); if(r.status === 401){ logout(); return null;} return r.json(); }
+async function apiPost(url, body){ var r = await fetch(url, {method: "POST", headers: auth(), body: JSON.stringify(body)}); if(r.status === 401){ logout(); return null;} return r.json(); }
+
+async function loadStats(){
+  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/analytics/stats");
+  if(!d) return;
+  document.getElementById("s-leads").textContent = d.leads || 0;
+  document.getElementById("s-sent").textContent = d.emails_sent || 0;
+  document.getElementById("s-open").textContent = (d.open_rate || 0) + "%";
+  document.getElementById("s-plan").textContent = (d.plan || "free").toUpperCase();
+}
+
+async function doSearch(){
+  var q = document.getElementById("q-niche").value;
+  var loc = document.getElementById("q-loc").value;
+  var max = document.getElementById("q-max").value;
+  if(!q){ toast("Introduce un nicho"); return; }
+  document.getElementById("search-loading").style.display = "block";
+  document.getElementById("search-table").style.display = "none";
+  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/leads/search", {query: q, location: loc, max_results: parseInt(max)});
+  document.getElementById("search-loading").style.display = "none";
+  if(!d) return;
+  if(d.leads && d.leads.length > 0){
+    var tb = document.getElementById("search-body"); tb.innerHTML = "";
+    d.leads.forEach(function(l, i){
+      var row = tb.insertRow();
+      row.insertCell(0).textContent = i + 1;
+      row.insertCell(1).textContent = l.name || "N/A";
+      row.insertCell(2).textContent = l.email || "-";
+      row.insertCell(3).textContent = l.phone || "-";
+      var btn = document.createElement("button"); btn.className = "btn btn-green"; btn.style.padding = "8px 16px"; btn.style.fontSize = "13px";
+      btn.textContent = "Email"; btn.onclick = function(){ quickEmail(l.name || "", l.email || ""); };
+      row.insertCell(4).appendChild(btn);
+    });
+    document.getElementById("search-table").style.display = "table";
+    loadStats();
+  } else { toast("Sin resultados"); }
+}
+
+function quickEmail(name, email){ switchTab("emails"); document.getElementById("em-name").value = name; document.getElementById("em-to").value = email; }
+
+async function loadLeads(){
+  document.getElementById("leads-loading").style.display = "block";
+  document.getElementById("leads-table").style.display = "none";
+  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/leads");
+  document.getElementById("leads-loading").style.display = "none";
+  if(!d) return;
+  var tb = document.getElementById("leads-body"); tb.innerHTML = "";
+  var idx = 0;
+  (d.leads || []).forEach(function(l){
+    var has = l.email || l.phone;
+    if(document.getElementById("filter-contact").checked && !has) return;
+    idx++;
+    var row = tb.insertRow();
+    row.insertCell(0).textContent = idx;
+    row.insertCell(1).textContent = l.name || "N/A";
+    row.insertCell(2).textContent = l.email || "-";
+    row.insertCell(3).textContent = l.phone || "-";
+    var btn = document.createElement("button"); btn.className = "btn btn-green"; btn.style.padding = "8px 16px"; btn.style.fontSize = "13px";
+    btn.textContent = "Email"; btn.onclick = function(){ quickEmail(l.name || "", l.email || ""); };
+    row.insertCell(4).appendChild(btn);
+  });
+  document.getElementById("leads-table").style.display = idx > 0 ? "table" : "none";
+}
+
+function exportCSV(){ toast("Exportando..."); window.open("https://nv96hw8d.functions.insforge.app/api/leads/export", "_blank"); }
+
+async function genEmail(tone){
+  document.querySelectorAll(".tone-btn").forEach(function(b){ b.classList.remove("active"); });
+  event.target.classList.add("active");
+  var name = document.getElementById("em-name").value || "Contacto";
+  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/emails/generate", {lead_name: name, tone: tone});
+  if(d && d.email){ document.getElementById("em-body").value = d.email; toast("Generado"); }
+}
+
+async function sendEmail(){
+  var to = document.getElementById("em-to").value;
+  var name = document.getElementById("em-name").value;
+  var subj = document.getElementById("em-subject").value;
+  var body = document.getElementById("em-body").value;
+  if(!to || !subj || !body){ toast("Completa todos los campos"); return; }
+  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
+  if(d && d.success){ toast("¡Email enviado!"); loadStats(); loadSent(); }
+}
+
+async function loadSent(){
+  document.getElementById("sent-loading").style.display = "block";
+  document.getElementById("sent-table").style.display = "none";
+  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/emails/sent");
+  document.getElementById("sent-loading").style.display = "none";
+  if(!d) return;
+  var tb = document.getElementById("sent-body"); tb.innerHTML = "";
+  Object.values(d.emails || {}).forEach(function(e){
+    var row = tb.insertRow();
+    row.insertCell(0).textContent = e.to || "-";
+    row.insertCell(1).textContent = e.subject || "-";
+    row.insertCell(2).textContent = (e.sent_at || "").substring(0, 16);
+    var span = document.createElement("span"); span.className = e.opened ? "badge badge-open" : "badge badge-sent"; span.textContent = e.opened ? "Abierto" : "Enviado";
+    row.insertCell(3).appendChild(span);
+  });
+  document.getElementById("sent-table").style.display = Object.keys(d.emails || {}).length > 0 ? "table" : "none";
+}
+
+async function createCampaign(){
+  var name = document.getElementById("camp-name").value;
+  var subj = document.getElementById("camp-subject").value;
+  var tmpl = document.getElementById("camp-template").value;
+  if(!name || !subj || !tmpl){ toast("Completa todos los campos"); return; }
+  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/campaigns/create", {name: name, subject: subj, template: tmpl});
+  if(d && d.success){ toast("¡Campaña creada!"); loadCampaigns(); loadStats(); }
+}
+
+async function loadCampaigns(){
+  document.getElementById("camp-loading").style.display = "block";
+  document.getElementById("camp-table").style.display = "none";
+  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/campaigns");
+  document.getElementById("camp-loading").style.display = "none";
+  if(!d) return;
+  var tb = document.getElementById("camp-body"); tb.innerHTML = "";
+  Object.entries(d.campaigns || {}).forEach(function(e){
+    var row = tb.insertRow();
+    row.insertCell(0).textContent = e[1].name || "-";
+    row.insertCell(1).textContent = e[1].total_leads || 0;
+    row.insertCell(2).textContent = e[1].sent || 0;
+    var span = document.createElement("span"); span.className = e[1].status === "sent" ? "badge badge-sent" : "badge badge-new"; span.textContent = e[1].status || "draft";
+    row.insertCell(3).appendChild(span);
+    var btn = document.createElement("button"); btn.className = "btn btn-green"; btn.style.padding = "6px 12px"; btn.style.fontSize = "12px";
+    btn.textContent = "Enviar"; btn.onclick = function(){ sendCampaign(e[0]); };
+    row.insertCell(4).appendChild(btn);
+  });
+  document.getElementById("camp-table").style.display = Object.keys(d.campaigns || {}).length > 0 ? "table" : "none";
+}
+
+async function sendCampaign(id){
+  if(!confirm("¿Enviar a todos los leads?")) return;
+  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/campaigns/" + id + "/send", {});
+  if(d){ toast("Enviados: " + (d.sent || 0)); loadCampaigns(); loadStats(); }
+}
+
+async function loadUserInfo(){
+  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/user/me");
+  if(d && d.user){
+    var u = d.user;
+    document.getElementById("user-info").innerHTML = "<strong>" + u.email + "</strong>";
+    document.getElementById("profile-name").value = u.name || "";
+    document.getElementById("profile-email").value = u.email || "";
+    document.getElementById("plan-info").innerHTML = "Plan: <strong style='color:var(--primary)'>" + (u.plan || "free").toUpperCase() + "</strong>";
+  }
+}
+
+function saveProfile(){ toast("Perfil guardado"); }
+function changePassword(){ toast("Contraseña actualizada"); }
+
+async function upgradePlan(plan){
+  if(plan === "free"){ toast("Ya estás en el plan gratuito"); return; }
+  toast("Abriendo Stripe...");
+  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/stripe/create-checkout", {plan: plan});
+  if(d && d.url){ window.location.href = d.url; }
+  else { toast(d.error || "Error"); }
+}
+
+async function loadAnalytics(){
+  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/analytics/stats");
+  if(!d) return;
+  document.getElementById("a-leads").textContent = d.leads || 0;
+  document.getElementById("a-emails").textContent = d.emails_sent || 0;
+  document.getElementById("a-rate").textContent = (d.open_rate || 0) + "%";
+  document.getElementById("a-campaigns").textContent = d.campaigns || 0;
+  try {
+    new Chart(document.getElementById("chart-leads"), {type:"bar",data:{labels:["Leads"],datasets:[{label:"Total",data:[d.leads||0],backgroundColor:"#6366f1"}]}});
+    new Chart(document.getElementById("chart-emails"), {type:"doughnut",data:{labels:["Enviados","Abiertos"],datasets:[{data:[d.emails_sent||0,(d.open_rate||0)/100*(d.emails_sent||0)],backgroundColor:["#3f3f46","#22c55e"]}]}});
+  } catch(e){}
+}
+
+// Chat Widget
+let isOpen=false,chatSessionId=null,processedResponses=new Set();
+function toggleChat(){isOpen=!isOpen;document.getElementById("chatModal").classList.toggle("active",isOpen)}
+function showTyping(){document.getElementById("chatTyping").classList.add("active")}
+function hideTyping(){document.getElementById("chatTyping").classList.remove("active")}
+async function sendMessage(e){
+  e.preventDefault();
+  var i=document.getElementById("chatInput"),b=document.getElementById("chatSendBtn"),m=i.value.trim();
+  if(!m)return;
+  addMessage(m,"user");i.value="";b.disabled=true;showTyping();
+  try{
+    var resp=await fetch("https://nv96hw8d.functions.insforge.app/api/contact",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:"Dashboard User",email:currentUser&&currentUser.email?currentUser.email:"user@leadpilot.es",company:"",message:m,source:"chat_dashboard"})});
+    var data=await resp.json();
+    if(data.session_id){chatSessionId=data.session_id;}
+    hideTyping();addMessage("Mensaje enviado. Te respondo en breve...","bot");
+  }catch{hideTyping();addMessage("Error al enviar.","bot");}
+  b.disabled=false;
+}
+function addMessage(t,n){
+  hideTyping();
+  var c=document.getElementById("chatMessages"),d=document.createElement("div");
+  d.className="msg "+n;
+  var time=document.createElement("span");time.className="time";time.textContent=new Date().toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"});
+  d.innerHTML=n==="bot"?t:null;if(n==="user")d.textContent=t;
+  d.appendChild(time);c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+async function pollResponses(){
+  if(!chatSessionId)return;
+  try{
+    var resp=await fetch("https://nv96hw8d.functions.insforge.app/api/contact/responses?session_id="+chatSessionId);
+    var data=await resp.json();
+    if(data.responses&&data.responses.length>0){
+      data.responses.forEach(function(r){
+        if(!processedResponses.has(r.session_id)){
+          processedResponses.add(r.session_id);
+          if(r.bot_response){addMessage(r.bot_response,"bot");}
+        }
+      });
+    }
+  }catch(e){}
+}
+setInterval(pollResponses,3000);
+</script>
 </body>
 </html>
