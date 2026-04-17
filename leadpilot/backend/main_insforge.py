@@ -361,12 +361,11 @@ async def stripe_webhook(req: Request):
         plan = session.get("metadata", {}).get("plan", "starter")
         
         if email:
-            for u in users:
-                if u["email"] == email:
-                    plan_tier = {"starter": "starter", "pro": "pro", "business": "business"}.get(plan, "starter")
-                    u["plan"] = plan_tier
-                    save_users()
-                    break
+            all_users = load_json(USERS_FILE)
+            if email in all_users:
+                plan_tier = {"starter": "starter", "pro": "pro", "business": "business"}.get(plan, "starter")
+                all_users[email]["plan"] = plan_tier
+                save_json(USERS_FILE, all_users)
         
         return {"received": True}
     
