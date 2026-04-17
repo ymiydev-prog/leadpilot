@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 *.pyo
 data/
-insforge/
 .env
 *.local
 .DS_Store
@@ -12,7 +11,8 @@ Thumbs.db
 node_modules/
 
 # InsForge & AI agent skills
-.insforge
+#.insforge
+.agents/skills/
 .agent
 # .agents - kept in git for OpenClaw skills
 .augment
