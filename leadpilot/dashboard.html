@@ -427,12 +427,12 @@ button:active { transform: scale(0.98); }
 <div class="panel" id="panel-plan" style="display:none">
 <div class="card">
 <h3>Mi Plan Actual</h3>
-<div id="plan-info-detailed" style="margin-top:16px;font-size:14px;color:#a1a1aa;line-height:1.8">
+<div id="plan-info-hidden" style="margin-top:16px;font-size:14px;color:#a1a1aa;line-height:1.8">
 <div style="background:#1f1f23;padding:16px;border-radius:8px;border:1px solid #6366f1">
 <div style="font-size:20px;font-weight:700;color:#6366f1;margin-bottom:8px">FREE</div>
-<div><b>Leads:</b> <span id="plan-leads">0</span> / 10</div>
-<div><b>Emails:</b> <span id="plan-emails">0</span> / 50</div>
-<div><b>Campañas:</b> <span id="plan-campaigns">0</span> / 1</div>
+<div><b>Leads:</b> <span id="plan-leads-h">0</span> / 10</div>
+<div><b>Emails:</b> <span id="plan-emails-h">0</span> / 50</div>
+<div><b>Campañas:</b> <span id="plan-campaigns-h">0</span> / 1</div>
 </div>
 </div>
 </div>
@@ -513,8 +513,13 @@ button:active { transform: scale(0.98); }
 <div class="toast" id="toast"></div>
 
 <script>
+const API_BASE = API_BASE + "";
 var token = localStorage.getItem("lp_token") || null;
-var currentUser = localStorage.getItem("lp_user") || null;
+var currentUser = null;
+try {
+  var storedUser = localStorage.getItem("lp_user");
+  currentUser = storedUser ? JSON.parse(storedUser) : null;
+} catch(e) { currentUser = null; }
 
 
 function togglePass(id, el){
@@ -526,17 +531,9 @@ function togglePass(id, el){
   var p = new URLSearchParams(window.location.search);
   if(p.get("checkout") === "success"){ toast("Pago completado!"); }
   else if(p.get("checkout") === "cancel"){ toast("Pago cancelado."); }
-  if(token){ try { var r = await fetch("https://nv96hw8d.functions.insforge.app/api/user/me", {headers: {"Authorization": "Bearer " + token}}); if(r.ok){ showApp(); loadStats(); } else { localStorage.removeItem("lp_token"); localStorage.removeItem("lp_user"); showAuth(); } } catch(e){ localStorage.removeItem("lp_token"); localStorage.removeItem("lp_user"); showAuth(); } }
+  if(token){ try { var r = await fetch(API_BASE + "/api/user/me", {headers: {"Authorization": "Bearer " + token}}); if(r.ok){ showApp(); loadStats(); } else { localStorage.removeItem("lp_token"); localStorage.removeItem("lp_user"); showAuth(); } } catch(e){ localStorage.removeItem("lp_token"); localStorage.removeItem("lp_user"); showAuth(); } }
   else { showAuth(); }
 })();
-
-function fillDemo(){
-  setTimeout(function(){
-    var e = document.getElementById("login-email");
-    var p = document.getElementById("login-pass");
-    
-  }, 500);
-}
 
 function showAuth(){
   document.getElementById("auth-overlay").style.display = "flex";
@@ -573,7 +570,7 @@ async function doLogin(){
   var pass = document.getElementById("login-pass").value;
   if(!email || !pass){ showErr("login", "Completa todos los campos"); return; }
   try {
-    var r = await fetch("https://nv96hw8d.functions.insforge.app/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
+    var r = await fetch(API_BASE + "/api/login", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email, password: pass})});
     var d = await r.json();
     if(d.success === true){ saveSess(d); showApp(); loadStats(); }
     else { showErr("login", d.detail || "Email o contrasena incorrectos"); }
@@ -587,7 +584,7 @@ async function doRegister(){
   if(!name || !email || !pass){ showErr("reg", "Completa todos los campos"); return; }
   if(pass.length < 6){ showErr("reg", "Contrasena minima 6 caracteres"); return; }
   try {
-    var r = await fetch("https://nv96hw8d.functions.insforge.app/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
+    var r = await fetch(API_BASE + "/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({name: name, email: email, password: pass})});
     var d = await r.json();
     if(d.success === true){ saveSess(d); showApp(); toast("Cuenta creada!"); loadStats(); }
     else { showErr("reg", d.detail || "No se pudo crear la cuenta"); }
@@ -601,7 +598,7 @@ async function doReset(){
   if(!code || !pass || !pass2){ showErr("reset", "Completa todos los campos"); return; }
   if(pass !== pass2){ showErr("reset", "Las contrasenas no coinciden"); return; }
   if(pass.length < 6){ showErr("reset", "Minimo 6 caracteres"); return; }
-  fetch("https://nv96hw8d.functions.insforge.app/api/reset-password", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({token: code, new_password: pass})})
+  fetch(API_BASE + "/api/reset-password", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({token: code, new_password: pass})})
     .then(function(r){ return r.json(); })
     .then(function(d){
       if(d.success === true){ toast("Contrasena cambiada!"); showAuthTab("login"); }
@@ -613,7 +610,7 @@ async function doReset(){
 async function doForgot(){
   var email = document.getElementById("forgot-email").value;
   if(!email){ showErr("forgot", "Introduce tu email"); return; }
-  var r = await fetch("https://nv96hw8d.functions.insforge.app/api/forgot-password", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
+  var r = await fetch(API_BASE + "/api/forgot-password", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({email: email})});
   var d = await r.json();
   if(d.success === true){
     toast("Codigo enviado! Revisa tu email.");
@@ -633,7 +630,7 @@ function saveSess(d){
   token = d.token;
   currentUser = d.user;
   localStorage.setItem("lp_token", token);
-  localStorage.setItem("lp_user", currentUser);
+  localStorage.setItem("lp_user", JSON.stringify(currentUser));
   document.getElementById("user-info").innerHTML = "<b>" + (currentUser.email || currentUser) + "</b>";
 }
 
@@ -659,7 +656,11 @@ function switchTab(name){
 }
 
 function tick(){
-  document.getElementById("clock").textContent = new Date().toISOString().replace("T", " ").substring(0, 19) + " UTC";
+  var now = new Date();
+  var h = String(now.getHours()).padStart(2, '0');
+  var m = String(now.getMinutes()).padStart(2, '0');
+  var s = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById("clock").textContent = h + ":" + m + ":" + s;
 }
 setInterval(tick, 1000);
 tick();
@@ -670,7 +671,7 @@ async function apiPut(url, body){ var r = await fetch(url, {method: "PUT", heade
 async function apiPost(url, body){ var r = await fetch(url, {method: "POST", headers: auth(), body: JSON.stringify(body)}); if(r.status === 401){ logout(); return null;} return r.json(); }
 
 async function loadStats(){
-  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/analytics/stats");
+  var d = await apiGet(API_BASE + "/api/analytics/stats");
   if(!d) return;
   document.getElementById("s-leads").textContent = d.leads_used || d.leads || 0;
   document.getElementById("s-sent").textContent = d.emails_sent || d.emails_used || 0;
@@ -685,7 +686,7 @@ async function doSearch(){
   if(!q){ toast("Introduce un nicho"); return; }
   document.getElementById("search-loading").style.display = "block";
   document.getElementById("search-table").style.display = "none";
-  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/leads/search", {query: q, location: loc, max_results: parseInt(max)});
+  var d = await apiPost(API_BASE + "/api/leads/search", {query: q, location: loc, max_results: parseInt(max)});
   document.getElementById("search-loading").style.display = "none";
   if(!d) return;
   if(d.leads && d.leads.length > 0){
@@ -718,7 +719,7 @@ function quickEmail(name, email){
 async function loadLeads(){
   document.getElementById("leads-loading").style.display = "block";
   document.getElementById("leads-table").style.display = "none";
-  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/leads");
+  var d = await apiGet(API_BASE + "/api/leads");
   document.getElementById("leads-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("leads-body");
@@ -743,11 +744,11 @@ async function loadLeads(){
   document.getElementById("leads-table").style.display = idx > 0 ? "table" : "none";
 }
 
-function exportCSV(){ window.open("https://nv96hw8d.functions.insforge.app/api/leads/export", "_blank"); }
+function exportCSV(){ window.open(API_BASE + "/api/leads/export", "_blank"); }
 
 async function genEmail(tone){
   var name = document.getElementById("em-name").value || "Contacto";
-  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/emails/generate", {lead_name: name, tone: tone});
+  var d = await apiPost(API_BASE + "/api/emails/generate", {lead_name: name, tone: tone});
   if(d && d.email){ document.getElementById("em-body").value = d.email; toast("Generado"); }
 }
 
@@ -757,14 +758,14 @@ async function sendEmail(){
   var subj = document.getElementById("em-subject").value;
   var body = document.getElementById("em-body").value;
   if(!to || !subj || !body){ toast("Completa todos los campos"); return; }
-  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
+  var d = await apiPost(API_BASE + "/api/emails/send", {to_email: to, to_name: name, subject: subj, body_html: body.replace(/\n/g, "<br>")});
   if(d && d.success === true){ toast("Email enviado!"); loadStats(); loadSent(); }
 }
 
 async function loadSent(){
   document.getElementById("sent-loading").style.display = "block";
   document.getElementById("sent-table").style.display = "none";
-  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/emails/sent");
+  var d = await apiGet(API_BASE + "/api/emails/sent");
   document.getElementById("sent-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("sent-body");
@@ -788,14 +789,14 @@ async function createCampaign(){
   var subj = document.getElementById("camp-subject").value;
   var tmpl = document.getElementById("camp-template").value;
   if(!name || !subj || !tmpl){ toast("Completa todos los campos"); return; }
-  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/campaigns/create", {name: name, subject: subj, template: tmpl});
+  var d = await apiPost(API_BASE + "/api/campaigns/create", {name: name, subject: subj, template: tmpl});
   if(d && d.success === true){ toast("Campaña creada!"); loadCampaigns(); loadStats(); }
 }
 
 async function loadCampaigns(){
   document.getElementById("camp-loading").style.display = "block";
   document.getElementById("camp-table").style.display = "none";
-  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/campaigns");
+  var d = await apiGet(API_BASE + "/api/campaigns");
   document.getElementById("camp-loading").style.display = "none";
   if(!d) return;
   var tb = document.getElementById("camp-body");
@@ -822,35 +823,47 @@ async function loadCampaigns(){
 
 async function sendCampaign(id){
   if(!confirm("Enviar a todos los leads?")) return;
-  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/campaigns/" + id + "/send", {});
+  var d = await apiPost(API_BASE + "/api/campaigns/" + id + "/send", {});
   if(d){ toast("Enviados: " + (d.sent || 0)); loadCampaigns(); loadStats(); }
 }
 
 async function loadUserInfo(){
-  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/user/me");
+  var d = await apiGet(API_BASE + "/api/user/me");
+  if(!d || !d.user) return;
+  var u = d.user;
+  var l = d.limits || {};
+  document.getElementById("user-info").innerHTML = "<b>" + u.email + "</b>";
+  // Update settings panel
   var el = document.getElementById("plan-info-detailed");
-  if(d && d.user){
-    var u = d.user;
-    var l = d.limits || {};
-    document.getElementById("user-info").innerHTML = "<b>" + u.email + "</b>";
-    el.innerHTML = "Plan: <b style='color:#6366f1'>" + (u.plan || "free").toUpperCase() + "</b><br>Leads: " + u.leads_used + "/" + (l.leads === -1 ? "infinito" : l.leads) + "<br>Emails: " + u.emails_used + "/" + (l.emails === -1 ? "infinito" : l.emails);
+  if(el){
+    el.innerHTML = "Plan: <b style='color:#6366f1'>" + (u.plan || "free").toUpperCase() + "</b><br>Leads: " + (u.leads_used || 0) + "/" + (l.leads === -1 ? "infinito" : l.leads) + "<br>Emails: " + (u.emails_used || 0) + "/" + (l.emails === -1 ? "infinito" : l.emails);
   }
+  // Update hidden panel if it exists
+  var elh = document.getElementById("plan-info-hidden");
+  if(elh){
+    elh.innerHTML = "Plan: <b style='color:#6366f1'>" + (u.plan || "free").toUpperCase() + "</b><br>Leads: " + (u.leads_used || 0) + "/" + (l.leads === -1 ? "infinito" : l.leads) + "<br>Emails: " + (u.emails_used || 0) + "/" + (l.emails === -1 ? "infinito" : l.emails);
+  }
+  // Update profile fields
+  var pname = document.getElementById("profile-name");
+  var pemail = document.getElementById("profile-email");
+  if(pname) pname.value = u.name || "";
+  if(pemail) pemail.value = u.email || "";
 }
 
 async function upgradePlan(plan){
   if(plan === "free"){
-    var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/plans/upgrade", {plan: plan});
+    var d = await apiPost(API_BASE + "/api/plans/upgrade", {plan: plan});
     if(d && d.success === true){ toast("Plan actualizado!"); loadUserInfo(); loadStats(); }
     return;
   }
   toast("Abriendo Stripe...");
-  var d = await apiPost("https://nv96hw8d.functions.insforge.app/api/stripe/create-checkout", {plan: plan});
+  var d = await apiPost(API_BASE + "/api/stripe/create-checkout", {plan: plan});
   if(d && d.url){ window.location.href = d.url; }
   else if(d){ toast(d.error || d.detail || "Error"); }
 }
 
 async function loadAnalytics(){
-  var d = await apiGet("https://nv96hw8d.functions.insforge.app/api/analytics/stats");
+  var d = await apiGet(API_BASE + "/api/analytics/stats");
   if(!d) return;
   var leads = d.leads || 0;
   var sent = d.emails_sent || 0;
@@ -913,7 +926,7 @@ async function loadAnalytics(){
 
 <script>
 let isOpen=false;function toggleChat(){isOpen=!isOpen;document.getElementById('chatModal').classList.toggle('active',isOpen)}
-async function sendMessage(e){e.preventDefault();const i=document.getElementById('chatInput'),b=e.target.querySelector('button'),m=i.value.trim();if(!m)return;addMessage(m,'user');i.value='';b.disabled=true;try{const resp=await fetch('https://nv96hw8d.functions.insforge.app/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Dashboard User',email:'user@leadpilot.es',company:'',message:m,source:'chat_widget'})});const data=await resp.json();if(data.response){addMessage(data.response,'bot')}else{addMessage('Mensaje enviado. Te responderemos pronto. 🚀','bot')}}catch{addMessage('Error al enviar. Intenta de nuevo.','bot')}b.disabled=false}
+async function sendMessage(e){e.preventDefault();const i=document.getElementById('chatInput'),b=e.target.querySelector('button'),m=i.value.trim();if(!m)return;addMessage(m,'user');i.value='';b.disabled=true;try{const resp=await fetch(API_BASE+'/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Dashboard User',email:'user@leadpilot.es',company:'',message:m,source:'chat_widget'})});const data=await resp.json();if(data.response){addMessage(data.response,'bot')}else{addMessage('Mensaje enviado. Te responderemos pronto. 🚀','bot')}}catch{addMessage('Error al enviar. Intenta de nuevo.','bot')}b.disabled=false}
 function addMessage(t,n){const c=document.getElementById('chatMessages'),d=document.createElement('div');d.className='msg '+n;if(n==='bot'){d.innerHTML=t}else{d.textContent=t}c.appendChild(d);c.scrollTop=c.scrollHeight}
 setTimeout(()=>{if(!isOpen)toggleChat()},5000);
 </script>

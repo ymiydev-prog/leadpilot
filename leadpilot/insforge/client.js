@@ -48,5 +48,3 @@ export const db = {
     return { data, error }
   }
 }
-
-export default insforge

@@ -55,38 +55,61 @@
         e.preventDefault();
         
         const btn = document.getElementById('submit-btn');
+        const successMsg = document.getElementById('success-msg');
+        const errorMsg = document.getElementById('error-msg');
+        
+        // Client-side validation
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const company = document.getElementById('company').value.trim();
+        const message = document.getElementById('message').value.trim();
+        
+        if(!name || !email || !message){
+            errorMsg.textContent = '❌ Completa todos los campos obligatorios.';
+            errorMsg.style.display = 'block';
+            successMsg.style.display = 'none';
+            return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(!emailRegex.test(email)){
+            errorMsg.textContent = '❌ Introduce un email válido.';
+            errorMsg.style.display = 'block';
+            successMsg.style.display = 'none';
+            return;
+        }
+        
         btn.textContent = 'Enviando...';
         btn.disabled = true;
+        errorMsg.style.display = 'none';
         
-        const data = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            company: document.getElementById('company').value,
-            message: document.getElementById('message').value,
-            source: 'contact_form'
-        };
+        const data = { name, email, company, message, source: 'contact_form' };
         
         try {
-            // Send to LeadPilot API
             const resp = await fetch('https://nv96hw8d.functions.insforge.app/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
             
-            if (resp.ok) {
-                document.getElementById('success-msg').style.display = 'block';
-                document.getElementById('error-msg').style.display = 'none';
+            if(resp.ok){
+                successMsg.textContent = '✅ Mensaje enviado. Te responderemos pronto!';
+                successMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
                 document.getElementById('contact-form').reset();
             } else {
-                throw new Error('Server error');
+                const errData = await resp.json().catch(() => ({}));
+                throw new Error(errData.detail || 'Server error ' + resp.status);
             }
         } catch(e) {
-            // If API fails, show email fallback
-            window.location.href = 'mailto:contacto@leadpilot.es?subject=Contacto desde leadpilot.es&body=' + 
-                encodeURIComponent('Nombre: ' + data.name + '\nEmail: ' + data.email + '\nEmpresa: ' + data.company + '\n\n' + data.message);
-            document.getElementById('success-msg').style.display = 'block';
-            document.getElementById('success-msg').textContent = '✉️ Abriendo email...';
+            // Show email fallback
+            errorMsg.textContent = '⚠️ No se pudo enviar. Redirigiendo a email...';
+            errorMsg.style.display = 'block';
+            successMsg.style.display = 'none';
+            setTimeout(() => {
+                window.location.href = 'mailto:contacto@leadpilot.es?subject=Contacto desde leadpilot.es&body=' + 
+                    encodeURIComponent('Nombre: ' + data.name + '\nEmail: ' + data.email + '\nEmpresa: ' + data.company + '\n\n' + data.message);
+            }, 1500);
         }
         
         btn.textContent = 'Enviar mensaje';

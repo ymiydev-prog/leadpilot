@@ -195,10 +195,11 @@ function addMessage(text, type) {
     container.scrollTop = container.scrollHeight;
 }
 
-// Auto-open after 3 seconds
-setTimeout(() => {
-    if (!isOpen) toggleChat();
-}, 3000);
+// Auto-open only on first visit (respects user preference)
+if(!localStorage.getItem('chat_seen')){
+  setTimeout(() => { if(!isOpen) toggleChat(); }, 8000);
+  localStorage.setItem('chat_seen', '1');
+}
 </script>
 
 </body>
