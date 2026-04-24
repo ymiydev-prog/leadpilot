@@ -208,7 +208,9 @@ async function createStripeCheckout(userId: string, email: string, plan: string)
 
 export default async function handler(req: Request) {
   const url = new URL(req.url)
-  let path = url.pathname.replace(/^\/(functions\/api|api|functions)\/?/, '')
+  let path = url.pathname.replace(/^\/(functions\/api|api|functions)\/?/, '').replace(/^\//, '')
+  // Insforge proxy only routes first path segment; fallback to ?path=
+  if (!path) path = url.searchParams.get('path') || ''
 
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
 
