@@ -4,3 +4,21 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# InsForge secrets
+.insforge/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Local data
+data/
+logs/
+marketing/
+backend/
+
+# OS
+.DS_Store
+Thumbs.db
